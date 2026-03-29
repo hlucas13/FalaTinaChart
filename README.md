@@ -31,7 +31,7 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 
 | Botão | Visibilidade | Ação |
 |-------|-------------|------|
-| **Exportar** | Sempre | Abre submenu com PNG e PDF |
+| **Exportar** | Landscape | Abre submenu com PNG e PDF |
 | **Temas** | Landscape | Abre seletor de 4 temas de cor |
 | **Mais** | Portrait | Hamburger com Temas + Exportar |
 | **Configurações** | Sempre | Modo escuro, vidro fosco, legenda, Ajuda |
