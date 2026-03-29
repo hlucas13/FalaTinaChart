@@ -19,14 +19,14 @@ export const WEEKS: string[] = ['W10', 'W11', 'W12'];
 
 export const PARTICIPANTS: Participant[] = [
     { name: 'Nay', color: '#f87171', data: [2392, 2883, 2101] },
-    { name: 'Thay', color: '#34d399', data: [283, 1666, 1853] },
+    { name: 'Thay', color: '#8b5cf6', data: [283, 1666, 1853] },
     { name: 'Cleber', color: '#fb923c', data: [1033, 1301, 1719] },
     { name: 'Marc R.', color: '#fbbf24', data: [937, 1199, 974] },
     { name: 'Lucas', color: '#84cc16', data: [900, 1171, 769] },
     { name: 'Fernanda', color: '#10b981', data: [838, 972, 796] },
     { name: 'Domi', color: '#14b8a6', data: [730, 827, 512] },
     { name: 'Italo G.', color: '#22c55e', data: [884, 405, 711] },
-    { name: 'Gabriel B.', color: '#8b5cf6', data: [476, 440, 720] },
+    { name: 'Gabriel B.', color: '#34d399', data: [476, 440, 720] },
     { name: 'Ivan F.', color: '#6366f1', data: [486, 657, null] },
     { name: 'Lexi', color: '#2dd4bf', data: [null, 607, 289] },
     { name: 'Paolo P.', color: '#f43f5e', data: [412, 614, 349] },
