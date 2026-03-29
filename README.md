@@ -22,7 +22,6 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 - **Ajuda & Wiki** — painel integrado nas Configurações com instruções de uso
 - **Tecla ESC** — fecha qualquer menu aberto ou o painel de ajuda sem precisar clicar
 - **Notificação de exportação** — exibe uma confirmação breve após salvar a imagem PNG
-- **Linhas contínuas** — quando um participante não tem dados numa semana, a linha é conectada diretamente à semana seguinte disponível
 - **Responsivo** — funciona em telas verticais (portrait); botão "Mais" na dock agrupa as ações de tema e exportação
 - **Site estático** — funciona no GitHub Pages sem servidor; 100% CDN
 

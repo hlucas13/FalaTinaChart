@@ -302,7 +302,7 @@ function buildDatasets() {
         pointHoverBorderWidth: 2.5,
         pointHoverBorderColor: '#ffffff',
         tension: 0.35,
-        spanGaps: true,
+        spanGaps: false,
     }));
 }
 
