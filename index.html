@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+        <title>Fala Tina</title>
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%230d1117'/><path d='M10 14a4 4 0 0 1 4-4h36a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H22l-10 8V14z' fill='none' stroke='%2325d366' stroke-width='3.5' stroke-linejoin='round'/><circle cx='22' cy='26' r='2.5' fill='%2325d366'/><circle cx='32' cy='26' r='2.5' fill='%2325d366'/><circle cx='42' cy='26' r='2.5' fill='%2325d366'/></svg>"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <!-- Chart.js — interactive line chart -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <div class="brand">
+                <span class="brand-badge" aria-hidden="true">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path
+                            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                        />
+                    </svg>
+                </span>
+                <div class="brand-text">
+                    <span class="brand-name">Fala Tina</span>
+                    <span class="brand-sub">Mensagens por semana</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <a
+                    class="header-action-btn"
+                    href="https://github.com/hlucas13/FalaTinaChart"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Repositório no GitHub"
+                    title="GitHub"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="26"
+                        height="26"
+                        fill="currentColor"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"
+                        />
+                    </svg>
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <!-- Chart area -->
+            <div class="chart-wrapper">
+                <canvas
+                    id="chart"
+                    aria-label="Gráfico de mensagens por semana"
+                ></canvas>
+            </div>
+
+            <!-- Participant legend -->
+            <div class="legend-area">
+                <div
+                    id="legend"
+                    class="legend-grid"
+                    role="list"
+                    aria-label="Participantes"
+                ></div>
+            </div>
+        </main>
+
+        <!-- Toast notification -->
+        <div id="toast" class="toast hidden" aria-live="polite"></div>
+
+        <!-- Settings Menu -->
+        <div id="settings-menu" class="platform-menu" inert>
+            <div class="glass-effect"></div>
+            <div class="glass-tint"></div>
+            <div class="glass-shine"></div>
+            <div class="platform-menu-content">
+                <div class="platform-menu-label">Configurações</div>
+
+                <!-- Dark mode toggle -->
+                <div class="settings-row">
+                    <span class="settings-row-icon">
+                        <svg
+                            id="icon-theme"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path
+                                d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                            />
+                        </svg>
+                    </span>
+                    <span class="settings-row-text">
+                        <span class="settings-row-name">Modo escuro</span>
+                        <span class="settings-row-desc"
+                            >Alternar entre tema claro e escuro</span
+                        >
+                    </span>
+                    <button
+                        class="liquid-toggle"
+                        id="toggle-theme"
+                        role="switch"
+                        aria-checked="false"
+                        aria-label="Modo escuro"
+                    >
+                        <div class="knockout">
+                            <div class="indicator indicator--masked">
+                                <div class="mask"></div>
+                            </div>
+                        </div>
+                        <div class="indicator__liquid">
+                            <div class="shadow"></div>
+                            <div class="wrapper">
+                                <div class="liquids">
+                                    <div class="liquid__shadow"></div>
+                                    <div class="liquid__track"></div>
+                                </div>
+                            </div>
+                            <div class="cover"></div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="settings-sep"></div>
+
+                <!-- Frosted glass toggle -->
+                <div class="settings-row">
+                    <span class="settings-row-icon">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                        </svg>
+                    </span>
+                    <span class="settings-row-text">
+                        <span class="settings-row-name">Vidro fosco</span>
+                        <span class="settings-row-desc"
+                            >Efeito de vidro desfocado na interface</span
+                        >
+                    </span>
+                    <button
+                        class="liquid-toggle"
+                        id="toggle-glass"
+                        role="switch"
+                        aria-checked="false"
+                        aria-label="Vidro fosco"
+                    >
+                        <div class="knockout">
+                            <div class="indicator indicator--masked">
+                                <div class="mask"></div>
+                            </div>
+                        </div>
+                        <div class="indicator__liquid">
+                            <div class="shadow"></div>
+                            <div class="wrapper">
+                                <div class="liquids">
+                                    <div class="liquid__shadow"></div>
+                                    <div class="liquid__track"></div>
+                                </div>
+                            </div>
+                            <div class="cover"></div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="settings-sep"></div>
+
+                <!-- Legend visibility toggle -->
+                <div class="settings-row">
+                    <span class="settings-row-icon">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <line x1="8" y1="6" x2="21" y2="6" />
+                            <line x1="8" y1="12" x2="21" y2="12" />
+                            <line x1="8" y1="18" x2="21" y2="18" />
+                            <circle
+                                cx="3"
+                                cy="6"
+                                r="1.2"
+                                fill="currentColor"
+                                stroke="none"
+                            />
+                            <circle
+                                cx="3"
+                                cy="12"
+                                r="1.2"
+                                fill="currentColor"
+                                stroke="none"
+                            />
+                            <circle
+                                cx="3"
+                                cy="18"
+                                r="1.2"
+                                fill="currentColor"
+                                stroke="none"
+                            />
+                        </svg>
+                    </span>
+                    <span class="settings-row-text">
+                        <span class="settings-row-name">Mostrar legenda</span>
+                        <span class="settings-row-desc"
+                            >Exibir barra de participantes abaixo do
+                            gráfico</span
+                        >
+                    </span>
+                    <button
+                        class="liquid-toggle"
+                        id="toggle-legend"
+                        role="switch"
+                        aria-checked="true"
+                        aria-label="Mostrar legenda"
+                    >
+                        <div class="knockout">
+                            <div class="indicator indicator--masked">
+                                <div class="mask"></div>
+                            </div>
+                        </div>
+                        <div class="indicator__liquid">
+                            <div class="shadow"></div>
+                            <div class="wrapper">
+                                <div class="liquids">
+                                    <div class="liquid__shadow"></div>
+                                    <div class="liquid__track"></div>
+                                </div>
+                            </div>
+                            <div class="cover"></div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="settings-sep"></div>
+
+                <!-- Help / Wiki -->
+                <button id="btn-help" class="platform-btn" type="button">
+                    <span class="platform-btn-icon">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg>
+                    </span>
+                    <span class="platform-btn-text">
+                        <span class="platform-btn-name">Ajuda &amp; Wiki</span>
+                        <span class="platform-btn-desc"
+                            >Como usar e atalhos</span
+                        >
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Themes Menu -->
+        <div id="themes-menu" class="platform-menu" inert>
+            <div class="glass-effect"></div>
+            <div class="glass-tint"></div>
+            <div class="glass-shine"></div>
+            <div class="platform-menu-content">
+                <div class="platform-menu-label">Temas de cor</div>
+                <!-- Rows are built dynamically by buildThemeRows() in main.ts -->
+                <div id="themes-menu-rows"></div>
+            </div>
+        </div>
+
+        <!-- Export Menu -->
+        <div id="export-menu" class="platform-menu" inert>
+            <div class="glass-effect"></div>
+            <div class="glass-tint"></div>
+            <div class="glass-shine"></div>
+            <div class="platform-menu-content">
+                <div class="platform-menu-label">Exportar gráfico</div>
+
+                <!-- PNG -->
+                <button id="btn-export-png" class="platform-btn" type="button">
+                    <span class="platform-btn-icon">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                    </span>
+                    <span class="platform-btn-text">
+                        <span class="platform-btn-name">Salvar como PNG</span>
+                        <span class="platform-btn-desc"
+                            >Imagem com fundo sólido do tema atual</span
+                        >
+                    </span>
+                </button>
+
+                <!-- PDF / Print -->
+                <button id="btn-export-pdf" class="platform-btn" type="button">
+                    <span class="platform-btn-icon">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <polyline points="6 9 6 2 18 2 18 9" />
+                            <path
+                                d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
+                            />
+                            <rect x="6" y="14" width="12" height="8" />
+                        </svg>
+                    </span>
+                    <span class="platform-btn-text">
+                        <span class="platform-btn-name">Imprimir / PDF</span>
+                        <span class="platform-btn-desc"
+                            >Caixa de diálogo nativa do navegador</span
+                        >
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Hamburger Panel (portrait) — Temas, Exportar PNG, PDF -->
+        <div id="hamburger-panel" class="platform-menu hamburger-panel" inert>
+            <div class="glass-effect"></div>
+            <div class="glass-tint"></div>
+            <div class="glass-shine"></div>
+            <div class="hamburger-grid">
+                <button
+                    class="hamburger-item"
+                    data-delegates="btn-themes"
+                    type="button"
+                >
+                    <svg
+                        class="dock-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                        <circle
+                            cx="17.5"
+                            cy="10.5"
+                            r=".5"
+                            fill="currentColor"
+                        />
+                        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                        <path
+                            d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+                        />
+                    </svg>
+                    <span>Temas</span>
+                </button>
+                <button
+                    class="hamburger-item"
+                    data-delegates="btn-export-png"
+                    type="button"
+                >
+                    <svg
+                        class="dock-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    <span>PNG</span>
+                </button>
+                <button
+                    class="hamburger-item"
+                    data-delegates="btn-export-pdf"
+                    type="button"
+                >
+                    <svg
+                        class="dock-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <polyline points="6 9 6 2 18 2 18 9" />
+                        <path
+                            d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
+                        />
+                        <rect x="6" y="14" width="12" height="8" />
+                    </svg>
+                    <span>PDF</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Floating Liquid Glass Dock -->
+        <div class="glass-dock">
+            <div class="glass-effect"></div>
+            <div class="glass-tint"></div>
+            <div class="glass-shine"></div>
+            <div class="glass-content">
+                <!-- Exportar — always visible, opens export submenu -->
+                <button
+                    id="btn-export"
+                    class="dock-btn has-menu"
+                    title="Exportar gráfico"
+                    aria-label="Exportar"
+                >
+                    <svg
+                        class="dock-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                        <polyline points="16 6 12 2 8 6" />
+                        <line x1="12" y1="2" x2="12" y2="15" />
+                    </svg>
+                    <span class="dock-label">Exportar</span>
+                </button>
+
+                <!-- Mais — portrait only (replaces landscape buttons) -->
+                <button
+                    id="btn-hamburger"
+                    class="dock-btn dock-hamburger-btn"
+                    aria-label="Mais"
+                    aria-expanded="false"
+                >
+                    <svg
+                        class="dock-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle
+                            cx="5"
+                            cy="12"
+                            r="1.5"
+                            fill="currentColor"
+                            stroke="none"
+                        />
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="1.5"
+                            fill="currentColor"
+                            stroke="none"
+                        />
+                        <circle
+                            cx="19"
+                            cy="12"
+                            r="1.5"
+                            fill="currentColor"
+                            stroke="none"
+                        />
+                    </svg>
+                    <span class="dock-label">Mais</span>
+                </button>
+
+                <!-- Temas — landscape only, opens colour theme picker -->
+                <button
+                    id="btn-themes"
+                    class="dock-btn dock-landscape-btn has-menu"
+                    title="Temas de cor"
+                    aria-label="Temas"
+                >
+                    <svg
+                        class="dock-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                        <circle
+                            cx="17.5"
+                            cy="10.5"
+                            r=".5"
+                            fill="currentColor"
+                        />
+                        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                        <path
+                            d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+                        />
+                    </svg>
+                    <span class="dock-label">Temas</span>
+                </button>
+
+                <div class="dock-sep" aria-hidden="true"></div>
+
+                <!-- Definições — always visible -->
+                <button
+                    id="btn-settings"
+                    class="dock-btn has-menu"
+                    title="Definições"
+                    aria-label="Definições"
+                >
+                    <svg
+                        class="dock-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <line x1="4" y1="21" x2="4" y2="14" />
+                        <line x1="4" y1="10" x2="4" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12" y2="3" />
+                        <line x1="20" y1="21" x2="20" y2="16" />
+                        <line x1="20" y1="12" x2="20" y2="3" />
+                        <line x1="1" y1="14" x2="7" y2="14" />
+                        <line x1="9" y1="8" x2="15" y2="8" />
+                        <line x1="17" y1="16" x2="23" y2="16" />
+                    </svg>
+                    <span class="dock-label">Definições</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Hidden SVG: Physics-based Liquid Glass distortion filters -->
+        <svg
+            class="glass-filter-defs"
+            aria-hidden="true"
+            style="position: absolute; width: 0; height: 0; overflow: hidden"
+        >
+            <defs>
+                <filter
+                    id="glass-distortion-dock"
+                    x="-2%"
+                    y="-2%"
+                    width="104%"
+                    height="104%"
+                    color-interpolation-filters="sRGB"
+                >
+                    <feImage
+                        id="glass-dock-map"
+                        href=""
+                        x="0"
+                        y="0"
+                        width="300"
+                        height="60"
+                        preserveAspectRatio="none"
+                        result="displacement_map"
+                    />
+                    <feDisplacementMap
+                        in="SourceGraphic"
+                        in2="displacement_map"
+                        scale="0"
+                        xChannelSelector="R"
+                        yChannelSelector="G"
+                    />
+                </filter>
+
+                <filter
+                    id="glass-distortion-panel"
+                    x="0"
+                    y="0"
+                    width="1"
+                    height="1"
+                    primitiveUnits="objectBoundingBox"
+                    color-interpolation-filters="sRGB"
+                >
+                    <feImage
+                        id="glass-panel-map"
+                        href=""
+                        x="0"
+                        y="0"
+                        width="1"
+                        height="1"
+                        preserveAspectRatio="none"
+                        result="displacement_map"
+                    />
+                    <feDisplacementMap
+                        in="SourceGraphic"
+                        in2="displacement_map"
+                        scale="0"
+                        xChannelSelector="R"
+                        yChannelSelector="G"
+                    />
+                </filter>
+            </defs>
+        </svg>
+
+        <!-- SVG filters for liquid toggles -->
+        <svg
+            aria-hidden="true"
+            style="position: absolute; width: 0; height: 0; overflow: hidden"
+        >
+            <defs>
+                <filter
+                    id="lt-goo"
+                    x="-20%"
+                    y="-20%"
+                    width="140%"
+                    height="140%"
+                >
+                    <feGaussianBlur
+                        in="SourceGraphic"
+                        result="blur"
+                        stdDeviation="4"
+                    />
+                    <feColorMatrix
+                        in="blur"
+                        result="matrix"
+                        type="matrix"
+                        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
+                    />
+                    <feComposite in="matrix" operator="atop" />
+                </filter>
+                <filter id="lt-remove-black" color-interpolation-filters="sRGB">
+                    <feColorMatrix
+                        type="matrix"
+                        values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    -255 -255 -255 0 1"
+                        result="black-pixels"
+                    />
+                    <feMorphology
+                        in="black-pixels"
+                        operator="dilate"
+                        radius="0.5"
+                        result="smoothed"
+                    />
+                    <feComposite
+                        in="SourceGraphic"
+                        in2="smoothed"
+                        operator="out"
+                    />
+                </filter>
+            </defs>
+        </svg>
+
+        <!-- External liquid-glass tooltip (replaces canvas-drawn tooltip) -->
+        <div
+            id="chart-tooltip"
+            class="chart-tooltip"
+            role="tooltip"
+            aria-live="polite"
+        >
+            <div class="glass-effect"></div>
+            <div class="glass-tint"></div>
+            <div class="glass-shine"></div>
+            <div class="chart-tooltip-inner">
+                <div class="chart-tooltip-title"></div>
+                <div class="chart-tooltip-body"></div>
+            </div>
+        </div>
+
+        <!-- Help / Wiki Modal -->
+        <div id="help-modal" class="help-modal" inert>
+            <div class="help-modal-backdrop" id="help-modal-backdrop"></div>
+            <div class="help-modal-panel">
+                <div class="glass-effect"></div>
+                <div class="glass-tint"></div>
+                <div class="glass-shine"></div>
+                <div class="help-modal-content">
+                    <div class="help-modal-header">
+                        <span class="help-modal-title">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <circle cx="12" cy="12" r="10" />
+                                <path
+                                    d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+                                />
+                                <line x1="12" y1="17" x2="12.01" y2="17" />
+                            </svg>
+                            Ajuda &amp; Wiki
+                        </span>
+                        <button
+                            id="btn-close-help"
+                            class="modal-close-btn"
+                            aria-label="Fechar ajuda"
+                            type="button"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="help-body" class="help-body"></div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+        <script src="app.bundle.js"></script>
+    </body>
+</html>

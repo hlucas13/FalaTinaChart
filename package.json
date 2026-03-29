@@ -1,0 +1,49 @@
+{
+    "name": "falatina",
+    "version": "1.0.0",
+    "description": "Gráfico de mensagens semanais do grupo Fala Tina no WhatsApp — estética Liquid Glass com física de refração.",
+    "main": "app.bundle.js",
+    "scripts": {
+        "build": "node build.js",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint src/",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "src/**/*.ts": [
+            "eslint --fix",
+            "prettier --write"
+        ],
+        "*.{html,css,json,md}": "prettier --write"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hlucas13/fala-tina.git"
+    },
+    "keywords": [
+        "whatsapp",
+        "chart",
+        "liquid-glass",
+        "github-pages"
+    ],
+    "author": "Homero Lucas do Prado",
+    "license": "MIT",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/hlucas13/fala-tina/issues"
+    },
+    "homepage": "https://hlucas13.github.io/fala-tina/",
+    "devDependencies": {
+        "@commitlint/cli": "^20.5.0",
+        "@commitlint/config-conventional": "^20.5.0",
+        "@typescript-eslint/eslint-plugin": "^8.57.2",
+        "@typescript-eslint/parser": "^8.57.2",
+        "esbuild": "^0.27.4",
+        "eslint": "^10.1.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.4.0",
+        "prettier": "^3.8.1",
+        "typescript": "^5.9.3"
+    }
+}
