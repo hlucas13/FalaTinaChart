@@ -16,7 +16,6 @@ const SVG_SUN =
 const settingsMenu = document.getElementById('settings-menu')!;
 const exportMenu = document.getElementById('export-menu')!;
 const themesMenu = document.getElementById('themes-menu')!;
-const hamburgerPanel = document.getElementById('hamburger-panel')!;
 const helpModal = document.getElementById('help-modal')!;
 const helpModalBackdrop = document.getElementById('help-modal-backdrop')!;
 const btnCloseHelp = document.getElementById('btn-close-help')!;
@@ -44,7 +43,6 @@ const exportChoiceWithoutDesc = document.getElementById(
 const btnSettings = document.getElementById('btn-settings')!;
 const btnExport = document.getElementById('btn-export')!;
 const btnThemes = document.getElementById('btn-themes')!;
-const btnHamburger = document.getElementById('btn-hamburger')!;
 const btnExportPng = document.getElementById('btn-export-png')!;
 const btnExportPdf = document.getElementById('btn-export-pdf')!;
 const btnHelp = document.getElementById('btn-help')!;
@@ -92,7 +90,7 @@ function animateLiquidToggle(el: HTMLElement, toState: boolean) {
 }
 
 // ── Menu management ──
-const allMenus = [settingsMenu, exportMenu, themesMenu, hamburgerPanel];
+const allMenus = [settingsMenu, exportMenu, themesMenu];
 
 function closeAllMenus() {
     for (const m of allMenus) {
@@ -128,28 +126,11 @@ btnThemes.addEventListener('click', (e) => {
     toggleMenu(themesMenu, !themesMenu.classList.contains('visible'));
 });
 
-btnHamburger.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const open = !hamburgerPanel.classList.contains('visible');
-    toggleMenu(hamburgerPanel, open);
-    btnHamburger.setAttribute('aria-expanded', String(open));
-});
-
-// Hamburger panel delegates clicks to target buttons
-hamburgerPanel
-    .querySelectorAll<HTMLElement>('[data-delegates]')
-    .forEach((btn) => {
-        btn.addEventListener('click', () => {
-            closeAllMenus();
-            document.getElementById(btn.dataset.delegates ?? '')?.click();
-        });
-    });
-
 document.addEventListener('click', (e) => {
     const target = e.target as Node;
     const clickedInsideMenu = allMenus.some((m) => m.contains(target));
     const clickedDockBtn = !!(target as HTMLElement).closest(
-        '#btn-settings, #btn-export, #btn-themes, #btn-hamburger',
+        '#btn-settings, #btn-export, #btn-themes',
     );
     if (!clickedInsideMenu && !clickedDockBtn) closeAllMenus();
 });
@@ -526,6 +507,7 @@ function buildRankingRow(
     avg?: number,
     posDiff?: number,
     countDiff?: number,
+    isNew?: boolean,
 ): HTMLLIElement {
     const li = document.createElement('li');
     li.className = 'ranking-row';
@@ -549,7 +531,12 @@ function buildRankingRow(
     nameTxt.textContent = name;
     nameEl.appendChild(nameTxt);
 
-    if (posDiff !== undefined && posDiff !== 0) {
+    if (isNew) {
+        const newEl = document.createElement('span');
+        newEl.className = 'ranking-new';
+        newEl.textContent = 'NEW';
+        nameEl.appendChild(newEl);
+    } else if (posDiff !== undefined && posDiff !== 0) {
         const trendEl = document.createElement('span');
         trendEl.className = `ranking-trend ${posDiff > 0 ? 'up' : 'down'}`;
         trendEl.textContent = posDiff > 0 ? '\u25b2' : '\u25bc';
@@ -656,12 +643,16 @@ function buildWeeklyRanking() {
         const currentRank = rank + 1;
         let posDiff: number | undefined;
         let countDiff: number | undefined;
+        let isNew: boolean | undefined;
         if (prevRankMap !== null && prevCountMap !== null) {
             const prevRank = prevRankMap.get(p.name);
             const prevCount = prevCountMap.get(p.name) ?? 0;
-            // Only show triangle if they had a rank before
-            posDiff =
-                prevRank !== undefined ? prevRank - currentRank : undefined;
+            if (prevRank === undefined) {
+                // Not in previous week's top 20 — new entry
+                isNew = true;
+            } else {
+                posDiff = prevRank - currentRank;
+            }
             countDiff = p.count - prevCount;
         }
         el.appendChild(
@@ -673,6 +664,7 @@ function buildWeeklyRanking() {
                 undefined,
                 posDiff,
                 countDiff,
+                isNew,
             ),
         );
     });
@@ -992,11 +984,6 @@ function exportPng(withTables = false) {
 function exportPdfWithOptions(withTables: boolean) {
     const tmp = buildExportCanvas(withTables);
     const dataUrl = tmp.toDataURL('image/png');
-    const win = window.open('', '_blank');
-    if (!win) {
-        showToast('Permita pop-ups para exportar o PDF.');
-        return;
-    }
     const html = `<!doctype html><html><head>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1013,8 +1000,18 @@ window.addEventListener('load',function(){
 });
 </script>
 </body></html>`;
-    win.document.write(html);
-    win.document.close();
+    // Use a Blob URL + anchor click to avoid popup blockers on mobile/Brave
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    // Revoke after enough time for the tab to load the content
+    setTimeout(() => URL.revokeObjectURL(url), 120_000);
 }
 
 // ── Help / Wiki Modal ──
@@ -1057,7 +1054,7 @@ function buildHelpBody() {
             `<ul class="help-list">
                 <li><strong>Top 10 Geral</strong> — os 10 participantes com mais mensagens no período; exibe o total e a média semanal (calculada apenas sobre as semanas em que a pessoa enviou mensagens).</li>
                 <li><strong>Top 20 por Semana</strong> — carrossel navegável pelas setas ‹ ›; exibe os 20 mais ativos em cada semana. Participantes sem mensagens naquela semana são omitidos.</li>
-                <li>A partir da segunda semana, cada linha mostra a variação de mensagens em relação à semana anterior (<em>+XX</em> verde ou <em>−XX</em> vermelho) e uma seta <strong>▲</strong> verde ou <strong>▼</strong> vermelha à direita do nome indicando subida ou descida de posição no ranking.</li>
+                <li>A partir da segunda semana, cada linha mostra a variação de mensagens em relação à semana anterior (<em>+XX</em> verde ou <em>−XX</em> vermelho) e uma seta <strong>▲</strong> verde ou <strong>▼</strong> vermelha à direita do nome indicando subida ou descida de posição no ranking. Participantes que não estavam no top 20 na semana anterior exibem um badge <strong>NEW</strong> laranja no lugar da seta.</li>
                 <li>As cores dos pontos do ranking acompanham o tema de cor ativo.</li>
                 <li>Na versão landscape, o botão de painel no cabeçalho oculta ou exibe o painel lateral; o estado é guardado no navegador.</li>
              </ul>`,

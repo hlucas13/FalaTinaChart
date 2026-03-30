@@ -147,6 +147,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 :focus:not(:focus-visible) {
@@ -2511,6 +2512,24 @@ html[data-accent='posdosol'][data-theme='dark'] {
     color: var(--text-tertiary);
 }
 
+.ranking-new {
+    font-size: 0.44rem;
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+    color: #7c2d12;
+    background: #fb923c;
+    padding: 1px 3px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+[data-theme='dark'] .ranking-new {
+    color: #431407;
+    background: #fdba74;
+}
+
 .toast {
     position: fixed;
     bottom: 96px;
@@ -2608,13 +2627,9 @@ html[data-accent='posdosol'][data-theme='dark'] {
         padding: 8px 10px 88px;
     }
 
-    /* show hamburger, hide landscape-only btn on portrait */
+    /* hide header buttons that are landscape-only (e.g. sidebar toggle) */
     .dock-landscape-btn {
         display: none;
-    }
-
-    .dock-hamburger-btn {
-        display: inline-flex;
     }
 }
 

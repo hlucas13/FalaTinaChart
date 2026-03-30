@@ -525,99 +525,16 @@
             </div>
         </div>
 
-        <!-- Hamburger Panel (portrait) — Temas, Exportar PNG, PDF -->
-        <div id="hamburger-panel" class="platform-menu hamburger-panel" inert>
-            <div class="glass-effect"></div>
-            <div class="glass-tint"></div>
-            <div class="glass-shine"></div>
-            <div class="hamburger-grid">
-                <button
-                    class="hamburger-item"
-                    data-delegates="btn-themes"
-                    type="button"
-                >
-                    <svg
-                        class="dock-icon"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
-                        <circle
-                            cx="17.5"
-                            cy="10.5"
-                            r=".5"
-                            fill="currentColor"
-                        />
-                        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
-                        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
-                        <path
-                            d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-                        />
-                    </svg>
-                    <span>Temas</span>
-                </button>
-                <button
-                    class="hamburger-item"
-                    data-delegates="btn-export-png"
-                    type="button"
-                >
-                    <svg
-                        class="dock-icon"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <circle cx="8.5" cy="8.5" r="1.5" />
-                        <polyline points="21 15 16 10 5 21" />
-                    </svg>
-                    <span>PNG</span>
-                </button>
-                <button
-                    class="hamburger-item"
-                    data-delegates="btn-export-pdf"
-                    type="button"
-                >
-                    <svg
-                        class="dock-icon"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <polyline points="6 9 6 2 18 2 18 9" />
-                        <path
-                            d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
-                        />
-                        <rect x="6" y="14" width="12" height="8" />
-                    </svg>
-                    <span>PDF</span>
-                </button>
-            </div>
-        </div>
-
         <!-- Floating Liquid Glass Dock -->
         <div class="glass-dock">
             <div class="glass-effect"></div>
             <div class="glass-tint"></div>
             <div class="glass-shine"></div>
             <div class="glass-content">
-                <!-- Exportar — landscape only, opens export submenu -->
+                <!-- Exportar — opens export submenu -->
                 <button
                     id="btn-export"
-                    class="dock-btn dock-landscape-btn has-menu"
+                    class="dock-btn has-menu"
                     title="Exportar gráfico"
                     aria-label="Exportar"
                 >
@@ -638,52 +555,10 @@
                     <span class="dock-label">Exportar</span>
                 </button>
 
-                <!-- Mais — portrait only (replaces landscape buttons) -->
-                <button
-                    id="btn-hamburger"
-                    class="dock-btn dock-hamburger-btn"
-                    aria-label="Mais"
-                    aria-expanded="false"
-                >
-                    <svg
-                        class="dock-icon"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-                        <circle
-                            cx="5"
-                            cy="12"
-                            r="1.5"
-                            fill="currentColor"
-                            stroke="none"
-                        />
-                        <circle
-                            cx="12"
-                            cy="12"
-                            r="1.5"
-                            fill="currentColor"
-                            stroke="none"
-                        />
-                        <circle
-                            cx="19"
-                            cy="12"
-                            r="1.5"
-                            fill="currentColor"
-                            stroke="none"
-                        />
-                    </svg>
-                    <span class="dock-label">Mais</span>
-                </button>
-
-                <!-- Temas — landscape only, opens colour theme picker -->
+                <!-- Temas — opens colour theme picker -->
                 <button
                     id="btn-themes"
-                    class="dock-btn dock-landscape-btn has-menu"
+                    class="dock-btn has-menu"
                     title="Temas de cor"
                     aria-label="Temas"
                 >

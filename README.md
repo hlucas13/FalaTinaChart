@@ -23,9 +23,9 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 - **Ajuda & Wiki** — painel integrado nas Configurações com instruções de uso
 - **Tecla ESC** — fecha qualquer menu aberto ou o painel de ajuda sem precisar clicar
 - **Notificação de exportação** — exibe uma confirmação breve após salvar a imagem PNG
-- **Tabelas de ranking** — painel lateral à direita com **Top 10 Geral** (total de mensagens + média semanal, considerando apenas semanas em que o participante enviou mensagens) e **Top 20 por Semana** em carrossel navegável com setas; o Top 20 mostra a variação de mensagens em relação à semana anterior e uma seta ▲/▼ verde/vermelha à direita do nome indicando subida ou descida de posição; cores dos pontos acompanham o tema de cor ativo
+- **Tabelas de ranking** — painel lateral à direita com **Top 10 Geral** (total de mensagens + média semanal, considerando apenas semanas em que o participante enviou mensagens) e **Top 20 por Semana** em carrossel navegável com setas; o Top 20 mostra a variação de mensagens em relação à semana anterior, uma seta ▲/▼ verde/vermelha indicando subida ou descida de posição, e um badge **NEW** laranja para participantes que não estavam no top 20 na semana anterior; cores dos pontos acompanham o tema de cor ativo
 - **Ocultar / mostrar ranking** — botão no cabeçalho da página (visível apenas em landscape) para colapsar e expandir o painel lateral de ranking com animação suave
-- **Responsivo** — funciona em telas verticais (portrait); botão "Mais" na dock agrupa as ações de tema e exportação; painel de ranking é empilhado abaixo do gráfico em portrait
+- **Responsivo** — funciona em telas verticais (portrait); painel de ranking é empilhado abaixo do gráfico em portrait
 - **Site estático** — funciona no GitHub Pages sem servidor; 100% CDN
 
 ---
@@ -34,9 +34,8 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 
 | Botão | Visibilidade | Ação |
 |-------|-------------|------|
-| **Exportar** | Landscape | Abre submenu com PNG e PDF; cada opção abre modal para escolher com ou sem tabelas |
-| **Temas** | Landscape | Abre seletor de 4 temas de cor |
-| **Mais** | Portrait | Hamburger com Temas + Exportar |
+| **Exportar** | Sempre | Abre submenu com PNG e PDF; cada opção abre modal para escolher com ou sem tabelas |
+| **Temas** | Sempre | Abre seletor de 4 temas de cor |
 | **Configurações** | Sempre | Modo escuro, vidro fosco, legenda, Ajuda |
 
 > **Botão de painel** — no cabeçalho da página (apenas landscape) há um botão de painel duplo que colapsa/expande o painel de ranking lateral com animação suave.

@@ -431,7 +431,6 @@
       var settingsMenu = document.getElementById("settings-menu");
       var exportMenu = document.getElementById("export-menu");
       var themesMenu = document.getElementById("themes-menu");
-      var hamburgerPanel = document.getElementById("hamburger-panel");
       var helpModal = document.getElementById("help-modal");
       var helpModalBackdrop = document.getElementById("help-modal-backdrop");
       var btnCloseHelp = document.getElementById("btn-close-help");
@@ -457,7 +456,6 @@
       var btnSettings = document.getElementById("btn-settings");
       var btnExport = document.getElementById("btn-export");
       var btnThemes = document.getElementById("btn-themes");
-      var btnHamburger = document.getElementById("btn-hamburger");
       var btnExportPng = document.getElementById("btn-export-png");
       var btnExportPdf = document.getElementById("btn-export-pdf");
       var btnHelp = document.getElementById("btn-help");
@@ -498,7 +496,7 @@
           }
         });
       }
-      var allMenus = [settingsMenu, exportMenu, themesMenu, hamburgerPanel];
+      var allMenus = [settingsMenu, exportMenu, themesMenu];
       function closeAllMenus() {
         for (const m of allMenus) {
           m.classList.remove("visible");
@@ -528,23 +526,11 @@
         e.stopPropagation();
         toggleMenu(themesMenu, !themesMenu.classList.contains("visible"));
       });
-      btnHamburger.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const open = !hamburgerPanel.classList.contains("visible");
-        toggleMenu(hamburgerPanel, open);
-        btnHamburger.setAttribute("aria-expanded", String(open));
-      });
-      hamburgerPanel.querySelectorAll("[data-delegates]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          closeAllMenus();
-          document.getElementById(btn.dataset.delegates ?? "")?.click();
-        });
-      });
       document.addEventListener("click", (e) => {
         const target = e.target;
         const clickedInsideMenu = allMenus.some((m) => m.contains(target));
         const clickedDockBtn = !!target.closest(
-          "#btn-settings, #btn-export, #btn-themes, #btn-hamburger"
+          "#btn-settings, #btn-export, #btn-themes"
         );
         if (!clickedInsideMenu && !clickedDockBtn) closeAllMenus();
       });
@@ -857,7 +843,7 @@
         const palette = ACCENT_THEMES[currentAccent].palette;
         return palette[participantIndex % palette.length];
       }
-      function buildRankingRow(pos, name, count, participantIndex, avg, posDiff, countDiff) {
+      function buildRankingRow(pos, name, count, participantIndex, avg, posDiff, countDiff, isNew) {
         const li = document.createElement("li");
         li.className = "ranking-row";
         const posEl = document.createElement("span");
@@ -875,7 +861,12 @@
         nameTxt.className = "ranking-name-text";
         nameTxt.textContent = name;
         nameEl.appendChild(nameTxt);
-        if (posDiff !== void 0 && posDiff !== 0) {
+        if (isNew) {
+          const newEl = document.createElement("span");
+          newEl.className = "ranking-new";
+          newEl.textContent = "NEW";
+          nameEl.appendChild(newEl);
+        } else if (posDiff !== void 0 && posDiff !== 0) {
           const trendEl = document.createElement("span");
           trendEl.className = `ranking-trend ${posDiff > 0 ? "up" : "down"}`;
           trendEl.textContent = posDiff > 0 ? "\u25B2" : "\u25BC";
@@ -970,10 +961,15 @@
           const currentRank = rank + 1;
           let posDiff;
           let countDiff;
+          let isNew;
           if (prevRankMap !== null && prevCountMap !== null) {
             const prevRank = prevRankMap.get(p.name);
             const prevCount = prevCountMap.get(p.name) ?? 0;
-            posDiff = prevRank !== void 0 ? prevRank - currentRank : void 0;
+            if (prevRank === void 0) {
+              isNew = true;
+            } else {
+              posDiff = prevRank - currentRank;
+            }
             countDiff = p.count - prevCount;
           }
           el.appendChild(
@@ -984,7 +980,8 @@
               p.idx,
               void 0,
               posDiff,
-              countDiff
+              countDiff,
+              isNew
             )
           );
         });
@@ -1238,11 +1235,6 @@
       function exportPdfWithOptions(withTables) {
         const tmp = buildExportCanvas(withTables);
         const dataUrl = tmp.toDataURL("image/png");
-        const win = window.open("", "_blank");
-        if (!win) {
-          showToast("Permita pop-ups para exportar o PDF.");
-          return;
-        }
         const html = `<!doctype html><html><head>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1259,8 +1251,16 @@ window.addEventListener('load',function(){
 });
 <\/script>
 </body></html>`;
-        win.document.write(html);
-        win.document.close();
+        const blob = new Blob([html], { type: "text/html" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 12e4);
       }
       function buildHelpBody() {
         const section = (icon, title, body) => `<div class="help-section">
@@ -1298,7 +1298,7 @@ window.addEventListener('load',function(){
             `<ul class="help-list">
                 <li><strong>Top 10 Geral</strong> \u2014 os 10 participantes com mais mensagens no per\xEDodo; exibe o total e a m\xE9dia semanal (calculada apenas sobre as semanas em que a pessoa enviou mensagens).</li>
                 <li><strong>Top 20 por Semana</strong> \u2014 carrossel naveg\xE1vel pelas setas \u2039 \u203A; exibe os 20 mais ativos em cada semana. Participantes sem mensagens naquela semana s\xE3o omitidos.</li>
-                <li>A partir da segunda semana, cada linha mostra a varia\xE7\xE3o de mensagens em rela\xE7\xE3o \xE0 semana anterior (<em>+XX</em> verde ou <em>\u2212XX</em> vermelho) e uma seta <strong>\u25B2</strong> verde ou <strong>\u25BC</strong> vermelha \xE0 direita do nome indicando subida ou descida de posi\xE7\xE3o no ranking.</li>
+                <li>A partir da segunda semana, cada linha mostra a varia\xE7\xE3o de mensagens em rela\xE7\xE3o \xE0 semana anterior (<em>+XX</em> verde ou <em>\u2212XX</em> vermelho) e uma seta <strong>\u25B2</strong> verde ou <strong>\u25BC</strong> vermelha \xE0 direita do nome indicando subida ou descida de posi\xE7\xE3o no ranking. Participantes que n\xE3o estavam no top 20 na semana anterior exibem um badge <strong>NEW</strong> laranja no lugar da seta.</li>
                 <li>As cores dos pontos do ranking acompanham o tema de cor ativo.</li>
                 <li>Na vers\xE3o landscape, o bot\xE3o de painel no cabe\xE7alho oculta ou exibe o painel lateral; o estado \xE9 guardado no navegador.</li>
              </ul>`
