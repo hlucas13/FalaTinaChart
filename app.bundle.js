@@ -36,22 +36,162 @@
         whatsapp: {
           name: "WhatsApp",
           dot: "#25d366",
-          descLight: "Verde \xB7 claro e escuro \xB7 padr\xE3o"
+          descLight: "Verde \xB7 claro e escuro \xB7 padr\xE3o",
+          // Neutral background → full hue spread, warm tones first
+          palette: [
+            "#f87171",
+            "#fb923c",
+            "#fbbf24",
+            "#a3e635",
+            "#4ade80",
+            "#34d399",
+            "#2dd4bf",
+            "#22d3ee",
+            "#60a5fa",
+            "#818cf8",
+            "#a78bfa",
+            "#c084fc",
+            "#e879f9",
+            "#f472b6",
+            "#fb7185",
+            "#ef4444",
+            "#f97316",
+            "#eab308",
+            "#84cc16",
+            "#22c55e",
+            "#10b981",
+            "#14b8a6",
+            "#06b6d4",
+            "#3b82f6",
+            "#6366f1",
+            "#8b5cf6",
+            "#a855f7",
+            "#d946ef",
+            "#ec4899",
+            "#f43f5e",
+            "#38bdf8",
+            "#facc15"
+          ]
         },
         oceano: {
           name: "Oceano",
           dot: "#0ea5e9",
-          descLight: "Azul \xB7 claro e escuro"
+          descLight: "Azul \xB7 claro e escuro",
+          // Blue background → warm + purple tones first, blues pushed to end
+          palette: [
+            "#f87171",
+            "#fb923c",
+            "#fbbf24",
+            "#a3e635",
+            "#a78bfa",
+            "#c084fc",
+            "#e879f9",
+            "#f472b6",
+            "#fb7185",
+            "#ef4444",
+            "#f97316",
+            "#eab308",
+            "#84cc16",
+            "#22c55e",
+            "#34d399",
+            "#10b981",
+            "#2dd4bf",
+            "#14b8a6",
+            "#d946ef",
+            "#ec4899",
+            "#f43f5e",
+            "#4ade80",
+            "#a855f7",
+            "#8b5cf6",
+            "#6366f1",
+            "#818cf8",
+            "#22d3ee",
+            "#06b6d4",
+            "#38bdf8",
+            "#60a5fa",
+            "#3b82f6",
+            "#facc15"
+          ]
         },
         uva: {
           name: "Uva",
           dot: "#8b5cf6",
-          descLight: "Roxo \xB7 claro e escuro"
+          descLight: "Roxo \xB7 claro e escuro",
+          // Purple background → warm + teal + blue tones first, purples pushed to end
+          palette: [
+            "#f87171",
+            "#fb923c",
+            "#fbbf24",
+            "#4ade80",
+            "#34d399",
+            "#2dd4bf",
+            "#22d3ee",
+            "#38bdf8",
+            "#60a5fa",
+            "#f472b6",
+            "#fb7185",
+            "#ef4444",
+            "#f97316",
+            "#eab308",
+            "#a3e635",
+            "#84cc16",
+            "#22c55e",
+            "#10b981",
+            "#14b8a6",
+            "#06b6d4",
+            "#3b82f6",
+            "#6366f1",
+            "#ec4899",
+            "#f43f5e",
+            "#facc15",
+            "#818cf8",
+            "#e879f9",
+            "#d946ef",
+            "#a855f7",
+            "#c084fc",
+            "#a78bfa",
+            "#8b5cf6"
+          ]
         },
         posdosol: {
           name: "P\xF4r do Sol",
           dot: "#f97316",
-          descLight: "Laranja \xB7 claro e escuro"
+          descLight: "Laranja \xB7 claro e escuro",
+          // Warm background → blues + greens + purples first, oranges/yellows pushed to end
+          palette: [
+            "#60a5fa",
+            "#38bdf8",
+            "#22d3ee",
+            "#2dd4bf",
+            "#4ade80",
+            "#34d399",
+            "#818cf8",
+            "#a78bfa",
+            "#c084fc",
+            "#a855f7",
+            "#8b5cf6",
+            "#6366f1",
+            "#e879f9",
+            "#d946ef",
+            "#f472b6",
+            "#ec4899",
+            "#fb7185",
+            "#f43f5e",
+            "#f87171",
+            "#ef4444",
+            "#a3e635",
+            "#84cc16",
+            "#22c55e",
+            "#10b981",
+            "#14b8a6",
+            "#06b6d4",
+            "#3b82f6",
+            "#facc15",
+            "#eab308",
+            "#fbbf24",
+            "#fb923c",
+            "#f97316"
+          ]
         }
       };
       THEME_NAMES = Object.keys(ACCENT_THEMES);
@@ -64,33 +204,33 @@
     "src/data.ts"() {
       WEEKS = ["W10", "W11", "W12"];
       PARTICIPANTS = [
-        { name: "Nay", color: "#f87171", data: [2392, 2883, 2101] },
-        { name: "Thay", color: "#8b5cf6", data: [283, 1666, 1853] },
-        { name: "Cleber", color: "#fb923c", data: [1033, 1301, 1719] },
-        { name: "Marc R.", color: "#fbbf24", data: [937, 1199, 974] },
-        { name: "Lucas", color: "#84cc16", data: [900, 1171, 769] },
-        { name: "Fernanda", color: "#10b981", data: [838, 972, 796] },
-        { name: "Domi", color: "#14b8a6", data: [730, 827, 512] },
-        { name: "Italo G.", color: "#22c55e", data: [884, 405, 711] },
-        { name: "Gabriel B.", color: "#34d399", data: [476, 440, 720] },
-        { name: "Ivan F.", color: "#6366f1", data: [486, 657, null] },
-        { name: "Lexi", color: "#2dd4bf", data: [null, 607, 289] },
-        { name: "Paolo P.", color: "#f43f5e", data: [412, 614, 349] },
-        { name: "Leticia M.", color: "#ef4444", data: [411, 542, 218] },
-        { name: "C", color: "#60a5fa", data: [null, 230, 509] },
-        { name: "Jaime T.", color: "#c084fc", data: [null, null, 405] },
-        { name: "Ana C.", color: "#eab308", data: [407, null, 309] },
-        { name: "Vitor V.", color: "#06b6d4", data: [591, null, null] },
-        { name: "Leonardo", color: "#3b82f6", data: [493, 443, 380] },
-        { name: "Beatriz A.", color: "#a855f7", data: [447, null, 170] },
-        { name: "Kari", color: "#ec4899", data: [434, 305, 247] },
-        { name: "Delboni", color: "#f97316", data: [409, 343, null] },
-        { name: "Helena", color: "#a3e635", data: [372, null, null] },
-        { name: "Claudio Z.", color: "#4ade80", data: [322, null, null] },
-        { name: "Andr\xE9", color: "#22d3ee", data: [null, 259, null] },
-        { name: "Camila", color: "#818cf8", data: [null, 213, 175] },
-        { name: "Juan", color: "#a78bfa", data: [null, 194, null] },
-        { name: "Jader T.", color: "#f472b6", data: [null, null, 166] }
+        { name: "Nay", data: [2392, 2883, 2101] },
+        { name: "Thay", data: [283, 1666, 1853] },
+        { name: "Cleber", data: [1033, 1301, 1719] },
+        { name: "Marc R.", data: [937, 1199, 974] },
+        { name: "Lucas", data: [900, 1171, 769] },
+        { name: "Fernanda", data: [838, 972, 796] },
+        { name: "Domi", data: [730, 827, 512] },
+        { name: "Italo G.", data: [884, 405, 711] },
+        { name: "Gabriel B.", data: [476, 440, 720] },
+        { name: "Ivan F.", data: [486, 657, null] },
+        { name: "Lexi", data: [null, 607, 289] },
+        { name: "Paolo P.", data: [412, 614, 349] },
+        { name: "Leticia M.", data: [411, 542, 218] },
+        { name: "C", data: [null, 230, 509] },
+        { name: "Jaime T.", data: [null, null, 405] },
+        { name: "Ana C.", data: [407, null, 309] },
+        { name: "Vitor V.", data: [591, null, null] },
+        { name: "Leonardo", data: [493, 443, 380] },
+        { name: "Beatriz A.", data: [447, null, 170] },
+        { name: "Kari", data: [434, 305, 247] },
+        { name: "Delboni", data: [409, 343, null] },
+        { name: "Helena", data: [372, null, null] },
+        { name: "Claudio Z.", data: [322, null, null] },
+        { name: "Andr\xE9", data: [null, 259, null] },
+        { name: "Camila", data: [null, 213, 175] },
+        { name: "Juan", data: [null, 194, null] },
+        { name: "Jader T.", data: [null, null, 166] }
       ];
     }
   });
@@ -296,6 +436,24 @@
       var helpModalBackdrop = document.getElementById("help-modal-backdrop");
       var btnCloseHelp = document.getElementById("btn-close-help");
       var helpBody = document.getElementById("help-body");
+      var exportChoiceModal = document.getElementById("export-choice-modal");
+      var exportChoiceBackdrop = document.getElementById("export-choice-backdrop");
+      var btnCloseExportChoice = document.getElementById(
+        "btn-close-export-choice"
+      );
+      var btnChoiceWithTables = document.getElementById("btn-choice-with-tables");
+      var btnChoiceWithoutTables = document.getElementById(
+        "btn-choice-without-tables"
+      );
+      var exportChoiceTitleText = document.getElementById(
+        "export-choice-title-text"
+      );
+      var exportChoiceWithDesc = document.getElementById(
+        "export-choice-with-desc"
+      );
+      var exportChoiceWithoutDesc = document.getElementById(
+        "export-choice-without-desc"
+      );
       var btnSettings = document.getElementById("btn-settings");
       var btnExport = document.getElementById("btn-export");
       var btnThemes = document.getElementById("btn-themes");
@@ -392,7 +550,9 @@
       });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-          if (helpModal.classList.contains("visible")) closeHelpModal();
+          if (exportChoiceModal.classList.contains("visible"))
+            closeExportChoiceModal();
+          else if (helpModal.classList.contains("visible")) closeHelpModal();
           else closeAllMenus();
         }
       });
@@ -419,12 +579,28 @@
       toggleGlass.addEventListener("click", () => {
         applyGlassStyle(document.documentElement.dataset.glass !== "frosted", true);
       });
+      var currentAccent = "whatsapp";
       function applyAccentTheme(name, persist = true) {
+        currentAccent = name;
         document.documentElement.dataset.accent = name;
         if (persist) localStorage.setItem("falatina-accent", name);
         document.querySelectorAll(".chart-theme-row").forEach((row) => {
           row.classList.toggle("active", row.dataset.accentTheme === name);
         });
+        if (chart) {
+          const palette = ACCENT_THEMES[name].palette;
+          chart.data.datasets.forEach((ds, i) => {
+            const color = palette[i % palette.length];
+            ds.borderColor = color;
+            ds.backgroundColor = color + "22";
+            ds.pointBackgroundColor = color;
+            ds.pointBorderColor = color;
+            ds.pointHoverBackgroundColor = color;
+          });
+          chart.update();
+          buildLegend();
+          updateRankingColors();
+        }
       }
       function buildThemeRows() {
         const container = document.getElementById("themes-menu-rows");
@@ -488,18 +664,19 @@
       }
       var chart = null;
       var highlightedIndex = null;
+      var pinFocusIndex = null;
       var hiddenDatasets = /* @__PURE__ */ new Set();
       var dimPlugin = {
         id: "dimPlugin",
         beforeDatasetDraw(ch, args) {
-          if (highlightedIndex === null) return;
-          if (args.index === highlightedIndex) return;
+          if (pinFocusIndex === null) return;
+          if (args.index === pinFocusIndex) return;
           ch.ctx.save();
-          ch.ctx.globalAlpha = 0.07;
+          ch.ctx.globalAlpha = 0.12;
         },
         afterDatasetDraw(ch, args) {
-          if (highlightedIndex === null) return;
-          if (args.index === highlightedIndex) return;
+          if (pinFocusIndex === null) return;
+          if (args.index === pinFocusIndex) return;
           ch.ctx.restore();
         }
       };
@@ -510,21 +687,25 @@
         };
       }
       function buildDatasets() {
-        return PARTICIPANTS.map((p) => ({
-          label: p.name,
-          data: p.data,
-          borderColor: p.color,
-          backgroundColor: p.color + "22",
-          borderWidth: 2.5,
-          pointRadius: 4,
-          pointHoverRadius: 9,
-          pointBackgroundColor: p.color,
-          pointBorderColor: p.color,
-          pointHoverBorderWidth: 2.5,
-          pointHoverBorderColor: "#ffffff",
-          tension: 0.35,
-          spanGaps: false
-        }));
+        const palette = ACCENT_THEMES[currentAccent].palette;
+        return PARTICIPANTS.map((p, i) => {
+          const color = palette[i % palette.length];
+          return {
+            label: p.name,
+            data: p.data,
+            borderColor: color,
+            backgroundColor: color + "22",
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointHoverRadius: 9,
+            pointBackgroundColor: color,
+            pointBorderColor: color,
+            pointHoverBorderWidth: 2.5,
+            pointHoverBorderColor: "#ffffff",
+            tension: 0.35,
+            spanGaps: false
+          };
+        });
       }
       function buildChart() {
         const canvas = document.getElementById("chart");
@@ -553,19 +734,37 @@
                 external: externalTooltipHandler
               }
             },
-            onHover: (_evt, elements) => {
+            onHover: (evt, elements) => {
+              if (evt.native?.target) {
+                evt.native.target.style.cursor = elements.length > 0 ? "pointer" : "default";
+              }
               if (elements.length > 0) {
                 const idx = elements[0].datasetIndex;
                 if (highlightedIndex !== idx) {
                   highlightedIndex = idx;
-                  chart?.update("none");
                   syncLegendHover(idx);
                 }
               } else if (highlightedIndex !== null) {
                 highlightedIndex = null;
-                chart?.update("none");
-                syncLegendHover(null);
+                syncLegendHover(pinFocusIndex);
               }
+            },
+            onClick: (evt, _elements, ch) => {
+              if (!evt.native) return;
+              const hits = ch.getElementsAtEventForMode(
+                evt.native,
+                "nearest",
+                { intersect: true },
+                false
+              );
+              if (hits.length > 0) {
+                const idx = hits[0].datasetIndex;
+                pinFocusIndex = pinFocusIndex === idx ? null : idx;
+              } else {
+                pinFocusIndex = null;
+              }
+              ch.update("none");
+              syncLegendHover(pinFocusIndex);
             },
             scales: {
               x: {
@@ -648,17 +847,209 @@
           btn.addEventListener("mouseleave", () => {
             highlightedIndex = null;
             chart.update("none");
-            syncLegendHover(null);
+            syncLegendHover(pinFocusIndex);
           });
           legend.appendChild(btn);
         });
       }
-      function exportPng() {
+      var carouselWeekIndex = 0;
+      function getParticipantColor(participantIndex) {
+        const palette = ACCENT_THEMES[currentAccent].palette;
+        return palette[participantIndex % palette.length];
+      }
+      function buildRankingRow(pos, name, count, participantIndex, avg, posDiff, countDiff) {
+        const li = document.createElement("li");
+        li.className = "ranking-row";
+        const posEl = document.createElement("span");
+        posEl.className = "ranking-pos";
+        if (pos === 1) posEl.classList.add("gold");
+        else if (pos === 2) posEl.classList.add("silver");
+        else if (pos === 3) posEl.classList.add("bronze");
+        posEl.textContent = String(pos);
+        const dot = document.createElement("span");
+        dot.className = "ranking-dot";
+        dot.style.background = getParticipantColor(participantIndex);
+        const nameEl = document.createElement("span");
+        nameEl.className = "ranking-name";
+        const nameTxt = document.createElement("span");
+        nameTxt.className = "ranking-name-text";
+        nameTxt.textContent = name;
+        nameEl.appendChild(nameTxt);
+        if (posDiff !== void 0 && posDiff !== 0) {
+          const trendEl = document.createElement("span");
+          trendEl.className = `ranking-trend ${posDiff > 0 ? "up" : "down"}`;
+          trendEl.textContent = posDiff > 0 ? "\u25B2" : "\u25BC";
+          nameEl.appendChild(trendEl);
+        }
+        const statsEl = document.createElement("span");
+        statsEl.className = "ranking-stats";
+        const countEl = document.createElement("span");
+        countEl.className = "ranking-count";
+        countEl.textContent = count.toLocaleString("pt-BR");
+        statsEl.appendChild(countEl);
+        if (avg !== void 0) {
+          const avgEl = document.createElement("span");
+          avgEl.className = "ranking-avg";
+          avgEl.textContent = `~${Math.round(avg).toLocaleString("pt-BR")}/sem`;
+          statsEl.appendChild(avgEl);
+        }
+        if (countDiff !== void 0) {
+          const diffEl = document.createElement("span");
+          if (countDiff > 0) {
+            diffEl.className = "ranking-diff positive";
+            diffEl.textContent = `+${countDiff.toLocaleString("pt-BR")}`;
+          } else if (countDiff < 0) {
+            diffEl.className = "ranking-diff negative";
+            diffEl.textContent = countDiff.toLocaleString("pt-BR");
+          } else {
+            diffEl.className = "ranking-diff neutral";
+            diffEl.textContent = "=";
+          }
+          statsEl.appendChild(diffEl);
+        }
+        li.appendChild(posEl);
+        li.appendChild(dot);
+        li.appendChild(nameEl);
+        li.appendChild(statsEl);
+        return li;
+      }
+      function buildAlltimeRanking() {
+        const el = document.getElementById("ranking-alltime");
+        el.innerHTML = "";
+        const totals = PARTICIPANTS.map((p, i) => {
+          const weeks = p.data.filter((v) => v !== null).length;
+          const total = p.data.reduce((s, v) => s + (v ?? 0), 0);
+          return {
+            name: p.name,
+            idx: i,
+            total,
+            avg: weeks > 0 ? total / weeks : 0
+          };
+        });
+        totals.sort((a, b) => b.total - a.total);
+        totals.slice(0, 10).forEach((p, rank) => {
+          el.appendChild(
+            buildRankingRow(rank + 1, p.name, p.total, p.idx, p.avg)
+          );
+        });
+      }
+      function buildWeeklyRanking() {
+        const el = document.getElementById("ranking-weekly");
+        const labelEl = document.getElementById("carousel-label");
+        const prevBtn = document.getElementById(
+          "carousel-prev"
+        );
+        const nextBtn = document.getElementById(
+          "carousel-next"
+        );
+        el.innerHTML = "";
+        labelEl.textContent = WEEKS[carouselWeekIndex];
+        prevBtn.disabled = carouselWeekIndex === 0;
+        nextBtn.disabled = carouselWeekIndex === WEEKS.length - 1;
+        const weekData = PARTICIPANTS.map((p, i) => ({
+          name: p.name,
+          idx: i,
+          count: p.data[carouselWeekIndex] ?? 0
+        })).filter((p) => p.count > 0);
+        weekData.sort((a, b) => b.count - a.count);
+        let prevRankMap = null;
+        let prevCountMap = null;
+        if (carouselWeekIndex > 0) {
+          const prevData = PARTICIPANTS.map((p, i) => ({
+            name: p.name,
+            idx: i,
+            count: p.data[carouselWeekIndex - 1] ?? 0
+          })).filter((p) => p.count > 0);
+          prevData.sort((a, b) => b.count - a.count);
+          prevRankMap = new Map(
+            prevData.slice(0, 20).map((p, rank) => [p.name, rank + 1])
+          );
+          prevCountMap = new Map(prevData.map((p) => [p.name, p.count]));
+        }
+        weekData.slice(0, 20).forEach((p, rank) => {
+          const currentRank = rank + 1;
+          let posDiff;
+          let countDiff;
+          if (prevRankMap !== null && prevCountMap !== null) {
+            const prevRank = prevRankMap.get(p.name);
+            const prevCount = prevCountMap.get(p.name) ?? 0;
+            posDiff = prevRank !== void 0 ? prevRank - currentRank : void 0;
+            countDiff = p.count - prevCount;
+          }
+          el.appendChild(
+            buildRankingRow(
+              currentRank,
+              p.name,
+              p.count,
+              p.idx,
+              void 0,
+              posDiff,
+              countDiff
+            )
+          );
+        });
+      }
+      function updateRankingColors() {
+        buildAlltimeRanking();
+        buildWeeklyRanking();
+      }
+      document.getElementById("carousel-prev").addEventListener("click", () => {
+        if (carouselWeekIndex > 0) {
+          carouselWeekIndex--;
+          buildWeeklyRanking();
+        }
+      });
+      document.getElementById("carousel-next").addEventListener("click", () => {
+        if (carouselWeekIndex < WEEKS.length - 1) {
+          carouselWeekIndex++;
+          buildWeeklyRanking();
+        }
+      });
+      var exportChoiceType = null;
+      function openExportChoiceModal(type) {
         closeAllMenus();
+        exportChoiceType = type;
+        if (type === "png") {
+          exportChoiceTitleText.textContent = "Exportar como PNG";
+          exportChoiceWithDesc.textContent = "Gr\xE1fico + legenda + Top 10 e Top 20";
+          exportChoiceWithoutDesc.textContent = "S\xF3 gr\xE1fico e legenda";
+        } else {
+          exportChoiceTitleText.textContent = "Exportar como PDF";
+          exportChoiceWithDesc.textContent = "Gr\xE1fico + ranking lateral \xB7 landscape";
+          exportChoiceWithoutDesc.textContent = "S\xF3 gr\xE1fico \xB7 landscape";
+        }
+        exportChoiceModal.classList.add("visible");
+        exportChoiceModal.removeAttribute("inert");
+      }
+      function closeExportChoiceModal() {
+        exportChoiceModal.classList.remove("visible");
+        exportChoiceModal.setAttribute("inert", "");
+      }
+      btnExportPng.addEventListener("click", () => openExportChoiceModal("png"));
+      btnExportPdf.addEventListener("click", () => openExportChoiceModal("pdf"));
+      btnCloseExportChoice.addEventListener("click", closeExportChoiceModal);
+      exportChoiceBackdrop.addEventListener("click", closeExportChoiceModal);
+      btnChoiceWithTables.addEventListener("click", () => {
+        const type = exportChoiceType;
+        closeExportChoiceModal();
+        if (type === "png") exportPng(true);
+        else exportPdfWithOptions(true);
+      });
+      btnChoiceWithoutTables.addEventListener("click", () => {
+        const type = exportChoiceType;
+        closeExportChoiceModal();
+        if (type === "png") exportPng(false);
+        else exportPdfWithOptions(false);
+      });
+      function buildExportCanvas(withTables) {
         const canvas = document.getElementById("chart");
         const dark = document.documentElement.dataset.theme === "dark";
         const bg = dark ? "#0d1117" : "#f0f2f8";
         const fg = dark ? "#e6edf3" : "#111827";
+        const fgMuted = dark ? "#8b949e" : "#6b7280";
+        const borderLine = dark ? "#30363d" : "#e5e7eb";
+        const positiveColor = "#22c55e";
+        const negativeColor = "#ef4444";
         const datasets = chart?.data?.datasets ?? [];
         const DPR = window.devicePixelRatio || 1;
         const PAD = Math.round(20 * DPR);
@@ -666,16 +1057,23 @@
         const ITEM_H = Math.round(28 * DPR);
         const DOT_R = Math.round(7 * DPR);
         const FONT_SZ = Math.round(13 * DPR);
+        const ROW_H = Math.round(24 * DPR);
         const legendRows = Math.ceil(datasets.length / COLS);
         const legendH = legendRows * ITEM_H + PAD * 2;
+        const SEP_H = Math.round(28 * DPR);
+        const LABEL_H = Math.round(28 * DPR);
+        const CHEADER_H = Math.round(20 * DPR);
+        const TOP10 = 10;
+        const TOP20 = 20;
+        const rankingBodyH = TOP20 * ROW_H;
+        const rankingH = withTables ? SEP_H + LABEL_H + CHEADER_H + rankingBodyH + Math.round(16 * DPR) : 0;
         const tmp = document.createElement("canvas");
         tmp.width = canvas.width;
-        tmp.height = canvas.height + legendH;
+        tmp.height = canvas.height + legendH + rankingH;
         const ctx = tmp.getContext("2d");
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, tmp.width, tmp.height);
         ctx.drawImage(canvas, 0, 0);
-        ctx.font = `500 ${FONT_SZ}px Inter, -apple-system, sans-serif`;
         ctx.textBaseline = "middle";
         const colW = (canvas.width - PAD * 2) / COLS;
         datasets.forEach((ds, i) => {
@@ -687,21 +1085,183 @@
           ctx.arc(x + DOT_R, y, DOT_R, 0, Math.PI * 2);
           ctx.fillStyle = ds.borderColor;
           ctx.fill();
+          ctx.font = `500 ${FONT_SZ}px Inter, -apple-system, sans-serif`;
           ctx.fillStyle = fg;
           ctx.fillText(ds.label, x + DOT_R * 2 + Math.round(6 * DPR), y);
         });
+        if (!withTables) return tmp;
+        const HALF_W = Math.floor((tmp.width - PAD * 3) / 2);
+        const L_START = PAD;
+        const L_END = PAD + HALF_W;
+        const R_START = PAD * 2 + HALF_W;
+        const R_END = tmp.width - PAD;
+        let curY = canvas.height + legendH;
+        ctx.strokeStyle = borderLine;
+        ctx.lineWidth = Math.round(1 * DPR);
+        ctx.beginPath();
+        ctx.moveTo(PAD, curY + Math.round(12 * DPR));
+        ctx.lineTo(tmp.width - PAD, curY + Math.round(12 * DPR));
+        ctx.stroke();
+        curY += SEP_H;
+        const vsepX = PAD + HALF_W + Math.round(PAD / 2);
+        ctx.beginPath();
+        ctx.moveTo(vsepX, curY);
+        ctx.lineTo(vsepX, curY + LABEL_H + CHEADER_H + rankingBodyH);
+        ctx.stroke();
+        const DOT_OFF = Math.round(6 * DPR);
+        const RANK_OFF = Math.round(20 * DPR);
+        const NAME_OFF = Math.round(46 * DPR);
+        const totals = PARTICIPANTS.map((p, idx) => {
+          const weeks = p.data.filter((v) => v !== null).length;
+          const total = p.data.reduce((s, v) => s + (v ?? 0), 0);
+          return { name: p.name, idx, total, avg: weeks > 0 ? total / weeks : 0 };
+        }).sort((a, b) => b.total - a.total);
+        let leftY = curY;
+        ctx.fillStyle = fg;
+        ctx.font = `600 ${Math.round(13 * DPR)}px Inter, -apple-system, sans-serif`;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "left";
+        ctx.fillText("Top 10 Geral", L_START, leftY + LABEL_H / 2);
+        leftY += LABEL_H;
+        ctx.fillStyle = fgMuted;
+        ctx.font = `500 ${Math.round(11 * DPR)}px Inter, -apple-system, sans-serif`;
+        ctx.textAlign = "left";
+        ctx.fillText("Nome", L_START + NAME_OFF, leftY);
+        ctx.textAlign = "right";
+        ctx.fillText("Total", L_END - Math.round(58 * DPR), leftY);
+        ctx.fillText("~sem", L_END, leftY);
+        leftY += CHEADER_H;
+        totals.slice(0, TOP10).forEach((p, rank) => {
+          if (rank % 2 === 0) {
+            ctx.fillStyle = dark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
+            ctx.fillRect(L_START, leftY - ROW_H * 0.45, HALF_W, ROW_H);
+          }
+          ctx.beginPath();
+          ctx.arc(L_START + DOT_OFF, leftY, Math.round(5 * DPR), 0, Math.PI * 2);
+          ctx.fillStyle = datasets[p.idx]?.borderColor ?? "#888";
+          ctx.fill();
+          ctx.font = `500 ${Math.round(12 * DPR)}px Inter, -apple-system, sans-serif`;
+          ctx.textBaseline = "middle";
+          ctx.textAlign = "left";
+          ctx.fillStyle = fgMuted;
+          ctx.fillText(String(rank + 1), L_START + RANK_OFF, leftY);
+          ctx.fillStyle = fg;
+          ctx.fillText(p.name, L_START + NAME_OFF, leftY);
+          ctx.textAlign = "right";
+          ctx.fillStyle = fg;
+          ctx.fillText(
+            p.total.toLocaleString("pt-BR"),
+            L_END - Math.round(58 * DPR),
+            leftY
+          );
+          ctx.fillStyle = fgMuted;
+          ctx.fillText(p.avg.toFixed(0), L_END, leftY);
+          leftY += ROW_H;
+        });
+        const weekIdx = carouselWeekIndex;
+        const weekLabel = WEEKS[weekIdx];
+        const weekData = PARTICIPANTS.map((p, idx) => ({
+          name: p.name,
+          idx,
+          count: p.data[weekIdx] ?? 0
+        })).filter((p) => p.count > 0).sort((a, b) => b.count - a.count);
+        let prevCountMap = null;
+        if (weekIdx > 0) {
+          const prevData = PARTICIPANTS.map((p) => ({
+            name: p.name,
+            count: p.data[weekIdx - 1] ?? 0
+          })).filter((p) => p.count > 0);
+          prevCountMap = new Map(prevData.map((p) => [p.name, p.count]));
+        }
+        let rightY = curY;
+        ctx.fillStyle = fg;
+        ctx.font = `600 ${Math.round(13 * DPR)}px Inter, -apple-system, sans-serif`;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "left";
+        ctx.fillText(`Top 20 \xB7 ${weekLabel}`, R_START, rightY + LABEL_H / 2);
+        rightY += LABEL_H;
+        ctx.fillStyle = fgMuted;
+        ctx.font = `500 ${Math.round(11 * DPR)}px Inter, -apple-system, sans-serif`;
+        ctx.textAlign = "left";
+        ctx.fillText("Nome", R_START + NAME_OFF, rightY);
+        ctx.textAlign = "right";
+        ctx.fillText("Msgs", R_END - Math.round(50 * DPR), rightY);
+        if (prevCountMap) ctx.fillText("+/\u2212", R_END, rightY);
+        rightY += CHEADER_H;
+        weekData.slice(0, TOP20).forEach((p, rank) => {
+          if (rank % 2 === 0) {
+            ctx.fillStyle = dark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
+            ctx.fillRect(R_START, rightY - ROW_H * 0.45, HALF_W, ROW_H);
+          }
+          ctx.beginPath();
+          ctx.arc(R_START + DOT_OFF, rightY, Math.round(5 * DPR), 0, Math.PI * 2);
+          ctx.fillStyle = datasets[p.idx]?.borderColor ?? "#888";
+          ctx.fill();
+          ctx.font = `500 ${Math.round(12 * DPR)}px Inter, -apple-system, sans-serif`;
+          ctx.textBaseline = "middle";
+          ctx.textAlign = "left";
+          ctx.fillStyle = fgMuted;
+          ctx.fillText(String(rank + 1), R_START + RANK_OFF, rightY);
+          ctx.fillStyle = fg;
+          ctx.fillText(p.name, R_START + NAME_OFF, rightY);
+          ctx.textAlign = "right";
+          ctx.fillStyle = fg;
+          ctx.fillText(
+            p.count.toLocaleString("pt-BR"),
+            R_END - Math.round(50 * DPR),
+            rightY
+          );
+          if (prevCountMap) {
+            const prev = prevCountMap.get(p.name) ?? 0;
+            const diff = p.count - prev;
+            ctx.fillStyle = diff > 0 ? positiveColor : diff < 0 ? negativeColor : fgMuted;
+            ctx.fillText(
+              diff > 0 ? `+${diff}` : String(diff || "="),
+              R_END,
+              rightY
+            );
+          }
+          rightY += ROW_H;
+        });
+        return tmp;
+      }
+      function exportPng(withTables = false) {
+        const tmp = buildExportCanvas(withTables);
         const link = document.createElement("a");
         link.download = "fala-tina.png";
         link.href = tmp.toDataURL("image/png");
         link.click();
-        showToast("Imagem PNG exportada!");
+        showToast(
+          withTables ? "PNG com tabelas exportado!" : "Imagem PNG exportada!"
+        );
       }
-      function exportPdf() {
-        closeAllMenus();
-        globalThis.print();
+      function exportPdfWithOptions(withTables) {
+        const tmp = buildExportCanvas(withTables);
+        const dataUrl = tmp.toDataURL("image/png");
+        const win = window.open("", "_blank");
+        if (!win) {
+          showToast("Permita pop-ups para exportar o PDF.");
+          return;
+        }
+        const html = `<!doctype html><html><head>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+@page{size:auto;margin:0}
+html,body{width:100%;background:#fff}
+img{display:block;width:100%;height:auto}
+</style>
+</head><body>
+<img src="${dataUrl}">
+<script>
+window.addEventListener('load',function(){
+  window.addEventListener('afterprint',function(){ window.close(); });
+  window.print();
+});
+<\/script>
+</body></html>`;
+        win.document.write(html);
+        win.document.close();
       }
-      btnExportPng.addEventListener("click", exportPng);
-      btnExportPdf.addEventListener("click", exportPdf);
       function buildHelpBody() {
         const section = (icon, title, body) => `<div class="help-section">
             <div class="help-section-hd">
@@ -712,6 +1272,7 @@
         </div>`;
         const iChart = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`;
         const iLegend = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1.2" fill="currentColor" stroke="none"/><circle cx="3" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="3" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>`;
+        const iRanking = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>`;
         const iExport = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>`;
         const iThemes = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>`;
         const iSettings = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>`;
@@ -719,7 +1280,8 @@
           section(
             iChart,
             "Gr\xE1fico interativo",
-            `<p class="help-p">Passe o mouse sobre qualquer linha para destac\xE1-la e ver o nome do participante e a quantidade de mensagens daquela semana. O foco sai quando o cursor \xE9 retirado.</p>`
+            `<p class="help-p">Passe o mouse sobre o gr\xE1fico para ver o tooltip do participante mais pr\xF3ximo do cursor \u2014 nome e quantidade de mensagens naquela semana. Todas as linhas permanecem vis\xEDveis durante o hover.</p>
+             <p class="help-p" style="margin-top:4px"><strong>Clique num ponto</strong> para fixar o foco naquela linha: as demais ficam semi-transparentes. Clique novamente no mesmo ponto ou numa \xE1rea vazia do gr\xE1fico para remover o foco e restaurar todas as linhas.</p>`
           ),
           section(
             iLegend,
@@ -731,11 +1293,25 @@
              </ul>`
           ),
           section(
+            iRanking,
+            "Ranking de participantes",
+            `<ul class="help-list">
+                <li><strong>Top 10 Geral</strong> \u2014 os 10 participantes com mais mensagens no per\xEDodo; exibe o total e a m\xE9dia semanal (calculada apenas sobre as semanas em que a pessoa enviou mensagens).</li>
+                <li><strong>Top 20 por Semana</strong> \u2014 carrossel naveg\xE1vel pelas setas \u2039 \u203A; exibe os 20 mais ativos em cada semana. Participantes sem mensagens naquela semana s\xE3o omitidos.</li>
+                <li>A partir da segunda semana, cada linha mostra a varia\xE7\xE3o de mensagens em rela\xE7\xE3o \xE0 semana anterior (<em>+XX</em> verde ou <em>\u2212XX</em> vermelho) e uma seta <strong>\u25B2</strong> verde ou <strong>\u25BC</strong> vermelha \xE0 direita do nome indicando subida ou descida de posi\xE7\xE3o no ranking.</li>
+                <li>As cores dos pontos do ranking acompanham o tema de cor ativo.</li>
+                <li>Na vers\xE3o landscape, o bot\xE3o de painel no cabe\xE7alho oculta ou exibe o painel lateral; o estado \xE9 guardado no navegador.</li>
+             </ul>`
+          ),
+          section(
             iExport,
             "Exportar",
             `<ul class="help-list">
-                <li><strong>Salvar como PNG</strong> \u2014 imagem com gr\xE1fico e legenda de participantes abaixo, fundo do tema atual. Uma confirma\xE7\xE3o aparece brevemente ap\xF3s a exporta\xE7\xE3o.</li>
-                <li><strong>Imprimir / PDF</strong> \u2014 caixa de di\xE1logo de impress\xE3o nativa do navegador com legenda inclusa abaixo do gr\xE1fico.</li>
+                <li><strong>Salvar como PNG</strong> e <strong>Imprimir / PDF</strong> \u2014 ao clicar em qualquer um dos bot\xF5es de exporta\xE7\xE3o, abre-se um seletor para escolher:</li>
+                <li style="margin-left:16px"><strong>Com tabelas</strong> \u2014 inclui o gr\xE1fico, legenda e as duas tabelas de ranking lado a lado.</li>
+                <li style="margin-left:16px"><strong>Sem tabelas</strong> \u2014 inclui apenas o gr\xE1fico e a legenda de participantes.</li>
+                <li>A exporta\xE7\xE3o usa o fundo e as cores do tema atual. Uma confirma\xE7\xE3o aparece brevemente ap\xF3s guardar o PNG.</li>
+                <li>O PDF abre a caixa de di\xE1logo de impress\xE3o nativa do navegador e a tab fecha-se automaticamente ao concluir ou cancelar.</li>
              </ul>`
           ),
           section(
@@ -747,7 +1323,7 @@
                 <li><strong>Uva</strong> \u2014 roxo \xB7 fundo lil\xE1s</li>
                 <li><strong>P\xF4r do Sol</strong> \u2014 laranja \xB7 fundo quente</li>
              </ul>
-             <p class="help-p" style="margin-top:4px">Cada tema altera o fundo do site, as cores de destaque e os tons das linhas do gr\xE1fico. Funciona nos modos claro e escuro.</p>`
+             <p class="help-p" style="margin-top:4px">Cada tema altera o fundo do site, as cores de destaque e a <strong>paleta completa de cores das linhas</strong> do gr\xE1fico \u2014 cada paleta tem 32 cores distintas, ordenadas para contrastar bem com o fundo do tema. Funciona nos modos claro e escuro.</p>`
           ),
           section(
             iSettings,
@@ -756,7 +1332,7 @@
                 <li><strong>Modo escuro</strong> \u2014 alterna entre tema claro e escuro; segue o sistema por padr\xE3o.</li>
                 <li><strong>Vidro fosco</strong> \u2014 ativa o efeito de desfoque atr\xE1s dos pain\xE9is e da dock.</li>
                 <li><strong>Mostrar legenda</strong> \u2014 exibe ou oculta a barra de participantes abaixo do gr\xE1fico.</li>
-                <li><strong>Prefer\xEAncias salvas</strong> \u2014 todas as configura\xE7\xF5es s\xE3o guardadas no navegador e restauradas automaticamente na pr\xF3xima visita.</li>
+                <li><strong>Prefer\xEAncias salvas</strong> \u2014 modo escuro, vidro fosco, paleta de cor, visibilidade da legenda e estado do painel de ranking s\xE3o guardados no navegador e restaurados automaticamente na pr\xF3xima visita.</li>
              </ul>
              <p class="help-p" style="margin-top:4px">Pressione <strong>ESC</strong> para fechar qualquer menu ou este painel de ajuda.</p>`
           )
@@ -778,6 +1354,28 @@
       });
       helpModalBackdrop.addEventListener("click", closeHelpModal);
       btnCloseHelp.addEventListener("click", closeHelpModal);
+      var SIDEBAR_KEY = "falatina-sidebar";
+      var btnToggleSidebar = document.getElementById(
+        "btn-toggle-sidebar"
+      );
+      var rankingCol = document.querySelector(".ranking-col");
+      function applySidebarState(hidden, persist) {
+        if (!rankingCol || !btnToggleSidebar) return;
+        rankingCol.classList.toggle("hidden", hidden);
+        const label = hidden ? "Mostrar tabelas" : "Ocultar tabelas";
+        btnToggleSidebar.setAttribute("aria-pressed", String(!hidden));
+        btnToggleSidebar.setAttribute("aria-label", label);
+        btnToggleSidebar.title = label;
+        if (persist)
+          localStorage.setItem(SIDEBAR_KEY, hidden ? "hidden" : "visible");
+      }
+      applySidebarState(localStorage.getItem(SIDEBAR_KEY) === "hidden", false);
+      if (btnToggleSidebar && rankingCol) {
+        btnToggleSidebar.addEventListener("click", () => {
+          const isHidden = rankingCol.classList.contains("hidden");
+          applySidebarState(!isHidden, true);
+        });
+      }
       var toastTimer;
       function showToast(msg) {
         toast.textContent = msg;
@@ -818,6 +1416,8 @@
       );
       chart = buildChart();
       buildLegend();
+      buildAlltimeRanking();
+      buildWeeklyRanking();
       applyLegendVisibility(
         savedLegend === null ? true : savedLegend !== "0",
         false,

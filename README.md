@@ -9,20 +9,23 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 ## Funcionalidades
 
 - **Gráfico de linhas interativo** — cada participante é uma linha colorida; passe o mouse sobre qualquer ponto para ver um tooltip com vidro líquido exibindo o nome do participante e a quantidade de mensagens naquela semana
-- **Destaque de linha** — ao passar o mouse sobre uma linha, as demais ficam esmaecidas; ao sair, todas voltam ao normal
+- **Tooltip por participante** — ao passar o mouse sobre o gráfico, é exibido o tooltip apenas da linha mais próxima do cursor; todas as linhas permanecem visíveis
+- **Foco por clique** — clique num ponto do gráfico para fixar o destaque naquela linha (as demais ficam semi-transparentes); clique novamente no mesmo ponto ou numa área vazia para voltar a exibir todas com opacidade plena
 - **Legenda clicável** — clique em uma pílula da legenda para mostrar ou ocultar um participante; passe o mouse para destacá-lo isoladamente
 - **Tooltip com Liquid Glass** — o container do tooltip usa o mesmo efeito de vidro físico da dock e dos painéis
-- **Exportar PNG** — gera uma imagem com o gráfico e a legenda de participantes abaixo, usando o fundo do tema atual
-- **Exportar / Imprimir PDF** — abre a caixa de diálogo de impressão nativa do navegador com a legenda inclusa abaixo do gráfico
-- **Temas de cor** — 4 paletas de destaque (WhatsApp verde, Oceano azul, Uva roxo, Pôr do Sol laranja), cada uma com variante clara e escura
+- **Exportar PNG** — abre um seletor para escolher exportar com ou sem as tabelas de ranking; gera uma imagem PNG com o gráfico, legenda e (opcionalmente) as tabelas, usando o fundo do tema atual
+- **Exportar / Imprimir PDF** — abre o mesmo seletor com ou sem tabelas; gera o PDF via renderização em canvas (idêntica ao PNG) e abre a caixa de diálogo de impressão nativa do navegador; a tab aberta fecha-se automaticamente ao fechar o preview
+- **Temas de cor** — 4 paletas de destaque (WhatsApp verde, Oceano azul, Uva roxo, Pôr do Sol laranja), cada uma com 32 cores distintas para as linhas do gráfico ordenadas para contrastar com o fundo do tema, em modo claro e escuro
 - **Modo escuro / claro** — alternância completa com transição animada Liquid Glass; segue automaticamente a preferência do sistema
 - **Vidro fosco** — ativa o efeito de desfoque atrás dos painéis e da dock (Liquid Glass frosted)
 - **Mostrar / ocultar legenda** — toggle nas Configurações para esconder a barra de participantes e expandir o gráfico
-- **Preferências salvas** — modo escuro, vidro fosco, paleta de cor e visibilidade da legenda são guardados no navegador (`localStorage`) e restaurados automaticamente na próxima visita
+- **Preferências salvas** — modo escuro, vidro fosco, paleta de cor, visibilidade da legenda e estado do painel de ranking são guardados no navegador (`localStorage`) e restaurados automaticamente na próxima visita
 - **Ajuda & Wiki** — painel integrado nas Configurações com instruções de uso
 - **Tecla ESC** — fecha qualquer menu aberto ou o painel de ajuda sem precisar clicar
 - **Notificação de exportação** — exibe uma confirmação breve após salvar a imagem PNG
-- **Responsivo** — funciona em telas verticais (portrait); botão "Mais" na dock agrupa as ações de tema e exportação
+- **Tabelas de ranking** — painel lateral à direita com **Top 10 Geral** (total de mensagens + média semanal, considerando apenas semanas em que o participante enviou mensagens) e **Top 20 por Semana** em carrossel navegável com setas; o Top 20 mostra a variação de mensagens em relação à semana anterior e uma seta ▲/▼ verde/vermelha à direita do nome indicando subida ou descida de posição; cores dos pontos acompanham o tema de cor ativo
+- **Ocultar / mostrar ranking** — botão no cabeçalho da página (visível apenas em landscape) para colapsar e expandir o painel lateral de ranking com animação suave
+- **Responsivo** — funciona em telas verticais (portrait); botão "Mais" na dock agrupa as ações de tema e exportação; painel de ranking é empilhado abaixo do gráfico em portrait
 - **Site estático** — funciona no GitHub Pages sem servidor; 100% CDN
 
 ---
@@ -31,10 +34,12 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 
 | Botão | Visibilidade | Ação |
 |-------|-------------|------|
-| **Exportar** | Landscape | Abre submenu com PNG e PDF |
+| **Exportar** | Landscape | Abre submenu com PNG e PDF; cada opção abre modal para escolher com ou sem tabelas |
 | **Temas** | Landscape | Abre seletor de 4 temas de cor |
 | **Mais** | Portrait | Hamburger com Temas + Exportar |
 | **Configurações** | Sempre | Modo escuro, vidro fosco, legenda, Ajuda |
+
+> **Botão de painel** — no cabeçalho da página (apenas landscape) há um botão de painel duplo que colapsa/expande o painel de ranking lateral com animação suave.
 
 ---
 
@@ -50,13 +55,13 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 3. Para cada participante em `PARTICIPANTS`, adicione o novo valor no array `data` (mesma posição que `WEEKS`). Use `null` se o participante não enviou mensagens nessa semana:
 
    ```typescript
-   { name: 'Nay', color: '#f87171', data: [2392, 2883, 2101, 1980] },
+   { name: 'Nay', data: [2392, 2883, 2101, 1980] },
    ```
 
 4. Para adicionar um novo participante, acrescente uma nova entrada:
 
    ```typescript
-   { name: 'Novo Participante', color: '#hexcor', data: [null, null, null, 300] },
+   { name: 'Novo Participante', data: [null, null, null, 300] },
    ```
 
 5. Execute `node build.js` para gerar o bundle:
