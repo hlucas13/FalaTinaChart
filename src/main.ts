@@ -752,6 +752,7 @@ document.getElementById('carousel-next')!.addEventListener('click', () => {
 function switchView(view: ViewType) {
     if (currentView === view) return;
     currentView = view;
+    document.body.classList.toggle('view-proportion', view === 'proportion');
 
     // Determine base metric for rankings
     if (view === 'messages') currentMetric = 'messages';
@@ -1016,75 +1017,74 @@ function buildHeatmap() {
         return t > 0.5 ? '#fff' : '#111';
     }
 
-    const table = document.createElement('table');
-    table.className = 'heatmap-table';
+    // ── CSS Grid layout (replaces <table> for proper sticky glass header) ──
+    const grid = document.createElement('div');
+    grid.className = 'heatmap-grid';
+    grid.style.setProperty('--week-cols', String(WEEKS.length));
 
-    // Header
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    const thName = document.createElement('th');
+    // Glass sticky header
+    const glassHeader = document.createElement('div');
+    glassHeader.className = 'heatmap-glass-header';
+    const thName = document.createElement('div');
+    thName.className = 'heatmap-th heatmap-th-name';
     thName.textContent = 'Participante';
-    headerRow.appendChild(thName);
+    glassHeader.appendChild(thName);
     WEEKS.forEach((w) => {
-        const th = document.createElement('th');
+        const th = document.createElement('div');
+        th.className = 'heatmap-th';
         th.textContent = w;
-        headerRow.appendChild(th);
+        glassHeader.appendChild(th);
     });
-    const thAvg = document.createElement('th');
+    const thAvg = document.createElement('div');
+    thAvg.className = 'heatmap-th';
     thAvg.textContent = 'Média';
-    headerRow.appendChild(thAvg);
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
+    glassHeader.appendChild(thAvg);
+    grid.appendChild(glassHeader);
 
-    // Body
-    const tbody = document.createElement('tbody');
+    // Body rows — each cell is a direct child of the grid
     rows.forEach((r) => {
-        const tr = document.createElement('tr');
-        const tdName = document.createElement('td');
-        tdName.className = 'heatmap-name';
-        tdName.textContent = r.name;
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'heatmap-name';
+        nameDiv.textContent = r.name;
         const dot = document.createElement('span');
         dot.className = 'ranking-dot';
         dot.style.background = getParticipantColor(r.idx);
         dot.style.display = 'inline-block';
         dot.style.marginRight = '6px';
         dot.style.verticalAlign = 'middle';
-        tdName.prepend(dot);
-        tr.appendChild(tdName);
+        nameDiv.prepend(dot);
+        grid.appendChild(nameDiv);
 
         r.cells.forEach((val) => {
-            const td = document.createElement('td');
-            td.className = 'heatmap-cell';
+            const cell = document.createElement('div');
+            cell.className = 'heatmap-cell';
             if (val === null) {
-                td.classList.add('no-data');
-                td.textContent = '—';
+                cell.classList.add('no-data');
+                cell.textContent = '—';
             } else {
-                td.style.background = heatColor(val);
-                td.style.color = textColor(val);
-                td.textContent = val.toFixed(1);
-                td.title = `${val.toFixed(1)} msg/h`;
+                cell.style.background = heatColor(val);
+                cell.style.color = textColor(val);
+                cell.textContent = val.toFixed(1);
+                cell.title = `${val.toFixed(1)} msg/h`;
             }
-            tr.appendChild(td);
+            grid.appendChild(cell);
         });
 
         // Average cell
-        const tdAvg = document.createElement('td');
-        tdAvg.className = 'heatmap-cell';
+        const avgCell = document.createElement('div');
+        avgCell.className = 'heatmap-cell';
         if (r.avg > 0) {
-            tdAvg.style.background = heatColor(r.avg);
-            tdAvg.style.color = textColor(r.avg);
-            tdAvg.textContent = r.avg.toFixed(1);
-            tdAvg.style.fontWeight = '700';
+            avgCell.style.background = heatColor(r.avg);
+            avgCell.style.color = textColor(r.avg);
+            avgCell.textContent = r.avg.toFixed(1);
+            avgCell.style.fontWeight = '700';
         } else {
-            tdAvg.classList.add('no-data');
-            tdAvg.textContent = '—';
+            avgCell.classList.add('no-data');
+            avgCell.textContent = '—';
         }
-        tr.appendChild(tdAvg);
-
-        tbody.appendChild(tr);
+        grid.appendChild(avgCell);
     });
-    table.appendChild(tbody);
-    container.appendChild(table);
+    container.appendChild(grid);
 }
 
 // ── Proportion chart: active hours out of 168h per week ──
@@ -1108,6 +1108,9 @@ function buildProportionChart() {
 
     const MAX_HOURS = 168;
 
+    const portrait = window.innerHeight > window.innerWidth;
+    const barThickness = portrait ? 12 : undefined;
+
     const activeDs = {
         label: 'Horas ativas',
         data: data.map((d) => d.avg),
@@ -1118,6 +1121,7 @@ function buildProportionChart() {
         borderWidth: 1.5,
         borderRadius: 4,
         borderSkipped: false,
+        ...(barThickness !== undefined && { barThickness }),
     };
 
     const inactiveDs = {
@@ -1128,6 +1132,7 @@ function buildProportionChart() {
         borderWidth: 1,
         borderRadius: 4,
         borderSkipped: false,
+        ...(barThickness !== undefined && { barThickness }),
     };
 
     return new Chart(canvas, {
@@ -1182,7 +1187,11 @@ function buildProportionChart() {
                     grid: { display: false },
                     ticks: {
                         color: c.text,
-                        font: { family: 'Inter, sans-serif', size: 11 },
+                        font: {
+                            family: 'Inter, sans-serif',
+                            size: portrait ? 10 : 11,
+                        },
+                        autoSkip: false,
                     },
                     border: { color: 'transparent' },
                 },

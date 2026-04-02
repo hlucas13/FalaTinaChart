@@ -504,33 +504,115 @@ main {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     padding: 4px 0;
 }
 
-.heatmap-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 3px;
+/* ── CSS Grid layout ── */
+.heatmap-grid {
+    display: grid;
+    grid-template-columns:
+        minmax(95px, max-content)
+        repeat(var(--week-cols), minmax(44px, 1fr))
+        minmax(50px, 1fr);
+    gap: 3px;
+    padding-bottom: 4px;
     font-family: 'Inter', sans-serif;
 }
 
-.heatmap-table th {
+/* ── Glass sticky header ── */
+.heatmap-glass-header {
+    grid-column: 1 / -1;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: subgrid;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1px;
+
+    /* Glass directly on the sticky element — only approach that works
+       reliably for backdrop-filter over scrolling content */
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur))
+        saturate(var(--glass-saturation));
+    background: var(--glass-surface-bg);
+    transition:
+        background 0.4s cubic-bezier(1, 0, 0.4, 1),
+        box-shadow 0.4s cubic-bezier(1, 0, 0.4, 1);
+
+    /* Glass border + inset reflexes (same language as the dock) */
+    box-shadow:
+        0px 1px 4px 0px
+            color-mix(
+                in srgb,
+                var(--glass-c-dark) calc(var(--glass-reflex-dark) * 8%),
+                transparent
+            ),
+        0px 4px 14px 0px
+            color-mix(
+                in srgb,
+                var(--glass-c-dark) calc(var(--glass-reflex-dark) * 8%),
+                transparent
+            ),
+        inset 0 0 0 1px
+            color-mix(
+                in srgb,
+                var(--glass-c-light) calc(var(--glass-reflex-light) * 10%),
+                transparent
+            ),
+        inset 1.8px 3px 0px -2px
+            color-mix(
+                in srgb,
+                var(--glass-c-light) calc(var(--glass-reflex-light) * 90%),
+                transparent
+            ),
+        inset -1px -1px 1px 1px
+            color-mix(
+                in srgb,
+                var(--glass-c-light) calc(var(--glass-reflex-light) * 18%),
+                transparent
+            ),
+        inset 0 -2px 3px -1px
+            color-mix(
+                in srgb,
+                var(--glass-c-dark) calc(var(--glass-reflex-dark) * 14%),
+                transparent
+            );
+}
+
+@supports (backdrop-filter: url(#x)) {
+    .heatmap-glass-header {
+        backdrop-filter: url(#glass-distortion-panel) blur(var(--glass-blur))
+            saturate(var(--glass-saturation));
+    }
+}
+
+/* Frosted glass overrides for heatmap header */
+[data-glass='frosted'] .heatmap-glass-header {
+    outline: 1.5px solid rgba(255, 255, 255, 0.22);
+    outline-offset: -1px;
+}
+
+[data-theme='dark'][data-glass='frosted'] .heatmap-glass-header {
+    outline-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Header text cells */
+.heatmap-th {
+    position: relative;
+    z-index: 3;
     font-size: 0.68rem;
     font-weight: 600;
     color: var(--text-tertiary);
-    padding: 4px 8px;
+    padding: 8px 8px;
     text-align: center;
     white-space: nowrap;
-    position: sticky;
-    top: 0;
-    background: var(--bg-app);
-    z-index: 1;
 }
 
-.heatmap-table th:first-child {
+.heatmap-th-name {
     text-align: left;
-    min-width: 90px;
 }
 
 .heatmap-name {
@@ -2586,6 +2668,11 @@ html[data-accent='posdosol'][data-theme='dark'] {
         padding: 16px 16px 4px;
     }
 
+    /* Proportion chart needs more vertical room to show all participant bars */
+    .view-proportion .chart-wrapper {
+        height: max(65vh, 480px);
+    }
+
     .metric-tabs {
         padding: 8px 16px 0;
     }
@@ -2624,6 +2711,10 @@ html[data-accent='posdosol'][data-theme='dark'] {
     .chart-wrapper {
         height: 44vh;
         padding: 12px 10px 4px;
+    }
+
+    .view-proportion .chart-wrapper {
+        height: max(65vh, 480px);
     }
 
     .legend-area {

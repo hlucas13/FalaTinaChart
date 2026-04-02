@@ -446,7 +446,9 @@
       var btnExport = document.getElementById("btn-export");
       var btnThemes = document.getElementById("btn-themes");
       var btnExportWithTables = document.getElementById("btn-export-with-tables");
-      var btnExportWithoutTables = document.getElementById("btn-export-without-tables");
+      var btnExportWithoutTables = document.getElementById(
+        "btn-export-without-tables"
+      );
       var btnHelp = document.getElementById("btn-help");
       var toggleTheme = document.getElementById(
         "toggle-theme"
@@ -1053,6 +1055,7 @@
       function switchView(view) {
         if (currentView === view) return;
         currentView = view;
+        document.body.classList.toggle("view-proportion", view === "proportion");
         if (view === "messages") currentMetric = "messages";
         else if (view === "hours" || view === "proportion") currentMetric = "hours";
         if (view === "scatter" || view === "heatmap") currentMetric = "messages";
@@ -1275,67 +1278,66 @@
           if (dark) return t > 0.6 ? "#000" : "#fff";
           return t > 0.5 ? "#fff" : "#111";
         }
-        const table = document.createElement("table");
-        table.className = "heatmap-table";
-        const thead = document.createElement("thead");
-        const headerRow = document.createElement("tr");
-        const thName = document.createElement("th");
+        const grid = document.createElement("div");
+        grid.className = "heatmap-grid";
+        grid.style.setProperty("--week-cols", String(WEEKS.length));
+        const glassHeader = document.createElement("div");
+        glassHeader.className = "heatmap-glass-header";
+        const thName = document.createElement("div");
+        thName.className = "heatmap-th heatmap-th-name";
         thName.textContent = "Participante";
-        headerRow.appendChild(thName);
+        glassHeader.appendChild(thName);
         WEEKS.forEach((w) => {
-          const th = document.createElement("th");
+          const th = document.createElement("div");
+          th.className = "heatmap-th";
           th.textContent = w;
-          headerRow.appendChild(th);
+          glassHeader.appendChild(th);
         });
-        const thAvg = document.createElement("th");
+        const thAvg = document.createElement("div");
+        thAvg.className = "heatmap-th";
         thAvg.textContent = "M\xE9dia";
-        headerRow.appendChild(thAvg);
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
-        const tbody = document.createElement("tbody");
+        glassHeader.appendChild(thAvg);
+        grid.appendChild(glassHeader);
         rows.forEach((r) => {
-          const tr = document.createElement("tr");
-          const tdName = document.createElement("td");
-          tdName.className = "heatmap-name";
-          tdName.textContent = r.name;
+          const nameDiv = document.createElement("div");
+          nameDiv.className = "heatmap-name";
+          nameDiv.textContent = r.name;
           const dot = document.createElement("span");
           dot.className = "ranking-dot";
           dot.style.background = getParticipantColor(r.idx);
           dot.style.display = "inline-block";
           dot.style.marginRight = "6px";
           dot.style.verticalAlign = "middle";
-          tdName.prepend(dot);
-          tr.appendChild(tdName);
+          nameDiv.prepend(dot);
+          grid.appendChild(nameDiv);
           r.cells.forEach((val) => {
-            const td = document.createElement("td");
-            td.className = "heatmap-cell";
+            const cell = document.createElement("div");
+            cell.className = "heatmap-cell";
             if (val === null) {
-              td.classList.add("no-data");
-              td.textContent = "\u2014";
+              cell.classList.add("no-data");
+              cell.textContent = "\u2014";
             } else {
-              td.style.background = heatColor(val);
-              td.style.color = textColor(val);
-              td.textContent = val.toFixed(1);
-              td.title = `${val.toFixed(1)} msg/h`;
+              cell.style.background = heatColor(val);
+              cell.style.color = textColor(val);
+              cell.textContent = val.toFixed(1);
+              cell.title = `${val.toFixed(1)} msg/h`;
             }
-            tr.appendChild(td);
+            grid.appendChild(cell);
           });
-          const tdAvg = document.createElement("td");
-          tdAvg.className = "heatmap-cell";
+          const avgCell = document.createElement("div");
+          avgCell.className = "heatmap-cell";
           if (r.avg > 0) {
-            tdAvg.style.background = heatColor(r.avg);
-            tdAvg.style.color = textColor(r.avg);
-            tdAvg.textContent = r.avg.toFixed(1);
-            tdAvg.style.fontWeight = "700";
+            avgCell.style.background = heatColor(r.avg);
+            avgCell.style.color = textColor(r.avg);
+            avgCell.textContent = r.avg.toFixed(1);
+            avgCell.style.fontWeight = "700";
           } else {
-            tdAvg.classList.add("no-data");
-            tdAvg.textContent = "\u2014";
+            avgCell.classList.add("no-data");
+            avgCell.textContent = "\u2014";
           }
-          tr.appendChild(tdAvg);
-          tbody.appendChild(tr);
+          grid.appendChild(avgCell);
         });
-        table.appendChild(tbody);
-        container.appendChild(table);
+        container.appendChild(grid);
       }
       function buildProportionChart() {
         const canvas = document.getElementById("chart");
@@ -1348,6 +1350,8 @@
           return { name: p.name, idx, avg };
         }).filter((d) => d.avg > 0).sort((a, b) => b.avg - a.avg);
         const MAX_HOURS = 168;
+        const portrait = window.innerHeight > window.innerWidth;
+        const barThickness = portrait ? 12 : void 0;
         const activeDs = {
           label: "Horas ativas",
           data: data.map((d) => d.avg),
@@ -1357,7 +1361,8 @@
           borderColor: data.map((d) => palette[d.idx % palette.length]),
           borderWidth: 1.5,
           borderRadius: 4,
-          borderSkipped: false
+          borderSkipped: false,
+          ...barThickness !== void 0 && { barThickness }
         };
         const inactiveDs = {
           label: "Horas inativas",
@@ -1366,7 +1371,8 @@
           borderColor: dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
           borderWidth: 1,
           borderRadius: 4,
-          borderSkipped: false
+          borderSkipped: false,
+          ...barThickness !== void 0 && { barThickness }
         };
         return new Chart(canvas, {
           type: "bar",
@@ -1420,7 +1426,11 @@
                 grid: { display: false },
                 ticks: {
                   color: c.text,
-                  font: { family: "Inter, sans-serif", size: 11 }
+                  font: {
+                    family: "Inter, sans-serif",
+                    size: portrait ? 10 : 11
+                  },
+                  autoSkip: false
                 },
                 border: { color: "transparent" }
               }
