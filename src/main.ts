@@ -7,6 +7,16 @@ import {
 import { PARTICIPANTS, WEEKS } from './data';
 import './glass-distortion';
 
+// ── Metric switcher ──
+type MetricType = 'messages' | 'hours';
+type ViewType = 'messages' | 'hours' | 'scatter' | 'heatmap' | 'proportion';
+let currentMetric: MetricType = 'messages';
+let currentView: ViewType = 'messages';
+
+function getMetricValues(p: (typeof PARTICIPANTS)[number]): (number | null)[] {
+    return currentMetric === 'messages' ? p.data : p.hours;
+}
+
 // ── SVG icon paths ──
 const SVG_MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
 const SVG_SUN =
@@ -21,30 +31,13 @@ const helpModalBackdrop = document.getElementById('help-modal-backdrop')!;
 const btnCloseHelp = document.getElementById('btn-close-help')!;
 const helpBody = document.getElementById('help-body')!;
 
-const exportChoiceModal = document.getElementById('export-choice-modal')!;
-const exportChoiceBackdrop = document.getElementById('export-choice-backdrop')!;
-const btnCloseExportChoice = document.getElementById(
-    'btn-close-export-choice',
-)!;
-const btnChoiceWithTables = document.getElementById('btn-choice-with-tables')!;
-const btnChoiceWithoutTables = document.getElementById(
-    'btn-choice-without-tables',
-)!;
-const exportChoiceTitleText = document.getElementById(
-    'export-choice-title-text',
-)!;
-const exportChoiceWithDesc = document.getElementById(
-    'export-choice-with-desc',
-)!;
-const exportChoiceWithoutDesc = document.getElementById(
-    'export-choice-without-desc',
-)!;
-
 const btnSettings = document.getElementById('btn-settings')!;
 const btnExport = document.getElementById('btn-export')!;
 const btnThemes = document.getElementById('btn-themes')!;
-const btnExportPng = document.getElementById('btn-export-png')!;
-const btnExportPdf = document.getElementById('btn-export-pdf')!;
+const btnExportWithTables = document.getElementById('btn-export-with-tables')!;
+const btnExportWithoutTables = document.getElementById(
+    'btn-export-without-tables',
+)!;
 const btnHelp = document.getElementById('btn-help')!;
 
 const toggleTheme = document.getElementById(
@@ -137,9 +130,7 @@ document.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        if (exportChoiceModal.classList.contains('visible'))
-            closeExportChoiceModal();
-        else if (helpModal.classList.contains('visible')) closeHelpModal();
+        if (helpModal.classList.contains('visible')) closeHelpModal();
         else closeAllMenus();
     }
 });
@@ -188,16 +179,34 @@ function applyAccentTheme(name: AccentThemeName, persist = true) {
     // Update live chart colours if chart is already built
     if (chart) {
         const palette = ACCENT_THEMES[name].palette;
-        chart.data.datasets.forEach((ds: any, i: number) => {
-            const color = palette[i % palette.length];
-            ds.borderColor = color;
-            ds.backgroundColor = color + '22';
-            ds.pointBackgroundColor = color;
-            ds.pointBorderColor = color;
-            ds.pointHoverBackgroundColor = color;
-        });
-        chart.update();
+        if (currentView === 'messages' || currentView === 'hours') {
+            chart.data.datasets.forEach((ds: any, i: number) => {
+                const color = palette[i % palette.length];
+                ds.borderColor = color;
+                ds.backgroundColor = color + '22';
+                ds.pointBackgroundColor = color;
+                ds.pointBorderColor = color;
+                ds.pointHoverBackgroundColor = color;
+            });
+        } else if (currentView === 'scatter') {
+            chart.data.datasets.forEach((ds: any, i: number) => {
+                const color = palette[i % palette.length];
+                ds.backgroundColor = color;
+                ds.borderColor = color;
+            });
+        }
+        // proportion chart needs full rebuild for per-bar colours
+        if (currentView === 'proportion') {
+            chart.destroy();
+            chart = buildProportionChart();
+        } else {
+            chart.update();
+        }
         buildLegend();
+        updateRankingColors();
+    }
+    if (currentView === 'heatmap') {
+        buildHeatmap();
         updateRankingColors();
     }
 }
@@ -259,7 +268,17 @@ function externalTooltipHandler({ chart, tooltip }: any) {
     const dp = tooltip.dataPoints[0];
     const color: string = (dp.dataset as any).borderColor;
     chartTooltipTitle.innerHTML = `<span class="chart-tooltip-dot" style="background:${color}"></span>${dp.dataset.label as string}`;
-    chartTooltipBody.textContent = `${dp.label as string}: ${(dp.parsed.y as number).toLocaleString('pt-BR')} mensagens`;
+
+    const pIdx = dp.datasetIndex as number;
+    const wIdx = dp.dataIndex as number;
+    const unit = currentMetric === 'messages' ? 'mensagens' : 'horas';
+    let bodyText = `${dp.label as string}: ${(dp.parsed.y as number).toLocaleString('pt-BR')} ${unit}`;
+    const msgs = PARTICIPANTS[pIdx].data[wIdx];
+    const hrs = PARTICIPANTS[pIdx].hours[wIdx];
+    if (msgs !== null && hrs !== null && hrs > 0) {
+        bodyText += ` · ${(msgs / hrs).toFixed(1)} msg/h`;
+    }
+    chartTooltipBody.textContent = bodyText;
 
     const rect = chart.canvas.getBoundingClientRect();
     let x = rect.left + (tooltip.caretX as number) + 16;
@@ -315,7 +334,7 @@ function buildDatasets() {
         const color = palette[i % palette.length];
         return {
             label: p.name,
-            data: p.data,
+            data: getMetricValues(p),
             borderColor: color,
             backgroundColor: color + '22',
             borderWidth: 2.5,
@@ -424,11 +443,18 @@ function updateChartTheme(dark: boolean) {
     if (!chart) return;
     const c = getChartColors(dark);
     const opts = chart.options;
-    opts.scales.x.grid.color = c.grid;
-    opts.scales.x.ticks.color = c.text;
-    opts.scales.y.grid.color = c.grid;
-    opts.scales.y.ticks.color = c.text;
+    if (opts.scales?.x) {
+        opts.scales.x.grid.color = c.grid;
+        opts.scales.x.ticks.color = c.text;
+        if (opts.scales.x.title) opts.scales.x.title.color = c.text;
+    }
+    if (opts.scales?.y) {
+        opts.scales.y.grid.color = c.grid;
+        opts.scales.y.ticks.color = c.text;
+        if (opts.scales.y.title) opts.scales.y.title.color = c.text;
+    }
     chart.update('none');
+    if (currentView === 'heatmap') buildHeatmap();
 }
 
 // ── Legend ──
@@ -441,10 +467,13 @@ function syncLegendHover(idx: number | null) {
 
 function buildLegend() {
     const legend = document.getElementById('legend');
-    if (!legend || !chart) return;
+    if (!legend) return;
     legend.innerHTML = '';
+    if (!chart) return;
 
     chart.data.datasets.forEach((ds: any, i: number) => {
+        // Skip invisible datasets like "Horas inativas" in proportion view
+        if (currentView === 'proportion' && i > 0) return;
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'legend-item';
@@ -508,6 +537,7 @@ function buildRankingRow(
     posDiff?: number,
     countDiff?: number,
     isNew?: boolean,
+    msgPerH?: number | null,
 ): HTMLLIElement {
     const li = document.createElement('li');
     li.className = 'ranking-row';
@@ -554,7 +584,8 @@ function buildRankingRow(
     if (avg !== undefined) {
         const avgEl = document.createElement('span');
         avgEl.className = 'ranking-avg';
-        avgEl.textContent = `~${Math.round(avg).toLocaleString('pt-BR')}/sem`;
+        const avgUnit = currentMetric === 'messages' ? '/sem' : 'h/sem';
+        avgEl.textContent = `~${Math.round(avg).toLocaleString('pt-BR')}${avgUnit}`;
         statsEl.appendChild(avgEl);
     }
 
@@ -573,6 +604,13 @@ function buildRankingRow(
         statsEl.appendChild(diffEl);
     }
 
+    if (msgPerH !== undefined && msgPerH !== null) {
+        const mphEl = document.createElement('span');
+        mphEl.className = 'ranking-msgh';
+        mphEl.textContent = `${msgPerH.toFixed(1)} msg/h`;
+        statsEl.appendChild(mphEl);
+    }
+
     li.appendChild(posEl);
     li.appendChild(dot);
     li.appendChild(nameEl);
@@ -584,19 +622,35 @@ function buildAlltimeRanking() {
     const el = document.getElementById('ranking-alltime')!;
     el.innerHTML = '';
     const totals = PARTICIPANTS.map((p, i) => {
-        const weeks = p.data.filter((v) => v !== null).length;
-        const total = p.data.reduce<number>((s, v) => s + (v ?? 0), 0);
+        const values = getMetricValues(p);
+        const weeks = values.filter((v) => v !== null).length;
+        const total = values.reduce<number>((s, v) => s + (v ?? 0), 0);
+        const totalMsgs = p.data.reduce<number>((s, v) => s + (v ?? 0), 0);
+        const totalHours = p.hours.reduce<number>((s, v) => s + (v ?? 0), 0);
+        const msgPerH =
+            totalHours > 0 && totalMsgs > 0 ? totalMsgs / totalHours : null;
         return {
             name: p.name,
             idx: i,
             total,
             avg: weeks > 0 ? total / weeks : 0,
+            msgPerH,
         };
     });
     totals.sort((a, b) => b.total - a.total);
     totals.slice(0, 10).forEach((p, rank) => {
         el.appendChild(
-            buildRankingRow(rank + 1, p.name, p.total, p.idx, p.avg),
+            buildRankingRow(
+                rank + 1,
+                p.name,
+                p.total,
+                p.idx,
+                p.avg,
+                undefined,
+                undefined,
+                undefined,
+                p.msgPerH,
+            ),
         );
     });
 }
@@ -619,7 +673,7 @@ function buildWeeklyRanking() {
     const weekData = PARTICIPANTS.map((p, i) => ({
         name: p.name,
         idx: i,
-        count: p.data[carouselWeekIndex] ?? 0,
+        count: getMetricValues(p)[carouselWeekIndex] ?? 0,
     })).filter((p) => p.count > 0);
     weekData.sort((a, b) => b.count - a.count);
 
@@ -630,7 +684,7 @@ function buildWeeklyRanking() {
         const prevData = PARTICIPANTS.map((p, i) => ({
             name: p.name,
             idx: i,
-            count: p.data[carouselWeekIndex - 1] ?? 0,
+            count: getMetricValues(p)[carouselWeekIndex - 1] ?? 0,
         })).filter((p) => p.count > 0);
         prevData.sort((a, b) => b.count - a.count);
         prevRankMap = new Map(
@@ -655,6 +709,10 @@ function buildWeeklyRanking() {
             }
             countDiff = p.count - prevCount;
         }
+        const msgs = PARTICIPANTS[p.idx].data[carouselWeekIndex];
+        const hrs = PARTICIPANTS[p.idx].hours[carouselWeekIndex];
+        const msgPerH =
+            msgs !== null && hrs !== null && hrs > 0 ? msgs / hrs : null;
         el.appendChild(
             buildRankingRow(
                 currentRank,
@@ -665,6 +723,7 @@ function buildWeeklyRanking() {
                 posDiff,
                 countDiff,
                 isNew,
+                msgPerH,
             ),
         );
     });
@@ -689,50 +748,458 @@ document.getElementById('carousel-next')!.addEventListener('click', () => {
     }
 });
 
-// ── Export Choice Modal ──
-let exportChoiceType: 'png' | 'pdf' | null = null;
+// ── Metric switcher ──
+function switchView(view: ViewType) {
+    if (currentView === view) return;
+    currentView = view;
 
-function openExportChoiceModal(type: 'png' | 'pdf') {
-    closeAllMenus();
-    exportChoiceType = type;
-    if (type === 'png') {
-        exportChoiceTitleText.textContent = 'Exportar como PNG';
-        exportChoiceWithDesc.textContent =
-            'Gráfico + legenda + Top 10 e Top 20';
-        exportChoiceWithoutDesc.textContent = 'Só gráfico e legenda';
-    } else {
-        exportChoiceTitleText.textContent = 'Exportar como PDF';
-        exportChoiceWithDesc.textContent =
-            'Gráfico + ranking lateral · landscape';
-        exportChoiceWithoutDesc.textContent = 'Só gráfico · landscape';
+    // Determine base metric for rankings
+    if (view === 'messages') currentMetric = 'messages';
+    else if (view === 'hours' || view === 'proportion') currentMetric = 'hours';
+    // scatter & heatmap keep last metric (rankings by messages default)
+    if (view === 'scatter' || view === 'heatmap') currentMetric = 'messages';
+
+    // Update tab UI
+    document.querySelectorAll<HTMLElement>('.metric-tab').forEach((tab) => {
+        const isActive = tab.dataset.metric === view;
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', String(isActive));
+    });
+
+    // Update brand subtitle
+    const brandSub = document.querySelector<HTMLElement>('.brand-sub');
+    const subtitles: Record<ViewType, string> = {
+        messages: 'Mensagens por semana',
+        hours: 'Horas ativas por semana',
+        scatter: 'Eficiência · mensagens vs horas',
+        heatmap: 'Intensidade · msg/h por semana',
+        proportion: 'Proporção · horas ativas de 168h',
+    };
+    if (brandSub) brandSub.textContent = subtitles[view];
+
+    // Destroy current chart
+    if (chart) {
+        chart.destroy();
+        chart = null;
     }
-    exportChoiceModal.classList.add('visible');
-    exportChoiceModal.removeAttribute('inert');
+
+    const canvas = document.getElementById('chart') as HTMLCanvasElement;
+    const heatmapEl = document.getElementById('heatmap-container')!;
+    const legendArea = document.querySelector<HTMLElement>('.legend-area');
+
+    if (view === 'heatmap') {
+        canvas.style.display = 'none';
+        heatmapEl.style.display = '';
+        if (legendArea) legendArea.style.display = 'none';
+        buildHeatmap();
+    } else {
+        canvas.style.display = '';
+        heatmapEl.style.display = 'none';
+        heatmapEl.innerHTML = '';
+        if (legendArea) legendArea.style.display = legendVisible ? '' : 'none';
+
+        if (view === 'scatter') {
+            chart = buildScatterChart();
+        } else if (view === 'proportion') {
+            chart = buildProportionChart();
+        } else {
+            chart = buildChart();
+        }
+        buildLegend();
+    }
+
+    // Rebuild rankings
+    pinFocusIndex = null;
+    highlightedIndex = null;
+    buildAlltimeRanking();
+    buildWeeklyRanking();
 }
 
-function closeExportChoiceModal() {
-    exportChoiceModal.classList.remove('visible');
-    exportChoiceModal.setAttribute('inert', '');
-}
-
-btnExportPng.addEventListener('click', () => openExportChoiceModal('png'));
-btnExportPdf.addEventListener('click', () => openExportChoiceModal('pdf'));
-
-btnCloseExportChoice.addEventListener('click', closeExportChoiceModal);
-exportChoiceBackdrop.addEventListener('click', closeExportChoiceModal);
-
-btnChoiceWithTables.addEventListener('click', () => {
-    const type = exportChoiceType;
-    closeExportChoiceModal();
-    if (type === 'png') exportPng(true);
-    else exportPdfWithOptions(true);
+document.querySelectorAll<HTMLElement>('.metric-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+        switchView(tab.dataset.metric as ViewType);
+    });
 });
 
-btnChoiceWithoutTables.addEventListener('click', () => {
-    const type = exportChoiceType;
-    closeExportChoiceModal();
-    if (type === 'png') exportPng(false);
-    else exportPdfWithOptions(false);
+// ── Scatter chart: Eficiência (Y = messages, X = hours) ──
+function buildScatterChart() {
+    const canvas = document.getElementById('chart') as HTMLCanvasElement;
+    const dark = document.documentElement.dataset.theme === 'dark';
+    const c = getChartColors(dark);
+    const palette = ACCENT_THEMES[currentAccent].palette;
+
+    // One aggregated point per participant: sum of all weeks with both data points
+    const datasets = PARTICIPANTS.map((p, i) => {
+        const color = palette[i % palette.length];
+        let totalMsgs = 0;
+        let totalHours = 0;
+        let weeks = 0;
+        for (let w = 0; w < WEEKS.length; w++) {
+            const hrs = p.hours[w];
+            const msgs = p.data[w];
+            if (hrs !== null && msgs !== null) {
+                totalMsgs += msgs;
+                totalHours += hrs;
+                weeks++;
+            }
+        }
+        if (weeks === 0) return null;
+        return {
+            label: p.name,
+            data: [{ x: totalHours, y: totalMsgs }],
+            backgroundColor: color,
+            borderColor: color,
+            pointRadius: 7,
+            pointHoverRadius: 11,
+            pointBorderWidth: 2,
+            pointHoverBorderWidth: 2.5,
+            pointHoverBorderColor: '#ffffff',
+            // store extra info for tooltip
+            _mph: totalHours > 0 ? totalMsgs / totalHours : 0,
+            _weeks: weeks,
+        };
+    }).filter((d) => d !== null);
+
+    return new Chart(canvas, {
+        type: 'scatter',
+        plugins: [dimPlugin],
+        data: { datasets: datasets as any[] },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 400 },
+            interaction: { mode: 'nearest', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label(ctx: any) {
+                            const ds = ctx.dataset;
+                            const name = ds.label;
+                            const x = ctx.parsed.x as number;
+                            const y = ctx.parsed.y as number;
+                            const mph =
+                                ds._mph > 0
+                                    ? (ds._mph as number).toFixed(1)
+                                    : '—';
+                            const wks = ds._weeks as number;
+                            return `${name}: ${y.toLocaleString('pt-BR')} msgs · ${x}h · ${mph} msg/h (${wks} sem)`;
+                        },
+                    },
+                },
+            },
+            onHover: (evt: any, elements: any[]) => {
+                if (evt.native?.target) {
+                    (evt.native.target as HTMLElement).style.cursor =
+                        elements.length > 0 ? 'pointer' : 'default';
+                }
+                if (elements.length > 0) {
+                    const idx = elements[0].datasetIndex;
+                    if (highlightedIndex !== idx) {
+                        highlightedIndex = idx;
+                        syncLegendHover(idx);
+                    }
+                } else if (highlightedIndex !== null) {
+                    highlightedIndex = null;
+                    syncLegendHover(pinFocusIndex);
+                }
+            },
+            onClick: (evt: any, _elements: any[], ch: any) => {
+                if (!evt.native) return;
+                const hits = ch.getElementsAtEventForMode(
+                    evt.native,
+                    'nearest',
+                    { intersect: true },
+                    false,
+                );
+                if (hits.length > 0) {
+                    const idx = hits[0].datasetIndex;
+                    pinFocusIndex = pinFocusIndex === idx ? null : idx;
+                } else {
+                    pinFocusIndex = null;
+                }
+                ch.update('none');
+                syncLegendHover(pinFocusIndex);
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Total de horas ativas',
+                        color: c.text,
+                        font: {
+                            family: 'Inter, sans-serif',
+                            size: 12,
+                            weight: '500',
+                        },
+                    },
+                    grid: { color: c.grid },
+                    ticks: {
+                        color: c.text,
+                        font: { family: 'Inter, sans-serif', size: 12 },
+                    },
+                    border: { color: 'transparent' },
+                    beginAtZero: true,
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Total de mensagens',
+                        color: c.text,
+                        font: {
+                            family: 'Inter, sans-serif',
+                            size: 12,
+                            weight: '500',
+                        },
+                    },
+                    grid: { color: c.grid },
+                    ticks: {
+                        color: c.text,
+                        font: { family: 'Inter, sans-serif', size: 12 },
+                        maxTicksLimit: 8,
+                    },
+                    border: { color: 'transparent' },
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+}
+
+// ── Heatmap: msg/h intensity grid ──
+function buildHeatmap() {
+    const container = document.getElementById('heatmap-container')!;
+    container.innerHTML = '';
+
+    // Compute msg/h for each participant × week
+    const rows = PARTICIPANTS.map((p, idx) => {
+        const cells = WEEKS.map((_, w) => {
+            const msgs = p.data[w];
+            const hrs = p.hours[w];
+            if (msgs === null || hrs === null || hrs === 0) return null;
+            return msgs / hrs;
+        });
+        const validCells = cells.filter((c): c is number => c !== null);
+        const avg =
+            validCells.length > 0
+                ? validCells.reduce((a, b) => a + b, 0) / validCells.length
+                : 0;
+        return { name: p.name, idx, cells, avg };
+    })
+        .filter((r) => r.cells.some((c) => c !== null))
+        .sort((a, b) => b.avg - a.avg);
+
+    // Find global min/max for colour scale
+    const allValues = rows.flatMap((r) =>
+        r.cells.filter((c): c is number => c !== null),
+    );
+    const minVal = Math.min(...allValues);
+    const maxVal = Math.max(...allValues);
+
+    function heatColor(val: number): string {
+        const t = maxVal > minVal ? (val - minVal) / (maxVal - minVal) : 0.5;
+        // Cool → warm gradient: blue → cyan → green → yellow → orange → red
+        const hue = (1 - t) * 240; // 240=blue → 0=red
+        const sat = 70 + t * 20;
+        const light =
+            document.documentElement.dataset.theme === 'dark'
+                ? 25 + t * 20
+                : 85 - t * 40;
+        return `hsl(${hue}, ${sat}%, ${light}%)`;
+    }
+
+    function textColor(val: number): string {
+        const t = maxVal > minVal ? (val - minVal) / (maxVal - minVal) : 0.5;
+        const dark = document.documentElement.dataset.theme === 'dark';
+        if (dark) return t > 0.6 ? '#000' : '#fff';
+        return t > 0.5 ? '#fff' : '#111';
+    }
+
+    const table = document.createElement('table');
+    table.className = 'heatmap-table';
+
+    // Header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const thName = document.createElement('th');
+    thName.textContent = 'Participante';
+    headerRow.appendChild(thName);
+    WEEKS.forEach((w) => {
+        const th = document.createElement('th');
+        th.textContent = w;
+        headerRow.appendChild(th);
+    });
+    const thAvg = document.createElement('th');
+    thAvg.textContent = 'Média';
+    headerRow.appendChild(thAvg);
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Body
+    const tbody = document.createElement('tbody');
+    rows.forEach((r) => {
+        const tr = document.createElement('tr');
+        const tdName = document.createElement('td');
+        tdName.className = 'heatmap-name';
+        tdName.textContent = r.name;
+        const dot = document.createElement('span');
+        dot.className = 'ranking-dot';
+        dot.style.background = getParticipantColor(r.idx);
+        dot.style.display = 'inline-block';
+        dot.style.marginRight = '6px';
+        dot.style.verticalAlign = 'middle';
+        tdName.prepend(dot);
+        tr.appendChild(tdName);
+
+        r.cells.forEach((val) => {
+            const td = document.createElement('td');
+            td.className = 'heatmap-cell';
+            if (val === null) {
+                td.classList.add('no-data');
+                td.textContent = '—';
+            } else {
+                td.style.background = heatColor(val);
+                td.style.color = textColor(val);
+                td.textContent = val.toFixed(1);
+                td.title = `${val.toFixed(1)} msg/h`;
+            }
+            tr.appendChild(td);
+        });
+
+        // Average cell
+        const tdAvg = document.createElement('td');
+        tdAvg.className = 'heatmap-cell';
+        if (r.avg > 0) {
+            tdAvg.style.background = heatColor(r.avg);
+            tdAvg.style.color = textColor(r.avg);
+            tdAvg.textContent = r.avg.toFixed(1);
+            tdAvg.style.fontWeight = '700';
+        } else {
+            tdAvg.classList.add('no-data');
+            tdAvg.textContent = '—';
+        }
+        tr.appendChild(tdAvg);
+
+        tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    container.appendChild(table);
+}
+
+// ── Proportion chart: active hours out of 168h per week ──
+function buildProportionChart() {
+    const canvas = document.getElementById('chart') as HTMLCanvasElement;
+    const dark = document.documentElement.dataset.theme === 'dark';
+    const c = getChartColors(dark);
+    const palette = ACCENT_THEMES[currentAccent].palette;
+
+    // Build data: for each participant, average hours across all weeks they participated
+    const data = PARTICIPANTS.map((p, idx) => {
+        const validHours = p.hours.filter((h): h is number => h !== null);
+        const avg =
+            validHours.length > 0
+                ? validHours.reduce((a, b) => a + b, 0) / validHours.length
+                : 0;
+        return { name: p.name, idx, avg };
+    })
+        .filter((d) => d.avg > 0)
+        .sort((a, b) => b.avg - a.avg);
+
+    const MAX_HOURS = 168;
+
+    const activeDs = {
+        label: 'Horas ativas',
+        data: data.map((d) => d.avg),
+        backgroundColor: data.map(
+            (d) => palette[d.idx % palette.length] + 'cc',
+        ),
+        borderColor: data.map((d) => palette[d.idx % palette.length]),
+        borderWidth: 1.5,
+        borderRadius: 4,
+        borderSkipped: false,
+    };
+
+    const inactiveDs = {
+        label: 'Horas inativas',
+        data: data.map((d) => MAX_HOURS - d.avg),
+        backgroundColor: dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
+        borderColor: dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+        borderWidth: 1,
+        borderRadius: 4,
+        borderSkipped: false,
+    };
+
+    return new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels: data.map((d) => d.name),
+            datasets: [activeDs, inactiveDs],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            animation: { duration: 400 },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label(ctx: any) {
+                            if (ctx.datasetIndex === 0) {
+                                const hours = ctx.parsed.x as number;
+                                return `Ativas: ${hours.toFixed(1)}h (~${((hours / MAX_HOURS) * 100).toFixed(1)}%)`;
+                            }
+                            return `Inativas: ${(ctx.parsed.x as number).toFixed(1)}h`;
+                        },
+                    },
+                },
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    max: MAX_HOURS,
+                    title: {
+                        display: true,
+                        text: 'Horas na semana (média)',
+                        color: c.text,
+                        font: {
+                            family: 'Inter, sans-serif',
+                            size: 12,
+                            weight: '500',
+                        },
+                    },
+                    grid: { color: c.grid },
+                    ticks: {
+                        color: c.text,
+                        font: { family: 'Inter, sans-serif', size: 11 },
+                    },
+                    border: { color: 'transparent' },
+                },
+                y: {
+                    stacked: true,
+                    grid: { display: false },
+                    ticks: {
+                        color: c.text,
+                        font: { family: 'Inter, sans-serif', size: 11 },
+                    },
+                    border: { color: 'transparent' },
+                },
+            },
+        },
+    });
+}
+
+// ── Export buttons ──
+btnExportWithTables.addEventListener('click', () => {
+    closeAllMenus();
+    exportPng(true);
+});
+
+btnExportWithoutTables.addEventListener('click', () => {
+    closeAllMenus();
+    exportPng(false);
 });
 
 // ── Shared canvas builder (chart + legend + optional 2-column rankings) ──
@@ -827,8 +1294,9 @@ function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
 
     // ── Left column: Top 10 Geral ──
     const totals = PARTICIPANTS.map((p, idx) => {
-        const weeks = p.data.filter((v) => v !== null).length;
-        const total = p.data.reduce<number>((s, v) => s + (v ?? 0), 0);
+        const values = getMetricValues(p);
+        const weeks = values.filter((v) => v !== null).length;
+        const total = values.reduce<number>((s, v) => s + (v ?? 0), 0);
         return { name: p.name, idx, total, avg: weeks > 0 ? total / weeks : 0 };
     }).sort((a, b) => b.total - a.total);
 
@@ -890,18 +1358,18 @@ function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
     const weekData = PARTICIPANTS.map((p, idx) => ({
         name: p.name,
         idx,
-        count: p.data[weekIdx] ?? 0,
+        count: getMetricValues(p)[weekIdx] ?? 0,
     }))
         .filter((p) => p.count > 0)
         .sort((a, b) => b.count - a.count);
 
-    let prevCountMap: Map<string, number> | null = null;
+    let exportPrevCountMap: Map<string, number> | null = null;
     if (weekIdx > 0) {
         const prevData = PARTICIPANTS.map((p) => ({
             name: p.name,
-            count: p.data[weekIdx - 1] ?? 0,
+            count: getMetricValues(p)[weekIdx - 1] ?? 0,
         })).filter((p) => p.count > 0);
-        prevCountMap = new Map(prevData.map((p) => [p.name, p.count]));
+        exportPrevCountMap = new Map(prevData.map((p) => [p.name, p.count]));
     }
 
     let rightY = curY;
@@ -913,13 +1381,14 @@ function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
     ctx.fillText(`Top 20 · ${weekLabel}`, R_START, rightY + LABEL_H / 2);
     rightY += LABEL_H;
 
+    const colLabel = currentMetric === 'messages' ? 'Msgs' : 'Horas';
     ctx.fillStyle = fgMuted;
     ctx.font = `500 ${Math.round(11 * DPR)}px Inter, -apple-system, sans-serif`;
     ctx.textAlign = 'left';
     ctx.fillText('Nome', R_START + NAME_OFF, rightY);
     ctx.textAlign = 'right';
-    ctx.fillText('Msgs', R_END - Math.round(50 * DPR), rightY);
-    if (prevCountMap) ctx.fillText('+/−', R_END, rightY);
+    ctx.fillText(colLabel, R_END - Math.round(50 * DPR), rightY);
+    if (exportPrevCountMap) ctx.fillText('+/−', R_END, rightY);
     rightY += CHEADER_H;
 
     weekData.slice(0, TOP20).forEach((p, rank) => {
@@ -950,8 +1419,8 @@ function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
             rightY,
         );
 
-        if (prevCountMap) {
-            const prev = prevCountMap.get(p.name) ?? 0;
+        if (exportPrevCountMap) {
+            const prev = exportPrevCountMap.get(p.name) ?? 0;
             const diff = p.count - prev;
             ctx.fillStyle =
                 diff > 0 ? positiveColor : diff < 0 ? negativeColor : fgMuted;
@@ -980,40 +1449,6 @@ function exportPng(withTables = false) {
     );
 }
 
-// ── Export PDF — renders via canvas (same output as PNG), opens print dialog ──
-function exportPdfWithOptions(withTables: boolean) {
-    const tmp = buildExportCanvas(withTables);
-    const dataUrl = tmp.toDataURL('image/png');
-    const html = `<!doctype html><html><head>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-@page{size:auto;margin:0}
-html,body{width:100%;background:#fff}
-img{display:block;width:100%;height:auto}
-</style>
-</head><body>
-<img src="${dataUrl}">
-<script>
-window.addEventListener('load',function(){
-  window.addEventListener('afterprint',function(){ window.close(); });
-  window.print();
-});
-</script>
-</body></html>`;
-    // Use a Blob URL + anchor click to avoid popup blockers on mobile/Brave
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    // Revoke after enough time for the tab to load the content
-    setTimeout(() => URL.revokeObjectURL(url), 120_000);
-}
-
 // ── Help / Wiki Modal ──
 function buildHelpBody() {
     const section = (icon: string, title: string, body: string) =>
@@ -1040,6 +1475,18 @@ function buildHelpBody() {
              <p class="help-p" style="margin-top:4px"><strong>Clique num ponto</strong> para fixar o foco naquela linha: as demais ficam semi-transparentes. Clique novamente no mesmo ponto ou numa área vazia do gráfico para remover o foco e restaurar todas as linhas.</p>`,
         ),
         section(
+            iChart,
+            'Abas de visualização',
+            `<ul class="help-list">
+                <li><strong>Mensagens</strong> — gráfico de linhas com o total de mensagens por semana (visão padrão).</li>
+                <li><strong>Horas Ativas</strong> — gráfico de linhas com as horas ativas por semana. Uma hora é contada se o participante enviou pelo menos uma mensagem entre XX:00 e XX:59.</li>
+                <li><strong>Eficiência</strong> — scatter plot de total de mensagens (eixo Y) vs total de horas ativas (eixo X), agregado em todas as semanas por participante. Pontos mais altos e à esquerda indicam maior eficiência (mais msg/h). O tooltip mostra nome, totais e msg/h médio.</li>
+                <li><strong>Intensidade</strong> — heatmap de msg/h por participante e semana. Cores quentes (vermelho) indicam alta taxa, frias (azul) indicam baixa. A coluna "Média" mostra a taxa média geral.</li>
+                <li><strong>Proporção</strong> — barras horizontais empilhadas mostrando horas ativas (colorido) vs inativas (cinza) de um total de 168h semanais. Exibe a média de todas as semanas de cada participante.</li>
+             </ul>
+             <p class="help-p" style="margin-top:4px">Todas as abas incluem <strong>msg/h</strong> no tooltip e nas tabelas de ranking quando ambos os dados existem.</p>`,
+        ),
+        section(
             iLegend,
             'Legenda de participantes',
             `<ul class="help-list">
@@ -1052,9 +1499,9 @@ function buildHelpBody() {
             iRanking,
             'Ranking de participantes',
             `<ul class="help-list">
-                <li><strong>Top 10 Geral</strong> — os 10 participantes com mais mensagens no período; exibe o total e a média semanal (calculada apenas sobre as semanas em que a pessoa enviou mensagens).</li>
-                <li><strong>Top 20 por Semana</strong> — carrossel navegável pelas setas ‹ ›; exibe os 20 mais ativos em cada semana. Participantes sem mensagens naquela semana são omitidos.</li>
-                <li>A partir da segunda semana, cada linha mostra a variação de mensagens em relação à semana anterior (<em>+XX</em> verde ou <em>−XX</em> vermelho) e uma seta <strong>▲</strong> verde ou <strong>▼</strong> vermelha à direita do nome indicando subida ou descida de posição no ranking. Participantes que não estavam no top 20 na semana anterior exibem um badge <strong>NEW</strong> laranja no lugar da seta.</li>
+                <li><strong>Top 10 Geral</strong> — os 10 participantes com mais mensagens (ou horas, conforme a aba) no período; exibe o total, a média semanal e a taxa msg/h.</li>
+                <li><strong>Top 20 por Semana</strong> — carrossel navegável pelas setas ‹ ›; exibe os 20 mais ativos em cada semana. Inclui msg/h quando disponível.</li>
+                <li>A partir da segunda semana, cada linha mostra a variação em relação à semana anterior (<em>+XX</em> verde ou <em>−XX</em> vermelho) e uma seta <strong>▲</strong> verde ou <strong>▼</strong> vermelha indicando subida ou descida de posição. Participantes novos no top 20 exibem um badge <strong>NEW</strong> laranja.</li>
                 <li>As cores dos pontos do ranking acompanham o tema de cor ativo.</li>
                 <li>Na versão landscape, o botão de painel no cabeçalho oculta ou exibe o painel lateral; o estado é guardado no navegador.</li>
              </ul>`,
@@ -1063,11 +1510,10 @@ function buildHelpBody() {
             iExport,
             'Exportar',
             `<ul class="help-list">
-                <li><strong>Salvar como PNG</strong> e <strong>Imprimir / PDF</strong> — ao clicar em qualquer um dos botões de exportação, abre-se um seletor para escolher:</li>
-                <li style="margin-left:16px"><strong>Com tabelas</strong> — inclui o gráfico, legenda e as duas tabelas de ranking lado a lado.</li>
-                <li style="margin-left:16px"><strong>Sem tabelas</strong> — inclui apenas o gráfico e a legenda de participantes.</li>
-                <li>A exportação usa o fundo e as cores do tema atual. Uma confirmação aparece brevemente após guardar o PNG.</li>
-                <li>O PDF abre a caixa de diálogo de impressão nativa do navegador e a tab fecha-se automaticamente ao concluir ou cancelar.</li>
+                <li>Clique em <strong>Exportar</strong> na dock para abrir o menu de exportação.</li>
+                <li><strong>Com tabelas</strong> — salva PNG com o gráfico, legenda e as duas tabelas de ranking lado a lado.</li>
+                <li><strong>Sem tabelas</strong> — salva PNG com apenas o gráfico e a legenda de participantes.</li>
+                <li>A exportação usa o fundo e as cores do tema atual. Uma confirmação aparece brevemente após guardar.</li>
              </ul>`,
         ),
         section(

@@ -204,33 +204,35 @@
     "src/data.ts"() {
       WEEKS = ["W10", "W11", "W12"];
       PARTICIPANTS = [
-        { name: "Nay", data: [2392, 2883, 2101] },
-        { name: "Thay", data: [283, 1666, 1853] },
-        { name: "Cleber", data: [1033, 1301, 1719] },
-        { name: "Marc R.", data: [937, 1199, 974] },
-        { name: "Lucas", data: [900, 1171, 769] },
-        { name: "Fernanda", data: [838, 972, 796] },
-        { name: "Domi", data: [730, 827, 512] },
-        { name: "Italo G.", data: [884, 405, 711] },
-        { name: "Gabriel B.", data: [476, 440, 720] },
-        { name: "Ivan F.", data: [486, 657, null] },
-        { name: "Lexi", data: [null, 607, 289] },
-        { name: "Paolo P.", data: [412, 614, 349] },
-        { name: "Leticia M.", data: [411, 542, 218] },
-        { name: "C", data: [null, 230, 509] },
-        { name: "Jaime T.", data: [null, null, 405] },
-        { name: "Ana C.", data: [407, null, 309] },
-        { name: "Vitor V.", data: [591, null, null] },
-        { name: "Leonardo", data: [493, 443, 380] },
-        { name: "Beatriz A.", data: [447, null, 170] },
-        { name: "Kari", data: [434, 305, 247] },
-        { name: "Delboni", data: [409, 343, null] },
-        { name: "Helena", data: [372, null, null] },
-        { name: "Claudio Z.", data: [322, null, null] },
-        { name: "Andr\xE9", data: [null, 259, null] },
-        { name: "Camila", data: [null, 213, 175] },
-        { name: "Juan", data: [null, 194, null] },
-        { name: "Jader T.", data: [null, null, 166] }
+        { name: "Nay", data: [2392, 2883, 2101], hours: [74, 82, 75] },
+        { name: "Thay", data: [283, 1666, 1853], hours: [null, 62, 72] },
+        { name: "Cleber", data: [1033, 1301, 1719], hours: [72, 68, 78] },
+        { name: "Marc R.", data: [937, 1199, 974], hours: [55, 54, 51] },
+        { name: "Lucas", data: [900, 1171, 769], hours: [73, 79, 63] },
+        { name: "Fernanda", data: [838, 972, 796], hours: [84, 86, 77] },
+        { name: "Domi", data: [730, 827, 512], hours: [50, 70, 58] },
+        { name: "Italo G.", data: [884, 405, 711], hours: [67, 45, 52] },
+        { name: "Gabriel B.", data: [476, 440, 720], hours: [60, 51, 65] },
+        { name: "Ivan F.", data: [486, 657, null], hours: [52, 44, null] },
+        { name: "Lexi", data: [null, 607, 289], hours: [null, 63, 41] },
+        { name: "Paolo P.", data: [412, 614, 349], hours: [61, 82, 65] },
+        { name: "Leticia M.", data: [411, 542, 218], hours: [66, 52, null] },
+        { name: "C", data: [null, 230, 509], hours: [null, null, 74] },
+        { name: "Jaime T.", data: [null, null, 405], hours: [null, null, 41] },
+        { name: "Ana C.", data: [407, null, 309], hours: [52, 36, 41] },
+        { name: "Vitor V.", data: [591, null, null], hours: [45, null, null] },
+        { name: "L E O N V R D X", data: [493, 443, 380], hours: [76, 64, 58] },
+        { name: "Beatriz A.", data: [447, null, 170], hours: [39, null, null] },
+        { name: "Kari", data: [434, 305, 247], hours: [null, 39, null] },
+        { name: "Delboni", data: [409, 343, null], hours: [46, 56, null] },
+        { name: "Helena", data: [372, null, null], hours: [56, 42, 36] },
+        { name: "Claudio Z.", data: [322, null, null], hours: [null, null, null] },
+        { name: "Andr\xE9", data: [null, 259, null], hours: [44, 41, 46] },
+        { name: "Camila", data: [null, 213, 175], hours: [null, 38, 33] },
+        { name: "Juan", data: [null, 194, null], hours: [null, null, null] },
+        { name: "Jader T.", data: [null, null, 166], hours: [44, null, 49] },
+        { name: "BoTina", data: [null, null, null], hours: [67, null, null] },
+        { name: "Lucas N.", data: [null, null, null], hours: [null, null, 47] }
       ];
     }
   });
@@ -426,6 +428,11 @@
       init_chart_themes();
       init_data();
       var import_glass_distortion = __toESM(require_glass_distortion());
+      var currentMetric = "messages";
+      var currentView = "messages";
+      function getMetricValues(p) {
+        return currentMetric === "messages" ? p.data : p.hours;
+      }
       var SVG_MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
       var SVG_SUN = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
       var settingsMenu = document.getElementById("settings-menu");
@@ -435,29 +442,11 @@
       var helpModalBackdrop = document.getElementById("help-modal-backdrop");
       var btnCloseHelp = document.getElementById("btn-close-help");
       var helpBody = document.getElementById("help-body");
-      var exportChoiceModal = document.getElementById("export-choice-modal");
-      var exportChoiceBackdrop = document.getElementById("export-choice-backdrop");
-      var btnCloseExportChoice = document.getElementById(
-        "btn-close-export-choice"
-      );
-      var btnChoiceWithTables = document.getElementById("btn-choice-with-tables");
-      var btnChoiceWithoutTables = document.getElementById(
-        "btn-choice-without-tables"
-      );
-      var exportChoiceTitleText = document.getElementById(
-        "export-choice-title-text"
-      );
-      var exportChoiceWithDesc = document.getElementById(
-        "export-choice-with-desc"
-      );
-      var exportChoiceWithoutDesc = document.getElementById(
-        "export-choice-without-desc"
-      );
       var btnSettings = document.getElementById("btn-settings");
       var btnExport = document.getElementById("btn-export");
       var btnThemes = document.getElementById("btn-themes");
-      var btnExportPng = document.getElementById("btn-export-png");
-      var btnExportPdf = document.getElementById("btn-export-pdf");
+      var btnExportWithTables = document.getElementById("btn-export-with-tables");
+      var btnExportWithoutTables = document.getElementById("btn-export-without-tables");
       var btnHelp = document.getElementById("btn-help");
       var toggleTheme = document.getElementById(
         "toggle-theme"
@@ -536,9 +525,7 @@
       });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
-          if (exportChoiceModal.classList.contains("visible"))
-            closeExportChoiceModal();
-          else if (helpModal.classList.contains("visible")) closeHelpModal();
+          if (helpModal.classList.contains("visible")) closeHelpModal();
           else closeAllMenus();
         }
       });
@@ -575,16 +562,33 @@
         });
         if (chart) {
           const palette = ACCENT_THEMES[name].palette;
-          chart.data.datasets.forEach((ds, i) => {
-            const color = palette[i % palette.length];
-            ds.borderColor = color;
-            ds.backgroundColor = color + "22";
-            ds.pointBackgroundColor = color;
-            ds.pointBorderColor = color;
-            ds.pointHoverBackgroundColor = color;
-          });
-          chart.update();
+          if (currentView === "messages" || currentView === "hours") {
+            chart.data.datasets.forEach((ds, i) => {
+              const color = palette[i % palette.length];
+              ds.borderColor = color;
+              ds.backgroundColor = color + "22";
+              ds.pointBackgroundColor = color;
+              ds.pointBorderColor = color;
+              ds.pointHoverBackgroundColor = color;
+            });
+          } else if (currentView === "scatter") {
+            chart.data.datasets.forEach((ds, i) => {
+              const color = palette[i % palette.length];
+              ds.backgroundColor = color;
+              ds.borderColor = color;
+            });
+          }
+          if (currentView === "proportion") {
+            chart.destroy();
+            chart = buildProportionChart();
+          } else {
+            chart.update();
+          }
           buildLegend();
+          updateRankingColors();
+        }
+        if (currentView === "heatmap") {
+          buildHeatmap();
           updateRankingColors();
         }
       }
@@ -634,7 +638,16 @@
         const dp = tooltip.dataPoints[0];
         const color = dp.dataset.borderColor;
         chartTooltipTitle.innerHTML = `<span class="chart-tooltip-dot" style="background:${color}"></span>${dp.dataset.label}`;
-        chartTooltipBody.textContent = `${dp.label}: ${dp.parsed.y.toLocaleString("pt-BR")} mensagens`;
+        const pIdx = dp.datasetIndex;
+        const wIdx = dp.dataIndex;
+        const unit = currentMetric === "messages" ? "mensagens" : "horas";
+        let bodyText = `${dp.label}: ${dp.parsed.y.toLocaleString("pt-BR")} ${unit}`;
+        const msgs = PARTICIPANTS[pIdx].data[wIdx];
+        const hrs = PARTICIPANTS[pIdx].hours[wIdx];
+        if (msgs !== null && hrs !== null && hrs > 0) {
+          bodyText += ` \xB7 ${(msgs / hrs).toFixed(1)} msg/h`;
+        }
+        chartTooltipBody.textContent = bodyText;
         const rect = chart2.canvas.getBoundingClientRect();
         let x = rect.left + tooltip.caretX + 16;
         let y = rect.top + tooltip.caretY - 16;
@@ -678,7 +691,7 @@
           const color = palette[i % palette.length];
           return {
             label: p.name,
-            data: p.data,
+            data: getMetricValues(p),
             borderColor: color,
             backgroundColor: color + "22",
             borderWidth: 2.5,
@@ -783,11 +796,18 @@
         if (!chart) return;
         const c = getChartColors(dark);
         const opts = chart.options;
-        opts.scales.x.grid.color = c.grid;
-        opts.scales.x.ticks.color = c.text;
-        opts.scales.y.grid.color = c.grid;
-        opts.scales.y.ticks.color = c.text;
+        if (opts.scales?.x) {
+          opts.scales.x.grid.color = c.grid;
+          opts.scales.x.ticks.color = c.text;
+          if (opts.scales.x.title) opts.scales.x.title.color = c.text;
+        }
+        if (opts.scales?.y) {
+          opts.scales.y.grid.color = c.grid;
+          opts.scales.y.ticks.color = c.text;
+          if (opts.scales.y.title) opts.scales.y.title.color = c.text;
+        }
         chart.update("none");
+        if (currentView === "heatmap") buildHeatmap();
       }
       function syncLegendHover(idx) {
         document.querySelectorAll(".legend-item").forEach((btn, i) => {
@@ -797,9 +817,11 @@
       }
       function buildLegend() {
         const legend = document.getElementById("legend");
-        if (!legend || !chart) return;
+        if (!legend) return;
         legend.innerHTML = "";
+        if (!chart) return;
         chart.data.datasets.forEach((ds, i) => {
+          if (currentView === "proportion" && i > 0) return;
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "legend-item";
@@ -843,7 +865,7 @@
         const palette = ACCENT_THEMES[currentAccent].palette;
         return palette[participantIndex % palette.length];
       }
-      function buildRankingRow(pos, name, count, participantIndex, avg, posDiff, countDiff, isNew) {
+      function buildRankingRow(pos, name, count, participantIndex, avg, posDiff, countDiff, isNew, msgPerH) {
         const li = document.createElement("li");
         li.className = "ranking-row";
         const posEl = document.createElement("span");
@@ -881,7 +903,8 @@
         if (avg !== void 0) {
           const avgEl = document.createElement("span");
           avgEl.className = "ranking-avg";
-          avgEl.textContent = `~${Math.round(avg).toLocaleString("pt-BR")}/sem`;
+          const avgUnit = currentMetric === "messages" ? "/sem" : "h/sem";
+          avgEl.textContent = `~${Math.round(avg).toLocaleString("pt-BR")}${avgUnit}`;
           statsEl.appendChild(avgEl);
         }
         if (countDiff !== void 0) {
@@ -898,6 +921,12 @@
           }
           statsEl.appendChild(diffEl);
         }
+        if (msgPerH !== void 0 && msgPerH !== null) {
+          const mphEl = document.createElement("span");
+          mphEl.className = "ranking-msgh";
+          mphEl.textContent = `${msgPerH.toFixed(1)} msg/h`;
+          statsEl.appendChild(mphEl);
+        }
         li.appendChild(posEl);
         li.appendChild(dot);
         li.appendChild(nameEl);
@@ -908,19 +937,34 @@
         const el = document.getElementById("ranking-alltime");
         el.innerHTML = "";
         const totals = PARTICIPANTS.map((p, i) => {
-          const weeks = p.data.filter((v) => v !== null).length;
-          const total = p.data.reduce((s, v) => s + (v ?? 0), 0);
+          const values = getMetricValues(p);
+          const weeks = values.filter((v) => v !== null).length;
+          const total = values.reduce((s, v) => s + (v ?? 0), 0);
+          const totalMsgs = p.data.reduce((s, v) => s + (v ?? 0), 0);
+          const totalHours = p.hours.reduce((s, v) => s + (v ?? 0), 0);
+          const msgPerH = totalHours > 0 && totalMsgs > 0 ? totalMsgs / totalHours : null;
           return {
             name: p.name,
             idx: i,
             total,
-            avg: weeks > 0 ? total / weeks : 0
+            avg: weeks > 0 ? total / weeks : 0,
+            msgPerH
           };
         });
         totals.sort((a, b) => b.total - a.total);
         totals.slice(0, 10).forEach((p, rank) => {
           el.appendChild(
-            buildRankingRow(rank + 1, p.name, p.total, p.idx, p.avg)
+            buildRankingRow(
+              rank + 1,
+              p.name,
+              p.total,
+              p.idx,
+              p.avg,
+              void 0,
+              void 0,
+              void 0,
+              p.msgPerH
+            )
           );
         });
       }
@@ -940,7 +984,7 @@
         const weekData = PARTICIPANTS.map((p, i) => ({
           name: p.name,
           idx: i,
-          count: p.data[carouselWeekIndex] ?? 0
+          count: getMetricValues(p)[carouselWeekIndex] ?? 0
         })).filter((p) => p.count > 0);
         weekData.sort((a, b) => b.count - a.count);
         let prevRankMap = null;
@@ -949,7 +993,7 @@
           const prevData = PARTICIPANTS.map((p, i) => ({
             name: p.name,
             idx: i,
-            count: p.data[carouselWeekIndex - 1] ?? 0
+            count: getMetricValues(p)[carouselWeekIndex - 1] ?? 0
           })).filter((p) => p.count > 0);
           prevData.sort((a, b) => b.count - a.count);
           prevRankMap = new Map(
@@ -972,6 +1016,9 @@
             }
             countDiff = p.count - prevCount;
           }
+          const msgs = PARTICIPANTS[p.idx].data[carouselWeekIndex];
+          const hrs = PARTICIPANTS[p.idx].hours[carouselWeekIndex];
+          const msgPerH = msgs !== null && hrs !== null && hrs > 0 ? msgs / hrs : null;
           el.appendChild(
             buildRankingRow(
               currentRank,
@@ -981,7 +1028,8 @@
               void 0,
               posDiff,
               countDiff,
-              isNew
+              isNew,
+              msgPerH
             )
           );
         });
@@ -1002,41 +1050,391 @@
           buildWeeklyRanking();
         }
       });
-      var exportChoiceType = null;
-      function openExportChoiceModal(type) {
-        closeAllMenus();
-        exportChoiceType = type;
-        if (type === "png") {
-          exportChoiceTitleText.textContent = "Exportar como PNG";
-          exportChoiceWithDesc.textContent = "Gr\xE1fico + legenda + Top 10 e Top 20";
-          exportChoiceWithoutDesc.textContent = "S\xF3 gr\xE1fico e legenda";
-        } else {
-          exportChoiceTitleText.textContent = "Exportar como PDF";
-          exportChoiceWithDesc.textContent = "Gr\xE1fico + ranking lateral \xB7 landscape";
-          exportChoiceWithoutDesc.textContent = "S\xF3 gr\xE1fico \xB7 landscape";
+      function switchView(view) {
+        if (currentView === view) return;
+        currentView = view;
+        if (view === "messages") currentMetric = "messages";
+        else if (view === "hours" || view === "proportion") currentMetric = "hours";
+        if (view === "scatter" || view === "heatmap") currentMetric = "messages";
+        document.querySelectorAll(".metric-tab").forEach((tab) => {
+          const isActive = tab.dataset.metric === view;
+          tab.classList.toggle("active", isActive);
+          tab.setAttribute("aria-selected", String(isActive));
+        });
+        const brandSub = document.querySelector(".brand-sub");
+        const subtitles = {
+          messages: "Mensagens por semana",
+          hours: "Horas ativas por semana",
+          scatter: "Efici\xEAncia \xB7 mensagens vs horas",
+          heatmap: "Intensidade \xB7 msg/h por semana",
+          proportion: "Propor\xE7\xE3o \xB7 horas ativas de 168h"
+        };
+        if (brandSub) brandSub.textContent = subtitles[view];
+        if (chart) {
+          chart.destroy();
+          chart = null;
         }
-        exportChoiceModal.classList.add("visible");
-        exportChoiceModal.removeAttribute("inert");
+        const canvas = document.getElementById("chart");
+        const heatmapEl = document.getElementById("heatmap-container");
+        const legendArea = document.querySelector(".legend-area");
+        if (view === "heatmap") {
+          canvas.style.display = "none";
+          heatmapEl.style.display = "";
+          if (legendArea) legendArea.style.display = "none";
+          buildHeatmap();
+        } else {
+          canvas.style.display = "";
+          heatmapEl.style.display = "none";
+          heatmapEl.innerHTML = "";
+          if (legendArea) legendArea.style.display = legendVisible ? "" : "none";
+          if (view === "scatter") {
+            chart = buildScatterChart();
+          } else if (view === "proportion") {
+            chart = buildProportionChart();
+          } else {
+            chart = buildChart();
+          }
+          buildLegend();
+        }
+        pinFocusIndex = null;
+        highlightedIndex = null;
+        buildAlltimeRanking();
+        buildWeeklyRanking();
       }
-      function closeExportChoiceModal() {
-        exportChoiceModal.classList.remove("visible");
-        exportChoiceModal.setAttribute("inert", "");
-      }
-      btnExportPng.addEventListener("click", () => openExportChoiceModal("png"));
-      btnExportPdf.addEventListener("click", () => openExportChoiceModal("pdf"));
-      btnCloseExportChoice.addEventListener("click", closeExportChoiceModal);
-      exportChoiceBackdrop.addEventListener("click", closeExportChoiceModal);
-      btnChoiceWithTables.addEventListener("click", () => {
-        const type = exportChoiceType;
-        closeExportChoiceModal();
-        if (type === "png") exportPng(true);
-        else exportPdfWithOptions(true);
+      document.querySelectorAll(".metric-tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          switchView(tab.dataset.metric);
+        });
       });
-      btnChoiceWithoutTables.addEventListener("click", () => {
-        const type = exportChoiceType;
-        closeExportChoiceModal();
-        if (type === "png") exportPng(false);
-        else exportPdfWithOptions(false);
+      function buildScatterChart() {
+        const canvas = document.getElementById("chart");
+        const dark = document.documentElement.dataset.theme === "dark";
+        const c = getChartColors(dark);
+        const palette = ACCENT_THEMES[currentAccent].palette;
+        const datasets = PARTICIPANTS.map((p, i) => {
+          const color = palette[i % palette.length];
+          let totalMsgs = 0;
+          let totalHours = 0;
+          let weeks = 0;
+          for (let w = 0; w < WEEKS.length; w++) {
+            const hrs = p.hours[w];
+            const msgs = p.data[w];
+            if (hrs !== null && msgs !== null) {
+              totalMsgs += msgs;
+              totalHours += hrs;
+              weeks++;
+            }
+          }
+          if (weeks === 0) return null;
+          return {
+            label: p.name,
+            data: [{ x: totalHours, y: totalMsgs }],
+            backgroundColor: color,
+            borderColor: color,
+            pointRadius: 7,
+            pointHoverRadius: 11,
+            pointBorderWidth: 2,
+            pointHoverBorderWidth: 2.5,
+            pointHoverBorderColor: "#ffffff",
+            // store extra info for tooltip
+            _mph: totalHours > 0 ? totalMsgs / totalHours : 0,
+            _weeks: weeks
+          };
+        }).filter((d) => d !== null);
+        return new Chart(canvas, {
+          type: "scatter",
+          plugins: [dimPlugin],
+          data: { datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 400 },
+            interaction: { mode: "nearest", intersect: false },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                enabled: true,
+                callbacks: {
+                  label(ctx) {
+                    const ds = ctx.dataset;
+                    const name = ds.label;
+                    const x = ctx.parsed.x;
+                    const y = ctx.parsed.y;
+                    const mph = ds._mph > 0 ? ds._mph.toFixed(1) : "\u2014";
+                    const wks = ds._weeks;
+                    return `${name}: ${y.toLocaleString("pt-BR")} msgs \xB7 ${x}h \xB7 ${mph} msg/h (${wks} sem)`;
+                  }
+                }
+              }
+            },
+            onHover: (evt, elements) => {
+              if (evt.native?.target) {
+                evt.native.target.style.cursor = elements.length > 0 ? "pointer" : "default";
+              }
+              if (elements.length > 0) {
+                const idx = elements[0].datasetIndex;
+                if (highlightedIndex !== idx) {
+                  highlightedIndex = idx;
+                  syncLegendHover(idx);
+                }
+              } else if (highlightedIndex !== null) {
+                highlightedIndex = null;
+                syncLegendHover(pinFocusIndex);
+              }
+            },
+            onClick: (evt, _elements, ch) => {
+              if (!evt.native) return;
+              const hits = ch.getElementsAtEventForMode(
+                evt.native,
+                "nearest",
+                { intersect: true },
+                false
+              );
+              if (hits.length > 0) {
+                const idx = hits[0].datasetIndex;
+                pinFocusIndex = pinFocusIndex === idx ? null : idx;
+              } else {
+                pinFocusIndex = null;
+              }
+              ch.update("none");
+              syncLegendHover(pinFocusIndex);
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "Total de horas ativas",
+                  color: c.text,
+                  font: {
+                    family: "Inter, sans-serif",
+                    size: 12,
+                    weight: "500"
+                  }
+                },
+                grid: { color: c.grid },
+                ticks: {
+                  color: c.text,
+                  font: { family: "Inter, sans-serif", size: 12 }
+                },
+                border: { color: "transparent" },
+                beginAtZero: true
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "Total de mensagens",
+                  color: c.text,
+                  font: {
+                    family: "Inter, sans-serif",
+                    size: 12,
+                    weight: "500"
+                  }
+                },
+                grid: { color: c.grid },
+                ticks: {
+                  color: c.text,
+                  font: { family: "Inter, sans-serif", size: 12 },
+                  maxTicksLimit: 8
+                },
+                border: { color: "transparent" },
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+      function buildHeatmap() {
+        const container = document.getElementById("heatmap-container");
+        container.innerHTML = "";
+        const rows = PARTICIPANTS.map((p, idx) => {
+          const cells = WEEKS.map((_, w) => {
+            const msgs = p.data[w];
+            const hrs = p.hours[w];
+            if (msgs === null || hrs === null || hrs === 0) return null;
+            return msgs / hrs;
+          });
+          const validCells = cells.filter((c) => c !== null);
+          const avg = validCells.length > 0 ? validCells.reduce((a, b) => a + b, 0) / validCells.length : 0;
+          return { name: p.name, idx, cells, avg };
+        }).filter((r) => r.cells.some((c) => c !== null)).sort((a, b) => b.avg - a.avg);
+        const allValues = rows.flatMap(
+          (r) => r.cells.filter((c) => c !== null)
+        );
+        const minVal = Math.min(...allValues);
+        const maxVal = Math.max(...allValues);
+        function heatColor(val) {
+          const t = maxVal > minVal ? (val - minVal) / (maxVal - minVal) : 0.5;
+          const hue = (1 - t) * 240;
+          const sat = 70 + t * 20;
+          const light = document.documentElement.dataset.theme === "dark" ? 25 + t * 20 : 85 - t * 40;
+          return `hsl(${hue}, ${sat}%, ${light}%)`;
+        }
+        function textColor(val) {
+          const t = maxVal > minVal ? (val - minVal) / (maxVal - minVal) : 0.5;
+          const dark = document.documentElement.dataset.theme === "dark";
+          if (dark) return t > 0.6 ? "#000" : "#fff";
+          return t > 0.5 ? "#fff" : "#111";
+        }
+        const table = document.createElement("table");
+        table.className = "heatmap-table";
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        const thName = document.createElement("th");
+        thName.textContent = "Participante";
+        headerRow.appendChild(thName);
+        WEEKS.forEach((w) => {
+          const th = document.createElement("th");
+          th.textContent = w;
+          headerRow.appendChild(th);
+        });
+        const thAvg = document.createElement("th");
+        thAvg.textContent = "M\xE9dia";
+        headerRow.appendChild(thAvg);
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        const tbody = document.createElement("tbody");
+        rows.forEach((r) => {
+          const tr = document.createElement("tr");
+          const tdName = document.createElement("td");
+          tdName.className = "heatmap-name";
+          tdName.textContent = r.name;
+          const dot = document.createElement("span");
+          dot.className = "ranking-dot";
+          dot.style.background = getParticipantColor(r.idx);
+          dot.style.display = "inline-block";
+          dot.style.marginRight = "6px";
+          dot.style.verticalAlign = "middle";
+          tdName.prepend(dot);
+          tr.appendChild(tdName);
+          r.cells.forEach((val) => {
+            const td = document.createElement("td");
+            td.className = "heatmap-cell";
+            if (val === null) {
+              td.classList.add("no-data");
+              td.textContent = "\u2014";
+            } else {
+              td.style.background = heatColor(val);
+              td.style.color = textColor(val);
+              td.textContent = val.toFixed(1);
+              td.title = `${val.toFixed(1)} msg/h`;
+            }
+            tr.appendChild(td);
+          });
+          const tdAvg = document.createElement("td");
+          tdAvg.className = "heatmap-cell";
+          if (r.avg > 0) {
+            tdAvg.style.background = heatColor(r.avg);
+            tdAvg.style.color = textColor(r.avg);
+            tdAvg.textContent = r.avg.toFixed(1);
+            tdAvg.style.fontWeight = "700";
+          } else {
+            tdAvg.classList.add("no-data");
+            tdAvg.textContent = "\u2014";
+          }
+          tr.appendChild(tdAvg);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        container.appendChild(table);
+      }
+      function buildProportionChart() {
+        const canvas = document.getElementById("chart");
+        const dark = document.documentElement.dataset.theme === "dark";
+        const c = getChartColors(dark);
+        const palette = ACCENT_THEMES[currentAccent].palette;
+        const data = PARTICIPANTS.map((p, idx) => {
+          const validHours = p.hours.filter((h) => h !== null);
+          const avg = validHours.length > 0 ? validHours.reduce((a, b) => a + b, 0) / validHours.length : 0;
+          return { name: p.name, idx, avg };
+        }).filter((d) => d.avg > 0).sort((a, b) => b.avg - a.avg);
+        const MAX_HOURS = 168;
+        const activeDs = {
+          label: "Horas ativas",
+          data: data.map((d) => d.avg),
+          backgroundColor: data.map(
+            (d) => palette[d.idx % palette.length] + "cc"
+          ),
+          borderColor: data.map((d) => palette[d.idx % palette.length]),
+          borderWidth: 1.5,
+          borderRadius: 4,
+          borderSkipped: false
+        };
+        const inactiveDs = {
+          label: "Horas inativas",
+          data: data.map((d) => MAX_HOURS - d.avg),
+          backgroundColor: dark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
+          borderColor: dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+          borderWidth: 1,
+          borderRadius: 4,
+          borderSkipped: false
+        };
+        return new Chart(canvas, {
+          type: "bar",
+          data: {
+            labels: data.map((d) => d.name),
+            datasets: [activeDs, inactiveDs]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: "y",
+            animation: { duration: 400 },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                enabled: true,
+                callbacks: {
+                  label(ctx) {
+                    if (ctx.datasetIndex === 0) {
+                      const hours = ctx.parsed.x;
+                      return `Ativas: ${hours.toFixed(1)}h (~${(hours / MAX_HOURS * 100).toFixed(1)}%)`;
+                    }
+                    return `Inativas: ${ctx.parsed.x.toFixed(1)}h`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                stacked: true,
+                max: MAX_HOURS,
+                title: {
+                  display: true,
+                  text: "Horas na semana (m\xE9dia)",
+                  color: c.text,
+                  font: {
+                    family: "Inter, sans-serif",
+                    size: 12,
+                    weight: "500"
+                  }
+                },
+                grid: { color: c.grid },
+                ticks: {
+                  color: c.text,
+                  font: { family: "Inter, sans-serif", size: 11 }
+                },
+                border: { color: "transparent" }
+              },
+              y: {
+                stacked: true,
+                grid: { display: false },
+                ticks: {
+                  color: c.text,
+                  font: { family: "Inter, sans-serif", size: 11 }
+                },
+                border: { color: "transparent" }
+              }
+            }
+          }
+        });
+      }
+      btnExportWithTables.addEventListener("click", () => {
+        closeAllMenus();
+        exportPng(true);
+      });
+      btnExportWithoutTables.addEventListener("click", () => {
+        closeAllMenus();
+        exportPng(false);
       });
       function buildExportCanvas(withTables) {
         const canvas = document.getElementById("chart");
@@ -1109,8 +1507,9 @@
         const RANK_OFF = Math.round(20 * DPR);
         const NAME_OFF = Math.round(46 * DPR);
         const totals = PARTICIPANTS.map((p, idx) => {
-          const weeks = p.data.filter((v) => v !== null).length;
-          const total = p.data.reduce((s, v) => s + (v ?? 0), 0);
+          const values = getMetricValues(p);
+          const weeks = values.filter((v) => v !== null).length;
+          const total = values.reduce((s, v) => s + (v ?? 0), 0);
           return { name: p.name, idx, total, avg: weeks > 0 ? total / weeks : 0 };
         }).sort((a, b) => b.total - a.total);
         let leftY = curY;
@@ -1160,15 +1559,15 @@
         const weekData = PARTICIPANTS.map((p, idx) => ({
           name: p.name,
           idx,
-          count: p.data[weekIdx] ?? 0
+          count: getMetricValues(p)[weekIdx] ?? 0
         })).filter((p) => p.count > 0).sort((a, b) => b.count - a.count);
-        let prevCountMap = null;
+        let exportPrevCountMap = null;
         if (weekIdx > 0) {
           const prevData = PARTICIPANTS.map((p) => ({
             name: p.name,
-            count: p.data[weekIdx - 1] ?? 0
+            count: getMetricValues(p)[weekIdx - 1] ?? 0
           })).filter((p) => p.count > 0);
-          prevCountMap = new Map(prevData.map((p) => [p.name, p.count]));
+          exportPrevCountMap = new Map(prevData.map((p) => [p.name, p.count]));
         }
         let rightY = curY;
         ctx.fillStyle = fg;
@@ -1177,13 +1576,14 @@
         ctx.textAlign = "left";
         ctx.fillText(`Top 20 \xB7 ${weekLabel}`, R_START, rightY + LABEL_H / 2);
         rightY += LABEL_H;
+        const colLabel = currentMetric === "messages" ? "Msgs" : "Horas";
         ctx.fillStyle = fgMuted;
         ctx.font = `500 ${Math.round(11 * DPR)}px Inter, -apple-system, sans-serif`;
         ctx.textAlign = "left";
         ctx.fillText("Nome", R_START + NAME_OFF, rightY);
         ctx.textAlign = "right";
-        ctx.fillText("Msgs", R_END - Math.round(50 * DPR), rightY);
-        if (prevCountMap) ctx.fillText("+/\u2212", R_END, rightY);
+        ctx.fillText(colLabel, R_END - Math.round(50 * DPR), rightY);
+        if (exportPrevCountMap) ctx.fillText("+/\u2212", R_END, rightY);
         rightY += CHEADER_H;
         weekData.slice(0, TOP20).forEach((p, rank) => {
           if (rank % 2 === 0) {
@@ -1208,8 +1608,8 @@
             R_END - Math.round(50 * DPR),
             rightY
           );
-          if (prevCountMap) {
-            const prev = prevCountMap.get(p.name) ?? 0;
+          if (exportPrevCountMap) {
+            const prev = exportPrevCountMap.get(p.name) ?? 0;
             const diff = p.count - prev;
             ctx.fillStyle = diff > 0 ? positiveColor : diff < 0 ? negativeColor : fgMuted;
             ctx.fillText(
@@ -1231,36 +1631,6 @@
         showToast(
           withTables ? "PNG com tabelas exportado!" : "Imagem PNG exportada!"
         );
-      }
-      function exportPdfWithOptions(withTables) {
-        const tmp = buildExportCanvas(withTables);
-        const dataUrl = tmp.toDataURL("image/png");
-        const html = `<!doctype html><html><head>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-@page{size:auto;margin:0}
-html,body{width:100%;background:#fff}
-img{display:block;width:100%;height:auto}
-</style>
-</head><body>
-<img src="${dataUrl}">
-<script>
-window.addEventListener('load',function(){
-  window.addEventListener('afterprint',function(){ window.close(); });
-  window.print();
-});
-<\/script>
-</body></html>`;
-        const blob = new Blob([html], { type: "text/html" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.target = "_blank";
-        a.rel = "noopener";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 12e4);
       }
       function buildHelpBody() {
         const section = (icon, title, body) => `<div class="help-section">
@@ -1284,6 +1654,18 @@ window.addEventListener('load',function(){
              <p class="help-p" style="margin-top:4px"><strong>Clique num ponto</strong> para fixar o foco naquela linha: as demais ficam semi-transparentes. Clique novamente no mesmo ponto ou numa \xE1rea vazia do gr\xE1fico para remover o foco e restaurar todas as linhas.</p>`
           ),
           section(
+            iChart,
+            "Abas de visualiza\xE7\xE3o",
+            `<ul class="help-list">
+                <li><strong>Mensagens</strong> \u2014 gr\xE1fico de linhas com o total de mensagens por semana (vis\xE3o padr\xE3o).</li>
+                <li><strong>Horas Ativas</strong> \u2014 gr\xE1fico de linhas com as horas ativas por semana. Uma hora \xE9 contada se o participante enviou pelo menos uma mensagem entre XX:00 e XX:59.</li>
+                <li><strong>Efici\xEAncia</strong> \u2014 scatter plot de total de mensagens (eixo Y) vs total de horas ativas (eixo X), agregado em todas as semanas por participante. Pontos mais altos e \xE0 esquerda indicam maior efici\xEAncia (mais msg/h). O tooltip mostra nome, totais e msg/h m\xE9dio.</li>
+                <li><strong>Intensidade</strong> \u2014 heatmap de msg/h por participante e semana. Cores quentes (vermelho) indicam alta taxa, frias (azul) indicam baixa. A coluna "M\xE9dia" mostra a taxa m\xE9dia geral.</li>
+                <li><strong>Propor\xE7\xE3o</strong> \u2014 barras horizontais empilhadas mostrando horas ativas (colorido) vs inativas (cinza) de um total de 168h semanais. Exibe a m\xE9dia de todas as semanas de cada participante.</li>
+             </ul>
+             <p class="help-p" style="margin-top:4px">Todas as abas incluem <strong>msg/h</strong> no tooltip e nas tabelas de ranking quando ambos os dados existem.</p>`
+          ),
+          section(
             iLegend,
             "Legenda de participantes",
             `<ul class="help-list">
@@ -1296,9 +1678,9 @@ window.addEventListener('load',function(){
             iRanking,
             "Ranking de participantes",
             `<ul class="help-list">
-                <li><strong>Top 10 Geral</strong> \u2014 os 10 participantes com mais mensagens no per\xEDodo; exibe o total e a m\xE9dia semanal (calculada apenas sobre as semanas em que a pessoa enviou mensagens).</li>
-                <li><strong>Top 20 por Semana</strong> \u2014 carrossel naveg\xE1vel pelas setas \u2039 \u203A; exibe os 20 mais ativos em cada semana. Participantes sem mensagens naquela semana s\xE3o omitidos.</li>
-                <li>A partir da segunda semana, cada linha mostra a varia\xE7\xE3o de mensagens em rela\xE7\xE3o \xE0 semana anterior (<em>+XX</em> verde ou <em>\u2212XX</em> vermelho) e uma seta <strong>\u25B2</strong> verde ou <strong>\u25BC</strong> vermelha \xE0 direita do nome indicando subida ou descida de posi\xE7\xE3o no ranking. Participantes que n\xE3o estavam no top 20 na semana anterior exibem um badge <strong>NEW</strong> laranja no lugar da seta.</li>
+                <li><strong>Top 10 Geral</strong> \u2014 os 10 participantes com mais mensagens (ou horas, conforme a aba) no per\xEDodo; exibe o total, a m\xE9dia semanal e a taxa msg/h.</li>
+                <li><strong>Top 20 por Semana</strong> \u2014 carrossel naveg\xE1vel pelas setas \u2039 \u203A; exibe os 20 mais ativos em cada semana. Inclui msg/h quando dispon\xEDvel.</li>
+                <li>A partir da segunda semana, cada linha mostra a varia\xE7\xE3o em rela\xE7\xE3o \xE0 semana anterior (<em>+XX</em> verde ou <em>\u2212XX</em> vermelho) e uma seta <strong>\u25B2</strong> verde ou <strong>\u25BC</strong> vermelha indicando subida ou descida de posi\xE7\xE3o. Participantes novos no top 20 exibem um badge <strong>NEW</strong> laranja.</li>
                 <li>As cores dos pontos do ranking acompanham o tema de cor ativo.</li>
                 <li>Na vers\xE3o landscape, o bot\xE3o de painel no cabe\xE7alho oculta ou exibe o painel lateral; o estado \xE9 guardado no navegador.</li>
              </ul>`
@@ -1307,11 +1689,10 @@ window.addEventListener('load',function(){
             iExport,
             "Exportar",
             `<ul class="help-list">
-                <li><strong>Salvar como PNG</strong> e <strong>Imprimir / PDF</strong> \u2014 ao clicar em qualquer um dos bot\xF5es de exporta\xE7\xE3o, abre-se um seletor para escolher:</li>
-                <li style="margin-left:16px"><strong>Com tabelas</strong> \u2014 inclui o gr\xE1fico, legenda e as duas tabelas de ranking lado a lado.</li>
-                <li style="margin-left:16px"><strong>Sem tabelas</strong> \u2014 inclui apenas o gr\xE1fico e a legenda de participantes.</li>
-                <li>A exporta\xE7\xE3o usa o fundo e as cores do tema atual. Uma confirma\xE7\xE3o aparece brevemente ap\xF3s guardar o PNG.</li>
-                <li>O PDF abre a caixa de di\xE1logo de impress\xE3o nativa do navegador e a tab fecha-se automaticamente ao concluir ou cancelar.</li>
+                <li>Clique em <strong>Exportar</strong> na dock para abrir o menu de exporta\xE7\xE3o.</li>
+                <li><strong>Com tabelas</strong> \u2014 salva PNG com o gr\xE1fico, legenda e as duas tabelas de ranking lado a lado.</li>
+                <li><strong>Sem tabelas</strong> \u2014 salva PNG com apenas o gr\xE1fico e a legenda de participantes.</li>
+                <li>A exporta\xE7\xE3o usa o fundo e as cores do tema atual. Uma confirma\xE7\xE3o aparece brevemente ap\xF3s guardar.</li>
              </ul>`
           ),
           section(

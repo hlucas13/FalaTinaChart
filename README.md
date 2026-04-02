@@ -9,12 +9,18 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 ## Funcionalidades
 
 - **Gráfico de linhas interativo** — cada participante é uma linha colorida; passe o mouse sobre qualquer ponto para ver um tooltip com vidro líquido exibindo o nome do participante e a quantidade de mensagens naquela semana
+- **5 abas de visualização** — alterne entre diferentes perspectivas dos dados:
+  - **Mensagens** — gráfico de linhas com o total de mensagens por semana (visão padrão)
+  - **Horas Ativas** — gráfico de linhas com as horas ativas por semana (conta horas distintas em que o participante enviou pelo menos uma mensagem)
+  - **Eficiência** — scatter plot de total de mensagens (eixo Y) vs total de horas ativas (eixo X), agregado em todas as semanas por participante; pontos mais altos e à esquerda indicam maior msg/h; tooltip mostra nome, totais e msg/h médio
+  - **Intensidade** — heatmap de msg/h por participante e semana; cores quentes indicam alta taxa, frias indicam baixa; coluna "Média" com a taxa geral
+  - **Proporção** — barras horizontais empilhadas mostrando horas ativas (colorido) vs inativas (cinza) de um total de 168h semanais
+- **Métrica msg/h** — todas as abas mostram a taxa de mensagens por hora no tooltip e nas tabelas de ranking quando ambos os dados existem
 - **Tooltip por participante** — ao passar o mouse sobre o gráfico, é exibido o tooltip apenas da linha mais próxima do cursor; todas as linhas permanecem visíveis
 - **Foco por clique** — clique num ponto do gráfico para fixar o destaque naquela linha (as demais ficam semi-transparentes); clique novamente no mesmo ponto ou numa área vazia para voltar a exibir todas com opacidade plena
 - **Legenda clicável** — clique em uma pílula da legenda para mostrar ou ocultar um participante; passe o mouse para destacá-lo isoladamente
 - **Tooltip com Liquid Glass** — o container do tooltip usa o mesmo efeito de vidro físico da dock e dos painéis
-- **Exportar PNG** — abre um seletor para escolher exportar com ou sem as tabelas de ranking; gera uma imagem PNG com o gráfico, legenda e (opcionalmente) as tabelas, usando o fundo do tema atual
-- **Exportar / Imprimir PDF** — abre o mesmo seletor com ou sem tabelas; gera o PDF via renderização em canvas (idêntica ao PNG) e abre a caixa de diálogo de impressão nativa do navegador; a tab aberta fecha-se automaticamente ao fechar o preview
+- **Exportar PNG** — clique em **Exportar** na dock para abrir o menu de exportação; escolha **Com tabelas** (gráfico + legenda + Top 10 e Top 20) ou **Sem tabelas** (só gráfico e legenda); a imagem PNG é salva com o fundo e as cores do tema atual; uma confirmação aparece brevemente após guardar
 - **Temas de cor** — 4 paletas de destaque (WhatsApp verde, Oceano azul, Uva roxo, Pôr do Sol laranja), cada uma com 32 cores distintas para as linhas do gráfico ordenadas para contrastar com o fundo do tema, em modo claro e escuro
 - **Modo escuro / claro** — alternância completa com transição animada Liquid Glass; segue automaticamente a preferência do sistema
 - **Vidro fosco** — ativa o efeito de desfoque atrás dos painéis e da dock (Liquid Glass frosted)
@@ -23,7 +29,7 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 - **Ajuda & Wiki** — painel integrado nas Configurações com instruções de uso
 - **Tecla ESC** — fecha qualquer menu aberto ou o painel de ajuda sem precisar clicar
 - **Notificação de exportação** — exibe uma confirmação breve após salvar a imagem PNG
-- **Tabelas de ranking** — painel lateral à direita com **Top 10 Geral** (total de mensagens + média semanal, considerando apenas semanas em que o participante enviou mensagens) e **Top 20 por Semana** em carrossel navegável com setas; o Top 20 mostra a variação de mensagens em relação à semana anterior, uma seta ▲/▼ verde/vermelha indicando subida ou descida de posição, e um badge **NEW** laranja para participantes que não estavam no top 20 na semana anterior; cores dos pontos acompanham o tema de cor ativo
+- **Tabelas de ranking** — painel lateral à direita com **Top 10 Geral** (total de mensagens/horas + média semanal + msg/h) e **Top 20 por Semana** em carrossel navegável com setas; o Top 20 mostra a variação em relação à semana anterior, setas ▲/▼ de posição, badge **NEW** para entradas novas, e msg/h por linha
 - **Ocultar / mostrar ranking** — botão no cabeçalho da página (visível apenas em landscape) para colapsar e expandir o painel lateral de ranking com animação suave
 - **Responsivo** — funciona em telas verticais (portrait); painel de ranking é empilhado abaixo do gráfico em portrait
 - **Site estático** — funciona no GitHub Pages sem servidor; 100% CDN
@@ -34,7 +40,7 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 
 | Botão | Visibilidade | Ação |
 |-------|-------------|------|
-| **Exportar** | Sempre | Abre submenu com PNG e PDF; cada opção abre modal para escolher com ou sem tabelas |
+| **Exportar** | Sempre | Abre menu com **Com tabelas** e **Sem tabelas**; salva PNG diretamente |
 | **Temas** | Sempre | Abre seletor de 4 temas de cor |
 | **Configurações** | Sempre | Modo escuro, vidro fosco, legenda, Ajuda |
 
@@ -51,25 +57,27 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
    export const WEEKS: string[] = ['W10', 'W11', 'W12', 'W13'];
    ```
 
-3. Para cada participante em `PARTICIPANTS`, adicione o novo valor no array `data` (mesma posição que `WEEKS`). Use `null` se o participante não enviou mensagens nessa semana:
+3. Para cada participante em `PARTICIPANTS`, adicione o novo valor nos arrays `data` (mensagens) e `hours` (horas ativas), na mesma posição que `WEEKS`. Use `null` se o participante não enviou mensagens ou não tem dados nessa semana:
 
    ```typescript
-   { name: 'Nay', data: [2392, 2883, 2101, 1980] },
+   { name: 'Nay', data: [2392, 2883, 2101, 1980], hours: [74, 82, 75, 68] },
    ```
 
 4. Para adicionar um novo participante, acrescente uma nova entrada:
 
    ```typescript
-   { name: 'Novo Participante', data: [null, null, null, 300] },
+   { name: 'Novo Participante', data: [null, null, null, 300], hours: [null, null, null, 20] },
    ```
 
-5. Execute `node build.js` para gerar o bundle:
+5. **Horas ativas**: conta-se uma hora se o participante enviou pelo menos uma mensagem dentro do intervalo XX:00 a XX:59. Ex: 2 msgs às 10h20 e 1 msg às 11h30 = 2 horas ativas (slots 10h–10h59 e 11h–11h59).
+
+6. Execute `node build.js` para gerar o bundle:
 
    ```bash
    node build.js
    ```
 
-6. Faça commit de `app.bundle.js` e push — o GitHub Pages atualiza automaticamente.
+7. Faça commit de `app.bundle.js` e push — o GitHub Pages atualiza automaticamente.
 
 ---
 
