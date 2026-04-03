@@ -491,12 +491,30 @@ main {
     height: calc(100dvh - 60px - 80px - 36px);
     position: relative;
     padding: 20px 16px 4px 28px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+.chart-wrapper::-webkit-scrollbar {
+    height: 4px;
+}
+
+.chart-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chart-wrapper::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
 }
 
 .chart-wrapper canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
+    min-width: 380px;
 }
 
 /* ===== Heatmap container ===== */
@@ -544,6 +562,7 @@ main {
 
     /* Glass border + inset reflexes (same language as the dock) */
     box-shadow:
+        /* outer drop — only vertical so horizontal overflow never clips it */
         0px 1px 4px 0px
             color-mix(
                 in srgb,
@@ -556,28 +575,41 @@ main {
                 var(--glass-c-dark) calc(var(--glass-reflex-dark) * 8%),
                 transparent
             ),
-        inset 0 0 0 1px
+        /* full-perimeter thin border */ inset 0 0 0 1px
             color-mix(
                 in srgb,
                 var(--glass-c-light) calc(var(--glass-reflex-light) * 10%),
                 transparent
             ),
-        inset 1.8px 3px 0px -2px
+        /* top-left highlight */ inset 1.8px 3px 0px -2px
             color-mix(
                 in srgb,
                 var(--glass-c-light) calc(var(--glass-reflex-light) * 90%),
                 transparent
             ),
-        inset -1px -1px 1px 1px
+        /* bottom-right faint inset */ inset -1px -1px 1px 1px
             color-mix(
                 in srgb,
                 var(--glass-c-light) calc(var(--glass-reflex-light) * 18%),
                 transparent
             ),
-        inset 0 -2px 3px -1px
+        /* bottom inner shadow */ inset 0 -2px 3px -1px
             color-mix(
                 in srgb,
                 var(--glass-c-dark) calc(var(--glass-reflex-dark) * 14%),
+                transparent
+            ),
+        /* sharp left-edge highlight (inset, zero blur — never clipped) */ inset
+            1.5px 0 0 0
+            color-mix(
+                in srgb,
+                var(--glass-c-light) calc(var(--glass-reflex-light) * 55%),
+                transparent
+            ),
+        /* sharp right-edge shadow */ inset -1px 0 0 0
+            color-mix(
+                in srgb,
+                var(--glass-c-dark) calc(var(--glass-reflex-dark) * 9%),
                 transparent
             );
 }
@@ -634,15 +666,50 @@ main {
     padding: 6px 8px;
     border-radius: 6px;
     transition:
-        transform 0.15s,
-        box-shadow 0.15s;
-    cursor: default;
+        transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 2.2),
+        box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
     min-width: 44px;
 }
 
 .heatmap-cell:hover {
-    transform: scale(1.08);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+    box-shadow:
+        0 2px 8px
+            color-mix(
+                in srgb,
+                var(--glass-c-dark) calc(var(--glass-reflex-dark) * 14%),
+                transparent
+            ),
+        inset 1px 1.5px 0 0
+            color-mix(
+                in srgb,
+                var(--glass-c-light) calc(var(--glass-reflex-light) * 55%),
+                transparent
+            ),
+        inset 0 0 0 0.8px
+            color-mix(
+                in srgb,
+                var(--glass-c-light) calc(var(--glass-reflex-light) * 20%),
+                transparent
+            ),
+        inset 0 -2px 3px -1px
+            color-mix(
+                in srgb,
+                var(--glass-c-dark) calc(var(--glass-reflex-dark) * 12%),
+                transparent
+            );
+}
+
+.heatmap-cell:active {
+    transform: scale(0.97);
+    transition-duration: 0.1s;
+    box-shadow: inset 0 1px 2px
+        color-mix(
+            in srgb,
+            var(--glass-c-dark) calc(var(--glass-reflex-dark) * 16%),
+            transparent
+        );
 }
 
 .heatmap-cell.no-data {

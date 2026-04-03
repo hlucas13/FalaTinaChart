@@ -266,18 +266,53 @@ function externalTooltipHandler({ chart, tooltip }: any) {
     }
 
     const dp = tooltip.dataPoints[0];
-    const color: string = (dp.dataset as any).borderColor;
-    chartTooltipTitle.innerHTML = `<span class="chart-tooltip-dot" style="background:${color}"></span>${dp.dataset.label as string}`;
+    let color: string;
+    let titleText: string;
+    let bodyText: string;
 
-    const pIdx = dp.datasetIndex as number;
-    const wIdx = dp.dataIndex as number;
-    const unit = currentMetric === 'messages' ? 'mensagens' : 'horas';
-    let bodyText = `${dp.label as string}: ${(dp.parsed.y as number).toLocaleString('pt-BR')} ${unit}`;
-    const msgs = PARTICIPANTS[pIdx].data[wIdx];
-    const hrs = PARTICIPANTS[pIdx].hours[wIdx];
-    if (msgs !== null && hrs !== null && hrs > 0) {
-        bodyText += ` · ${(msgs / hrs).toFixed(1)} msg/h`;
+    if (currentView === 'scatter') {
+        const ds = dp.dataset as any;
+        color = ds.borderColor as string;
+        titleText = ds.label as string;
+        const x = dp.parsed.x as number;
+        const y = dp.parsed.y as number;
+        const mph = (ds._mph as number) ?? 0;
+        const wks = ds._weeks as number;
+        bodyText = `${y.toLocaleString('pt-BR')} msgs · ${x.toLocaleString('pt-BR')}h · ${mph > 0 ? mph.toFixed(1) : '—'} msg/h (${wks} sem)`;
+    } else if (currentView === 'proportion') {
+        const ds = dp.dataset as any;
+        const dIdx = dp.dataIndex as number;
+        // Always use the active dataset's colour for the dot
+        const activeDs = chart.data.datasets[0] as any;
+        const activeColor = Array.isArray(activeDs.borderColor)
+            ? activeDs.borderColor[dIdx]
+            : activeDs.borderColor;
+        color = activeColor;
+        titleText = dp.label as string;
+        const hours = dp.parsed.x as number;
+        const MAX_HOURS = 168;
+        if (dp.datasetIndex === 0) {
+            bodyText = `Ativas: ${hours.toFixed(1)}h (~${((hours / MAX_HOURS) * 100).toFixed(1)}%)`;
+        } else {
+            const activeHours = (chart.data.datasets[0].data as number[])[dIdx];
+            bodyText = `Ativas: ${(activeHours as number).toFixed(1)}h · Inativas: ${hours.toFixed(1)}h`;
+        }
+    } else {
+        // Line chart (messages / hours)
+        color = (dp.dataset as any).borderColor as string;
+        titleText = dp.dataset.label as string;
+        const pIdx = dp.datasetIndex as number;
+        const wIdx = dp.dataIndex as number;
+        const unit = currentMetric === 'messages' ? 'mensagens' : 'horas';
+        bodyText = `${dp.label as string}: ${(dp.parsed.y as number).toLocaleString('pt-BR')} ${unit}`;
+        const msgs = PARTICIPANTS[pIdx].data[wIdx];
+        const hrs = PARTICIPANTS[pIdx].hours[wIdx];
+        if (msgs !== null && hrs !== null && hrs > 0) {
+            bodyText += ` · ${(msgs / hrs).toFixed(1)} msg/h`;
+        }
     }
+
+    chartTooltipTitle.innerHTML = `<span class="chart-tooltip-dot" style="background:${color}"></span>${titleText}`;
     chartTooltipBody.textContent = bodyText;
 
     const rect = chart.canvas.getBoundingClientRect();
@@ -873,21 +908,8 @@ function buildScatterChart() {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    enabled: true,
-                    callbacks: {
-                        label(ctx: any) {
-                            const ds = ctx.dataset;
-                            const name = ds.label;
-                            const x = ctx.parsed.x as number;
-                            const y = ctx.parsed.y as number;
-                            const mph =
-                                ds._mph > 0
-                                    ? (ds._mph as number).toFixed(1)
-                                    : '—';
-                            const wks = ds._weeks as number;
-                            return `${name}: ${y.toLocaleString('pt-BR')} msgs · ${x}h · ${mph} msg/h (${wks} sem)`;
-                        },
-                    },
+                    enabled: false,
+                    external: externalTooltipHandler,
                 },
             },
             onHover: (evt: any, elements: any[]) => {
@@ -1149,16 +1171,8 @@ function buildProportionChart() {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    enabled: true,
-                    callbacks: {
-                        label(ctx: any) {
-                            if (ctx.datasetIndex === 0) {
-                                const hours = ctx.parsed.x as number;
-                                return `Ativas: ${hours.toFixed(1)}h (~${((hours / MAX_HOURS) * 100).toFixed(1)}%)`;
-                            }
-                            return `Inativas: ${(ctx.parsed.x as number).toFixed(1)}h`;
-                        },
-                    },
+                    enabled: false,
+                    external: externalTooltipHandler,
                 },
             },
             scales: {

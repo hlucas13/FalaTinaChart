@@ -638,17 +638,47 @@
           return;
         }
         const dp = tooltip.dataPoints[0];
-        const color = dp.dataset.borderColor;
-        chartTooltipTitle.innerHTML = `<span class="chart-tooltip-dot" style="background:${color}"></span>${dp.dataset.label}`;
-        const pIdx = dp.datasetIndex;
-        const wIdx = dp.dataIndex;
-        const unit = currentMetric === "messages" ? "mensagens" : "horas";
-        let bodyText = `${dp.label}: ${dp.parsed.y.toLocaleString("pt-BR")} ${unit}`;
-        const msgs = PARTICIPANTS[pIdx].data[wIdx];
-        const hrs = PARTICIPANTS[pIdx].hours[wIdx];
-        if (msgs !== null && hrs !== null && hrs > 0) {
-          bodyText += ` \xB7 ${(msgs / hrs).toFixed(1)} msg/h`;
+        let color;
+        let titleText;
+        let bodyText;
+        if (currentView === "scatter") {
+          const ds = dp.dataset;
+          color = ds.borderColor;
+          titleText = ds.label;
+          const x2 = dp.parsed.x;
+          const y2 = dp.parsed.y;
+          const mph = ds._mph ?? 0;
+          const wks = ds._weeks;
+          bodyText = `${y2.toLocaleString("pt-BR")} msgs \xB7 ${x2.toLocaleString("pt-BR")}h \xB7 ${mph > 0 ? mph.toFixed(1) : "\u2014"} msg/h (${wks} sem)`;
+        } else if (currentView === "proportion") {
+          const ds = dp.dataset;
+          const dIdx = dp.dataIndex;
+          const activeDs = chart2.data.datasets[0];
+          const activeColor = Array.isArray(activeDs.borderColor) ? activeDs.borderColor[dIdx] : activeDs.borderColor;
+          color = activeColor;
+          titleText = dp.label;
+          const hours = dp.parsed.x;
+          const MAX_HOURS = 168;
+          if (dp.datasetIndex === 0) {
+            bodyText = `Ativas: ${hours.toFixed(1)}h (~${(hours / MAX_HOURS * 100).toFixed(1)}%)`;
+          } else {
+            const activeHours = chart2.data.datasets[0].data[dIdx];
+            bodyText = `Ativas: ${activeHours.toFixed(1)}h \xB7 Inativas: ${hours.toFixed(1)}h`;
+          }
+        } else {
+          color = dp.dataset.borderColor;
+          titleText = dp.dataset.label;
+          const pIdx = dp.datasetIndex;
+          const wIdx = dp.dataIndex;
+          const unit = currentMetric === "messages" ? "mensagens" : "horas";
+          bodyText = `${dp.label}: ${dp.parsed.y.toLocaleString("pt-BR")} ${unit}`;
+          const msgs = PARTICIPANTS[pIdx].data[wIdx];
+          const hrs = PARTICIPANTS[pIdx].hours[wIdx];
+          if (msgs !== null && hrs !== null && hrs > 0) {
+            bodyText += ` \xB7 ${(msgs / hrs).toFixed(1)} msg/h`;
+          }
         }
+        chartTooltipTitle.innerHTML = `<span class="chart-tooltip-dot" style="background:${color}"></span>${titleText}`;
         chartTooltipBody.textContent = bodyText;
         const rect = chart2.canvas.getBoundingClientRect();
         let x = rect.left + tooltip.caretX + 16;
@@ -1156,18 +1186,8 @@
             plugins: {
               legend: { display: false },
               tooltip: {
-                enabled: true,
-                callbacks: {
-                  label(ctx) {
-                    const ds = ctx.dataset;
-                    const name = ds.label;
-                    const x = ctx.parsed.x;
-                    const y = ctx.parsed.y;
-                    const mph = ds._mph > 0 ? ds._mph.toFixed(1) : "\u2014";
-                    const wks = ds._weeks;
-                    return `${name}: ${y.toLocaleString("pt-BR")} msgs \xB7 ${x}h \xB7 ${mph} msg/h (${wks} sem)`;
-                  }
-                }
+                enabled: false,
+                external: externalTooltipHandler
               }
             },
             onHover: (evt, elements) => {
@@ -1388,16 +1408,8 @@
             plugins: {
               legend: { display: false },
               tooltip: {
-                enabled: true,
-                callbacks: {
-                  label(ctx) {
-                    if (ctx.datasetIndex === 0) {
-                      const hours = ctx.parsed.x;
-                      return `Ativas: ${hours.toFixed(1)}h (~${(hours / MAX_HOURS * 100).toFixed(1)}%)`;
-                    }
-                    return `Inativas: ${ctx.parsed.x.toFixed(1)}h`;
-                  }
-                }
+                enabled: false,
+                external: externalTooltipHandler
               }
             },
             scales: {
