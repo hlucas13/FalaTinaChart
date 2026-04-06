@@ -1003,11 +1003,12 @@ function buildHeatmap() {
             if (msgs === null || hrs === null || hrs === 0) return null;
             return msgs / hrs;
         });
-        const validCells = cells.filter((c): c is number => c !== null);
+        // Use total msgs / total hours (same formula as the ranking) so the
+        // Média column is always consistent with the msg/h shown in Top 10.
+        const totalMsgs = p.data.reduce<number>((s, v) => s + (v ?? 0), 0);
+        const totalHours = p.hours.reduce<number>((s, v) => s + (v ?? 0), 0);
         const avg =
-            validCells.length > 0
-                ? validCells.reduce((a, b) => a + b, 0) / validCells.length
-                : 0;
+            totalHours > 0 && totalMsgs > 0 ? totalMsgs / totalHours : 0;
         return { name: p.name, idx, cells, avg };
     })
         .filter((r) => r.cells.some((c) => c !== null))
