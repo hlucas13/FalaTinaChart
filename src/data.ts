@@ -16,7 +16,7 @@ export interface Participant {
     hours: (number | null)[];
 }
 
-export const WEEKS: string[] = ['W10', 'W11', 'W12', 'W13', 'W14'];
+export const WEEKS: string[] = ['W11', 'W12', 'W13', 'W14', 'W15'];
 
 export const PARTICIPANTS: Participant[] = [
     {
