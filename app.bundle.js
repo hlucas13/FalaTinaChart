@@ -202,7 +202,7 @@
   var WEEKS, PARTICIPANTS;
   var init_data = __esm({
     "src/data.ts"() {
-      WEEKS = ["W10", "W11", "W12", "W13", "W14"];
+      WEEKS = ["W11", "W12", "W13", "W14", "W15"];
       PARTICIPANTS = [
         {
           name: "Nay",
