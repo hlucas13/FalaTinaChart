@@ -202,7 +202,15 @@
   var WEEKS, PARTICIPANTS;
   var init_data = __esm({
     "src/data.ts"() {
-      WEEKS = ["W11", "W12", "W13", "W14", "W15", "W16", "W17"];
+      WEEKS = [
+        "W11",
+        "W12",
+        "W13",
+        "W14",
+        "W15",
+        "W16",
+        "W17"
+      ];
       PARTICIPANTS = [
         {
           name: "Nay",
@@ -251,7 +259,7 @@
         },
         {
           name: "Ivan F.",
-          data: [486, 657, null, null, null, null],
+          data: [486, 657, null, null, null, null, null],
           hours: [52, 44, null, null, null, null]
         },
         {
@@ -296,8 +304,8 @@
         },
         {
           name: "Beatriz A.",
-          data: [447, null, 170, null, null, null],
-          hours: [39, null, null, null, null, null]
+          data: [447, null, 170, null, null, null, null],
+          hours: [39, null, null, null, null, null, null]
         },
         {
           name: "Kari",
@@ -306,8 +314,8 @@
         },
         {
           name: "Delboni",
-          data: [409, 343, null, null, null, null],
-          hours: [46, 56, null, null, null, null]
+          data: [409, 343, null, null, null, null, null],
+          hours: [46, 56, null, null, null, null, null]
         },
         {
           name: "Helena",
@@ -316,8 +324,8 @@
         },
         {
           name: "Claudio Z.",
-          data: [322, null, null, null, null, null],
-          hours: [null, null, null, null, null, null]
+          data: [322, null, null, null, null, null, null],
+          hours: [null, null, null, null, null, null, null]
         },
         {
           name: "Andr\xE9",
@@ -326,13 +334,13 @@
         },
         {
           name: "Camila",
-          data: [null, 213, 175, null, null, null],
-          hours: [null, 38, 33, null, null, null]
+          data: [null, 213, 175, null, null, null, null],
+          hours: [null, 38, 33, null, null, null, null]
         },
         {
           name: "Juan",
-          data: [null, 194, null, null, null, null],
-          hours: [null, null, null, null, null, null]
+          data: [null, 194, null, null, null, null, null],
+          hours: [null, null, null, null, null, null, null]
         },
         {
           name: "Jader T.",
@@ -341,8 +349,8 @@
         },
         {
           name: "Ricardo L.",
-          data: [null, null, null, 722, 123, null],
-          hours: [null, null, null, null, null, null]
+          data: [null, null, null, 722, 123, null, null],
+          hours: [null, null, null, null, null, null, null]
         },
         {
           name: "Vic",

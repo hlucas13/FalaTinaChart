@@ -74,7 +74,7 @@ export const PARTICIPANTS: Participant[] = [
   },
   {
     name: "Ivan F.",
-    data: [486, 657, null, null, null, null],
+    data: [486, 657, null, null, null, null, null],
     hours: [52, 44, null, null, null, null],
   },
   {
@@ -119,8 +119,8 @@ export const PARTICIPANTS: Participant[] = [
   },
   {
     name: "Beatriz A.",
-    data: [447, null, 170, null, null, null],
-    hours: [39, null, null, null, null, null],
+    data: [447, null, 170, null, null, null, null],
+    hours: [39, null, null, null, null, null, null],
   },
   {
     name: "Kari",
@@ -129,8 +129,8 @@ export const PARTICIPANTS: Participant[] = [
   },
   {
     name: "Delboni",
-    data: [409, 343, null, null, null, null],
-    hours: [46, 56, null, null, null, null],
+    data: [409, 343, null, null, null, null, null],
+    hours: [46, 56, null, null, null, null, null],
   },
   {
     name: "Helena",
@@ -139,8 +139,8 @@ export const PARTICIPANTS: Participant[] = [
   },
   {
     name: "Claudio Z.",
-    data: [322, null, null, null, null, null],
-    hours: [null, null, null, null, null, null],
+    data: [322, null, null, null, null, null, null],
+    hours: [null, null, null, null, null, null, null],
   },
   {
     name: "André",
@@ -149,13 +149,13 @@ export const PARTICIPANTS: Participant[] = [
   },
   {
     name: "Camila",
-    data: [null, 213, 175, null, null, null],
-    hours: [null, 38, 33, null, null, null],
+    data: [null, 213, 175, null, null, null, null],
+    hours: [null, 38, 33, null, null, null, null],
   },
   {
     name: "Juan",
-    data: [null, 194, null, null, null, null],
-    hours: [null, null, null, null, null, null],
+    data: [null, 194, null, null, null, null, null],
+    hours: [null, null, null, null, null, null, null],
   },
   {
     name: "Jader T.",
@@ -164,8 +164,8 @@ export const PARTICIPANTS: Participant[] = [
   },
   {
     name: "Ricardo L.",
-    data: [null, null, null, 722, 123, null],
-    hours: [null, null, null, null, null, null],
+    data: [null, null, null, 722, 123, null, null],
+    hours: [null, null, null, null, null, null, null],
   },
   {
     name: "Vic",
