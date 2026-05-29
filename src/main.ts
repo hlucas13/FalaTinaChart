@@ -995,12 +995,12 @@ function buildHeatmap() {
       if (msgs === null || hrs === null || hrs === 0) return null;
       return msgs / hrs;
     });
-    // Average: mean of valid msg/h values (only weeks where participant has both data and hours)
-    const validRatios = cells.filter((c): c is number => c !== null);
-    const avg =
-      validRatios.length > 0
-        ? validRatios.reduce((a, b) => a + b, 0) / validRatios.length
-        : 0;
+    // Average: sum of all valid msg/h values divided by total weeks
+    // (including weeks with no data, normalized by total time period)
+    const sumValidRatios = cells
+      .filter((c): c is number => c !== null)
+      .reduce((a, b) => a + b, 0);
+    const avg = sumValidRatios / WEEKS.length;
     return { name: p.name, idx, cells, avg };
   })
     .filter((r) => r.cells.some((c) => c !== null))
