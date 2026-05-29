@@ -1483,9 +1483,8 @@
             if (msgs === null || hrs === null || hrs === 0) return null;
             return msgs / hrs;
           });
-          const totalMsgs = p.data.reduce((s, v) => s + (v ?? 0), 0);
-          const totalHours = p.hours.reduce((s, v) => s + (v ?? 0), 0);
-          const avg = totalHours > 0 && totalMsgs > 0 ? totalMsgs / totalHours : 0;
+          const validRatios = cells.filter((c) => c !== null);
+          const avg = validRatios.length > 0 ? validRatios.reduce((a, b) => a + b, 0) / validRatios.length : 0;
           return { name: p.name, idx, cells, avg };
         }).filter((r) => r.cells.some((c) => c !== null)).sort((a, b) => b.avg - a.avg);
         const allValues = rows.flatMap(
