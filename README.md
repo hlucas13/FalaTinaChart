@@ -9,13 +9,15 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 ## Funcionalidades
 
 - **Gráfico de linhas interativo** — cada participante é uma linha colorida; passe o mouse sobre qualquer ponto para ver um tooltip com vidro líquido exibindo o nome do participante e a quantidade de mensagens naquela semana
-- **5 abas de visualização** — alterne entre diferentes perspectivas dos dados:
+- **7 abas de visualização** — alterne entre diferentes perspectivas dos dados:
   - **Mensagens** — gráfico de linhas com o total de mensagens por semana (visão padrão)
   - **Horas Ativas** — gráfico de linhas com as horas ativas por semana (conta horas distintas em que o participante enviou pelo menos uma mensagem)
   - **Eficiência** — scatter plot de total de mensagens (eixo Y) vs total de horas ativas (eixo X), agregado em todas as semanas por participante; pontos mais altos e à esquerda indicam maior msg/h; tooltip mostra nome, totais e msg/h médio
   - **Intensidade** — heatmap de msg/h por participante e semana; cores quentes indicam alta taxa, frias indicam baixa; coluna "Média" com a taxa geral
   - **Proporção** — barras horizontais empilhadas mostrando horas ativas (colorido) vs inativas (cinza) de um total de 168h semanais
-- **Métrica msg/h** — todas as abas mostram a taxa de mensagens por hora no tooltip e nas tabelas de ranking quando ambos os dados existem
+  - **Sumário Top 20** — linha única com o total de mensagens dos top 20 participantes de cada semana; ideal para comparar semanas mais e menos agitadas
+  - **Acumulado** — linhas do acumulado de mensagens por usuário semana a semana; semanas sem dados aparecem como gaps na linha
+- **Métrica msg/h** — a taxa de mensagens por hora aparece no tooltip dos gráficos de Mensagens e Horas Ativas, no scatter de Eficiência, e nas tabelas de ranking (Top 10 e Top 20) em todas as abas quando ambos os dados existem
 - **Tooltip por participante** — ao passar o mouse sobre o gráfico, é exibido o tooltip apenas da linha mais próxima do cursor; todas as linhas permanecem visíveis
 - **Foco por clique** — clique num ponto do gráfico para fixar o destaque naquela linha (as demais ficam semi-transparentes); clique novamente no mesmo ponto ou numa área vazia para voltar a exibir todas com opacidade plena
 - **Legenda clicável** — clique em uma pílula da legenda para mostrar ou ocultar um participante; passe o mouse para destacá-lo isoladamente
@@ -38,11 +40,11 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 
 ## Dock — botões disponíveis
 
-| Botão | Visibilidade | Ação |
-|-------|-------------|------|
-| **Exportar** | Sempre | Abre menu com **Com tabelas** e **Sem tabelas**; salva PNG diretamente |
-| **Temas** | Sempre | Abre seletor de 4 temas de cor |
-| **Configurações** | Sempre | Modo escuro, vidro fosco, legenda, Ajuda |
+| Botão             | Visibilidade | Ação                                                                   |
+| ----------------- | ------------ | ---------------------------------------------------------------------- |
+| **Exportar**      | Sempre       | Abre menu com **Com tabelas** e **Sem tabelas**; salva PNG diretamente |
+| **Temas**         | Sempre       | Abre seletor de 4 temas de cor                                         |
+| **Configurações** | Sempre       | Modo escuro, vidro fosco, legenda, Ajuda                               |
 
 > **Botão de painel** — no cabeçalho da página (apenas landscape) há um botão de painel duplo que colapsa/expande o painel de ranking lateral com animação suave.
 
@@ -54,7 +56,7 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 2. Adicione a nova semana ao array `WEEKS`:
 
    ```typescript
-   export const WEEKS: string[] = ['W10', 'W11', 'W12', 'W13'];
+   export const WEEKS: string[] = ["W10", "W11", "W12", "W13"];
    ```
 
 3. Para cada participante em `PARTICIPANTS`, adicione o novo valor nos arrays `data` (mensagens) e `hours` (horas ativas), na mesma posição que `WEEKS`. Use `null` se o participante não enviou mensagens ou não tem dados nessa semana:
@@ -85,22 +87,22 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 
 ### Runtime (CDN — sem instalação local)
 
-| Biblioteca                              | Versão | Propósito                                       |
-| --------------------------------------- | ------ | ----------------------------------------------- |
-| [Chart.js](https://www.chartjs.org/)    | 4      | Gráfico de linhas com tooltip e legenda          |
-| [GSAP](https://gsap.com/)               | 3      | Animações dos toggles Liquid Glass               |
+| Biblioteca                           | Versão | Propósito                               |
+| ------------------------------------ | ------ | --------------------------------------- |
+| [Chart.js](https://www.chartjs.org/) | 4      | Gráfico de linhas com tooltip e legenda |
+| [GSAP](https://gsap.com/)            | 3      | Animações dos toggles Liquid Glass      |
 
 ### Build & Dev tooling (local, não incluído no bundle)
 
-| Ferramenta                                                                                    | Propósito                                                                        |
-| --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| [esbuild](https://esbuild.github.io/)                                                         | Empacota `src/main.ts` e todas as importações em um único IIFE `app.bundle.js`   |
-| [TypeScript](https://www.typescriptlang.org/)                                                 | Verificação de tipos (`tsc --noEmit`); compilação feita pelo esbuild             |
-| [ESLint](https://eslint.org/) + [`@typescript-eslint`](https://typescript-eslint.io/)         | Análise estática de todos os arquivos `.ts`                                      |
-| [Prettier](https://prettier.io/)                                                              | Formatação de código                                                             |
-| [Husky](https://typicode.github.io/husky/)                                                    | Git hooks: lint-staged no `pre-commit`, commitlint no `commit-msg`               |
-| [lint-staged](https://github.com/lint-staged/lint-staged)                                     | No commit, executa ESLint + Prettier apenas nos arquivos staged                  |
-| [commitlint](https://commitlint.js.org/)                                                      | Exige o formato [Conventional Commits](https://www.conventionalcommits.org/)     |
+| Ferramenta                                                                            | Propósito                                                                      |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [esbuild](https://esbuild.github.io/)                                                 | Empacota `src/main.ts` e todas as importações em um único IIFE `app.bundle.js` |
+| [TypeScript](https://www.typescriptlang.org/)                                         | Verificação de tipos (`tsc --noEmit`); compilação feita pelo esbuild           |
+| [ESLint](https://eslint.org/) + [`@typescript-eslint`](https://typescript-eslint.io/) | Análise estática de todos os arquivos `.ts`                                    |
+| [Prettier](https://prettier.io/)                                                      | Formatação de código                                                           |
+| [Husky](https://typicode.github.io/husky/)                                            | Git hooks: lint-staged no `pre-commit`, commitlint no `commit-msg`             |
+| [lint-staged](https://github.com/lint-staged/lint-staged)                             | No commit, executa ESLint + Prettier apenas nos arquivos staged                |
+| [commitlint](https://commitlint.js.org/)                                              | Exige o formato [Conventional Commits](https://www.conventionalcommits.org/)   |
 
 ---
 

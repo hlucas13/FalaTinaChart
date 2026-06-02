@@ -9,7 +9,14 @@ import "./glass-distortion";
 
 // ── Metric switcher ──
 type MetricType = "messages" | "hours";
-type ViewType = "messages" | "hours" | "scatter" | "heatmap" | "proportion";
+type ViewType =
+  | "messages"
+  | "hours"
+  | "scatter"
+  | "heatmap"
+  | "proportion"
+  | "weekly-total"
+  | "cumulative";
 let currentMetric: MetricType = "messages";
 let currentView: ViewType = "messages";
 
@@ -293,6 +300,16 @@ function externalTooltipHandler({ chart, tooltip }: any) {
       const activeHours = (chart.data.datasets[0].data as number[])[dIdx];
       bodyText = `Ativas: ${(activeHours as number).toFixed(1)}h · Inativas: ${hours.toFixed(1)}h`;
     }
+  } else if (currentView === "cumulative") {
+    // Cumulative chart: show only total, no week label or msg/h
+    color = (dp.dataset as any).borderColor as string;
+    titleText = dp.dataset.label as string;
+    bodyText = `Total: ${(dp.parsed.y as number).toLocaleString("pt-BR")} mensagens`;
+  } else if (currentView === "weekly-total") {
+    // Weekly total chart: single dataset, show only total
+    color = (dp.dataset as any).borderColor as string;
+    titleText = dp.dataset.label as string;
+    bodyText = `Total: ${(dp.parsed.y as number).toLocaleString("pt-BR")} mensagens`;
   } else {
     // Line chart (messages / hours)
     color = (dp.dataset as any).borderColor as string;
@@ -784,8 +801,14 @@ function switchView(view: ViewType) {
   // Determine base metric for rankings
   if (view === "messages") currentMetric = "messages";
   else if (view === "hours" || view === "proportion") currentMetric = "hours";
-  // scatter & heatmap keep last metric (rankings by messages default)
-  if (view === "scatter" || view === "heatmap") currentMetric = "messages";
+  // scatter, heatmap, weekly-total & cumulative show messages by default
+  if (
+    view === "scatter" ||
+    view === "heatmap" ||
+    view === "weekly-total" ||
+    view === "cumulative"
+  )
+    currentMetric = "messages";
 
   // Update tab UI
   document.querySelectorAll<HTMLElement>(".metric-tab").forEach((tab) => {
@@ -802,6 +825,8 @@ function switchView(view: ViewType) {
     scatter: "Eficiência · mensagens vs horas",
     heatmap: "Intensidade · msg/h por semana",
     proportion: "Proporção · horas ativas de 168h",
+    "weekly-total": "Total Top 20 por semana",
+    cumulative: "Acumulado por usuário",
   };
   if (brandSub) brandSub.textContent = subtitles[view];
 
@@ -830,6 +855,10 @@ function switchView(view: ViewType) {
       chart = buildScatterChart();
     } else if (view === "proportion") {
       chart = buildProportionChart();
+    } else if (view === "weekly-total") {
+      chart = buildWeeklyTotalChart();
+    } else if (view === "cumulative") {
+      chart = buildCumulativeChart();
     } else {
       chart = buildChart();
     }
@@ -1205,6 +1234,228 @@ function buildProportionChart() {
   });
 }
 
+// ── Weekly Total chart: sum of top 20 per week ──
+function buildWeeklyTotalChart() {
+  const canvas = document.getElementById("chart") as HTMLCanvasElement;
+  const dark = document.documentElement.dataset.theme === "dark";
+  const c = getChartColors(dark);
+
+  // For each week, sum messages from the top 20 participants by message count
+  const weeklyTotals = WEEKS.map((_, weekIdx) => {
+    return PARTICIPANTS.map((p) => ({
+      count: p.data[weekIdx],
+    }))
+      .filter((p) => p.count !== null)
+      .sort((a, b) => (b.count as number) - (a.count as number))
+      .slice(0, 20)
+      .reduce((sum, p) => sum + (p.count as number), 0);
+  });
+
+  return new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: WEEKS,
+      datasets: [
+        {
+          label: "Total Top 20",
+          data: weeklyTotals,
+          borderColor: getComputedStyle(document.documentElement)
+            .getPropertyValue("--accent")
+            .trim(),
+          borderWidth: 3,
+          pointRadius: 5,
+          pointHoverRadius: 10,
+          pointBackgroundColor: getComputedStyle(document.documentElement)
+            .getPropertyValue("--accent")
+            .trim(),
+          pointBorderColor: getComputedStyle(document.documentElement)
+            .getPropertyValue("--accent")
+            .trim(),
+          pointHoverBorderWidth: 2.5,
+          pointHoverBorderColor: "#ffffff",
+          tension: 0.35,
+          fill: true,
+          backgroundColor: (dark
+            ? "rgba(74,222,128,0.08)"
+            : "rgba(37,211,102,0.10)") as any,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      interaction: {
+        mode: "nearest",
+        intersect: false,
+        axis: "xy",
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: false,
+          external: externalTooltipHandler,
+        },
+      },
+      onHover: (evt: any, elements: any[]) => {
+        if (evt.native?.target) {
+          (evt.native.target as HTMLElement).style.cursor =
+            elements.length > 0 ? "pointer" : "default";
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: c.grid },
+          ticks: {
+            color: c.text,
+            font: {
+              family: "Inter, sans-serif",
+              size: 13,
+              weight: "600",
+            },
+          },
+          border: { color: "transparent" },
+        },
+        y: {
+          grid: { color: c.grid },
+          ticks: {
+            color: c.text,
+            font: { family: "Inter, sans-serif", size: 12 },
+            maxTicksLimit: 8,
+          },
+          border: { color: "transparent" },
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+}
+
+// ── Cumulative chart: running total per top-20 user ──
+function buildCumulativeChart() {
+  const canvas = document.getElementById("chart") as HTMLCanvasElement;
+  const dark = document.documentElement.dataset.theme === "dark";
+  const c = getChartColors(dark);
+  const palette = ACCENT_THEMES[currentAccent].palette;
+
+  // Show all participants, sorted by total messages (most active first)
+  const ranked = PARTICIPANTS.map((p, idx) => ({
+    name: p.name,
+    idx,
+    total: p.data.reduce<number>((s, v) => s + (v ?? 0), 0),
+  })).sort((a, b) => b.total - a.total);
+
+  const datasets = ranked.map((p, i) => {
+    const color = palette[i % palette.length];
+    let cumulative = 0;
+    const cumulativeData = WEEKS.map((_, w) => {
+      const val = PARTICIPANTS[p.idx].data[w];
+      if (val === null) return null;
+      cumulative += val;
+      return cumulative;
+    });
+
+    return {
+      label: p.name,
+      data: cumulativeData,
+      borderColor: color,
+      backgroundColor: color + "22",
+      borderWidth: 2.5,
+      pointRadius: 4,
+      pointHoverRadius: 9,
+      pointBackgroundColor: color,
+      pointBorderColor: color,
+      pointHoverBorderWidth: 2.5,
+      pointHoverBorderColor: "#ffffff",
+      tension: 0.35,
+      spanGaps: true,
+    };
+  });
+
+  return new Chart(canvas, {
+    type: "line",
+    plugins: [dimPlugin],
+    data: {
+      labels: WEEKS,
+      datasets,
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 400 },
+      interaction: {
+        mode: "nearest",
+        intersect: false,
+        axis: "xy",
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: false,
+          external: externalTooltipHandler,
+        },
+      },
+      onHover: (evt: any, elements: any[]) => {
+        if (evt.native?.target) {
+          (evt.native.target as HTMLElement).style.cursor =
+            elements.length > 0 ? "pointer" : "default";
+        }
+        if (elements.length > 0) {
+          const idx = elements[0].datasetIndex;
+          if (highlightedIndex !== idx) {
+            highlightedIndex = idx;
+            syncLegendHover(idx);
+          }
+        } else if (highlightedIndex !== null) {
+          highlightedIndex = null;
+          syncLegendHover(pinFocusIndex);
+        }
+      },
+      onClick: (evt: any, _elements: any[], ch: any) => {
+        if (!evt.native) return;
+        const hits = ch.getElementsAtEventForMode(
+          evt.native,
+          "nearest",
+          { intersect: true },
+          false,
+        );
+        if (hits.length > 0) {
+          const idx = hits[0].datasetIndex;
+          pinFocusIndex = pinFocusIndex === idx ? null : idx;
+        } else {
+          pinFocusIndex = null;
+        }
+        ch.update("none");
+        syncLegendHover(pinFocusIndex);
+      },
+      scales: {
+        x: {
+          grid: { color: c.grid },
+          ticks: {
+            color: c.text,
+            font: {
+              family: "Inter, sans-serif",
+              size: 13,
+              weight: "600",
+            },
+          },
+          border: { color: "transparent" },
+        },
+        y: {
+          grid: { color: c.grid },
+          ticks: {
+            color: c.text,
+            font: { family: "Inter, sans-serif", size: 12 },
+            maxTicksLimit: 8,
+          },
+          border: { color: "transparent" },
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+}
+
 // ── Export buttons ──
 btnExportWithTables.addEventListener("click", () => {
   closeAllMenus();
@@ -1489,8 +1740,10 @@ function buildHelpBody() {
                 <li><strong>Eficiência</strong> — scatter plot de total de mensagens (eixo Y) vs total de horas ativas (eixo X), agregado em todas as semanas por participante. Pontos mais altos e à esquerda indicam maior eficiência (mais msg/h). O tooltip mostra nome, totais e msg/h médio.</li>
                 <li><strong>Intensidade</strong> — heatmap de msg/h por participante e semana. Cores quentes (vermelho) indicam alta taxa, frias (azul) indicam baixa. A coluna "Média" mostra a taxa média geral.</li>
                 <li><strong>Proporção</strong> — barras horizontais empilhadas mostrando horas ativas (colorido) vs inativas (cinza) de um total de 168h semanais. Exibe a média de todas as semanas de cada participante.</li>
+                <li><strong>Sumário Top 20</strong> — linha única com o total de mensagens dos top 20 participantes de cada semana, ordenados por quantidade de mensagens. Ideal para comparar semanas mais e menos movimentadas.</li>
+                <li><strong>Acumulado</strong> — linhas do acumulado de mensagens por usuário semana a semana (todos os participantes). Semanas sem dados do usuário aparecem como um gap na linha; quando ele volta a enviar mensagens, a linha retoma do valor acumulado correto.</li>
              </ul>
-             <p class="help-p" style="margin-top:4px">Todas as abas incluem <strong>msg/h</strong> no tooltip e nas tabelas de ranking quando ambos os dados existem.</p>`,
+             <p class="help-p" style="margin-top:4px">A taxa <strong>msg/h</strong> aparece no tooltip dos gráficos de Mensagens e Horas Ativas, no scatter de Eficiência, e nas tabelas de ranking (Top 10 e Top 20) em todas as abas quando ambos os dados existem.</p>`,
     ),
     section(
       iLegend,

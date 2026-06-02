@@ -212,233 +212,239 @@
         "W17",
         "W18",
         "W19",
-        "W20"
+        "W20",
+        "W21"
       ];
       PARTICIPANTS = [
         {
           name: "Nay",
-          data: [2392, 2883, 2101, 1663, 1166, 1011, 589, 511, 929, 945],
-          hours: [74, 82, 75, 74, 50, 49, 41, 34, 38, 46]
+          data: [2392, 2883, 2101, 1663, 1166, 1011, 589, 511, 929, 945, 432],
+          hours: [74, 82, 75, 74, 50, 49, 41, 34, 38, 46, 40]
         },
         {
           name: "Thay",
-          data: [283, 1666, 1853, 1234, 416, 1392, 356, 232, 773, 477],
-          hours: [null, 62, 72, 63, 33, 48, 35, 27, 31, 19]
+          data: [283, 1666, 1853, 1234, 416, 1392, 356, 232, 773, 477, null],
+          hours: [null, 62, 72, 63, 33, 48, 35, 27, 31, 19, null]
         },
         {
           name: "Cleber",
-          data: [1033, 1301, 1719, 1202, 633, 765, 527, 254, 202, 440],
-          hours: [72, 68, 78, 85, 54, 65, 60, 32, 32, 39]
+          data: [1033, 1301, 1719, 1202, 633, 765, 527, 254, 202, 440, 238],
+          hours: [72, 68, 78, 85, 54, 65, 60, 32, 32, 39, 32]
         },
         {
           name: "Marc R.",
-          data: [937, 1199, 974, 828, 165, 344, 129, 222, 167, 177],
-          hours: [55, 54, 51, 49, null, null, null, 21, null, 23]
+          data: [937, 1199, 974, 828, 165, 344, 129, 222, 167, 177, 121],
+          hours: [55, 54, 51, 49, null, null, null, 21, null, 23, null]
         },
         {
           name: "H. Lucas",
-          data: [900, 1171, 769, 1081, 868, 677, 460, 87, 193, 291],
-          hours: [73, 79, 63, 81, 63, 56, 56, 23, 28, 39]
+          data: [900, 1171, 769, 1081, 868, 677, 460, 87, 193, 291, 154],
+          hours: [73, 79, 63, 81, 63, 56, 56, 23, 28, 39, 23]
         },
         {
           name: "Fernanda",
-          data: [838, 972, 796, 522, 397, 879, 352, 338, 542, 331],
-          hours: [84, 86, 77, 82, 63, 89, 58, 60, 69, 59]
+          data: [838, 972, 796, 522, 397, 879, 352, 338, 542, 331, 353],
+          hours: [84, 86, 77, 82, 63, 89, 58, 60, 69, 59, 42]
         },
         {
           name: "Domi",
-          data: [730, 827, 512, 443, 182, 521, 77, null, null, null],
-          hours: [50, 70, 58, 50, 22, 54, null, null, null, null]
+          data: [730, 827, 512, 443, 182, 521, 77, null, null, null, null],
+          hours: [50, 70, 58, 50, 22, 54, null, null, null, null, null]
         },
         {
           name: "Italo G.",
-          data: [884, 405, 711, 785, 183, 561, 556, 251, 269, 197],
-          hours: [67, 45, 52, 56, 26, 65, 66, 42, 50, 34]
+          data: [884, 405, 711, 785, 183, 561, 556, 251, 269, 197, 157],
+          hours: [67, 45, 52, 56, 26, 65, 66, 42, 50, 34, 34]
         },
         {
           name: "Gabriel B.",
-          data: [476, 440, 720, 545, 207, 326, 294, 116, null, null],
-          hours: [60, 51, 65, 56, 33, 42, 39, 26, null, null]
+          data: [476, 440, 720, 545, 207, 326, 294, 116, null, null, null],
+          hours: [60, 51, 65, 56, 33, 42, 39, 26, null, null, null]
         },
         {
           name: "Ivan F.",
-          data: [486, 657, null, null, null, null, null, null, null, null],
-          hours: [52, 44, null, null, null, null, null, null, null, null]
+          data: [486, 657, null, null, null, null, null, null, null, null, null],
+          hours: [52, 44, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Lexi",
-          data: [null, 607, 289, null, 194, 208, 98, 290, 162, 423],
-          hours: [null, 63, 41, null, 34, 38, 24, 34, 26, 35]
+          data: [null, 607, 289, null, 194, 208, 98, 290, 162, 423, 89],
+          hours: [null, 63, 41, null, 34, 38, 24, 34, 26, 35, 18]
         },
         {
           name: "Paolo P.",
-          data: [412, 614, 349, 276, 131, 336, null, null, null, null],
-          hours: [61, 82, 65, 52, 26, 64, null, null, null, null]
+          data: [412, 614, 349, 276, 131, 336, null, null, null, null, 109],
+          hours: [61, 82, 65, 52, 26, 64, null, null, null, null, 28]
         },
         {
           name: "Leticia M.",
-          data: [411, 542, 218, 394, 348, 516, 296, 94, 170, 143],
-          hours: [66, 52, null, 57, 53, 66, 51, 36, 53, 46]
+          data: [411, 542, 218, 394, 348, 516, 296, 94, 170, 143, 56],
+          hours: [66, 52, null, 57, 53, 66, 51, 36, 53, 46, 16]
         },
         {
           name: "C",
-          data: [null, 230, 509, 320, null, 257, null, null, null, null],
-          hours: [null, null, 74, 51, null, 26, 19, null, null, null]
+          data: [null, 230, 509, 320, null, 257, null, null, null, null, null],
+          hours: [null, null, 74, 51, null, 26, 19, null, null, null, null]
         },
         {
           name: "Jaime T.",
-          data: [null, null, 405, 414, null, 137, null, null, null, null],
-          hours: [null, null, 41, 54, 33, 27, null, null, null, null]
+          data: [null, null, 405, 414, null, 137, null, null, null, null, 67],
+          hours: [null, null, 41, 54, 33, 27, null, null, null, null, 21]
         },
         {
           name: "Ana C.",
-          data: [407, null, 309, 707, 487, 502, 202, 123, 129, 160],
-          hours: [52, 36, 41, 80, 49, 61, 42, 20, 31, 25]
+          data: [407, null, 309, 707, 487, 502, 202, 123, 129, 160, 128],
+          hours: [52, 36, 41, 80, 49, 61, 42, 20, 31, 25, 29]
         },
         {
           name: "Vitor V.",
-          data: [591, null, null, null, null, null, null, null, null, null],
-          hours: [45, null, null, null, null, null, null, null, null, null]
+          data: [591, null, null, null, null, null, null, null, null, null, null],
+          hours: [45, null, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "L E O N V R D X",
-          data: [493, 443, 380, 432, 288, 233, 160, null, null, null],
-          hours: [76, 64, 58, 68, 52, 50, 35, null, null, null]
+          data: [493, 443, 380, 432, 288, 233, 160, null, null, null, null],
+          hours: [76, 64, 58, 68, 52, 50, 35, null, null, null, null]
         },
         {
           name: "Beatriz A.",
-          data: [447, null, 170, null, null, null, null, null, null, null],
-          hours: [39, null, null, null, null, null, null, null, null, null]
+          data: [447, null, 170, null, null, null, null, null, null, null, null],
+          hours: [39, null, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Kari",
-          data: [434, 305, 247, 526, 245, 268, 176, null, 402, 301],
-          hours: [null, 39, null, 57, 37, 34, null, null, 49, 37]
+          data: [434, 305, 247, 526, 245, 268, 176, null, 402, 301, 226],
+          hours: [null, 39, null, 57, 37, 34, null, null, 49, 37, 30]
         },
         {
           name: "Delboni",
-          data: [409, 343, null, null, null, null, null, null, null, null],
-          hours: [46, 56, null, null, null, null, null, null, null, null]
+          data: [409, 343, null, null, null, null, null, null, null, null, null],
+          hours: [46, 56, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Helena",
-          data: [372, null, null, null, 159, null, null, 71, 140, 119],
-          hours: [56, 42, 36, 47, 40, 23, 30, 29, 28, 35]
+          data: [372, null, null, null, 159, null, null, 71, 140, 119, 102],
+          hours: [56, 42, 36, 47, 40, 23, 30, 29, 28, 35, 25]
         },
         {
           name: "Claudio Z.",
-          data: [322, null, null, null, null, null, null, null, null, null],
-          hours: [null, null, null, null, null, null, null, null, null, null]
+          data: [322, null, null, null, null, null, null, null, null, null, null],
+          hours: [null, null, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Andr\xE9",
-          data: [null, 259, null, 220, 161, 331, 203, 124, 233, 282],
-          hours: [44, 41, 46, 39, 42, 47, 40, 34, 39, 45]
+          data: [null, 259, null, 220, 161, 331, 203, 124, 233, 282, 160],
+          hours: [44, 41, 46, 39, 42, 47, 40, 34, 39, 45, 38]
         },
         {
           name: "Camila",
-          data: [null, 213, 175, null, null, null, null, 50, null, null],
-          hours: [null, 38, 33, null, null, null, null, null, null, null]
+          data: [null, 213, 175, null, null, null, null, 50, null, null, null],
+          hours: [null, 38, 33, null, null, null, null, null, null, null, 12]
         },
         {
           name: "Juan",
-          data: [null, 194, null, null, null, null, null, 169, 196, 496],
-          hours: [null, null, null, null, null, null, null, null, null, 23]
+          data: [null, 194, null, null, null, null, null, 169, 196, 496, 233],
+          hours: [null, null, null, null, null, null, null, null, null, 23, 23]
         },
         {
           name: "Jader T.",
-          data: [null, null, 166, 261, null, null, null, 92, 156, 184],
-          hours: [44, null, 49, 46, 22, 34, 30, 35, 37, 45]
+          data: [null, null, 166, 261, null, null, null, 92, 156, 184, 77],
+          hours: [44, null, 49, 46, 22, 34, 30, 35, 37, 45, 22]
         },
         {
           name: "Ricardo L.",
-          data: [null, null, null, 722, 123, null, null, null, null, null],
-          hours: [null, null, null, null, null, null, null, null, null, null]
+          data: [null, null, null, 722, 123, null, null, null, null, null, null],
+          hours: [null, null, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Vic",
-          data: [null, null, null, 349, 160, null, 85, null, null, null],
-          hours: [null, null, null, 45, 20, null, 22, null, null, null]
+          data: [null, null, null, 349, 160, null, 85, null, null, null, null],
+          hours: [null, null, null, 45, 20, null, 22, null, null, null, null]
         },
         {
           name: "BoTina",
-          data: [null, null, null, null, null, null, null, null, null, null],
-          hours: [67, null, null, null, null, null, null, null, null, null]
+          data: [null, null, null, null, null, null, null, null, null, null, null],
+          hours: [67, null, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Lucas N.",
-          data: [null, null, null, null, null, null, null, null, null, null],
-          hours: [null, null, 47, null, null, null, null, null, null, null]
+          data: [null, null, null, null, null, null, null, null, null, null, null],
+          hours: [null, null, 47, null, null, null, null, null, null, null, 17]
         },
         {
           name: "Narumi",
-          data: [null, null, null, null, 224, null, null, 59, null, null],
-          hours: [null, null, null, null, 41, 41, 27, 22, 29, 33]
+          data: [null, null, null, null, 224, null, null, 59, null, null, 64],
+          hours: [null, null, null, null, 41, 41, 27, 22, 29, 33, 36]
         },
         {
           name: "Gabriel M.",
-          data: [null, null, null, null, null, 261, 168, null, null, null],
-          hours: [null, null, null, null, null, null, null, null, null, null]
+          data: [null, null, null, null, null, 261, 168, null, null, null, null],
+          hours: [null, null, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Jessica",
-          data: [null, null, null, null, null, 144, 178, null, null, 97],
-          hours: [null, null, null, null, null, null, null, null, null, null]
+          data: [null, null, null, null, null, 144, 178, null, null, 97, null],
+          hours: [null, null, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Fernando S.",
-          data: [null, null, null, null, null, null, 155, null, 228, 285],
-          hours: [null, null, null, null, null, null, null, 19, 31, 38]
+          data: [null, null, null, null, null, null, 155, null, 228, 285, 179],
+          hours: [null, null, null, null, null, null, null, 19, 31, 38, 25]
         },
         {
           name: "Guilherme",
-          data: [null, null, null, null, null, null, 109, null, null, null],
-          hours: [null, null, null, null, null, null, 24, null, null, null]
+          data: [null, null, null, null, null, null, 109, null, null, null, null],
+          hours: [null, null, null, null, null, null, 24, null, null, null, null]
         },
         {
           name: "Bia",
-          data: [null, null, null, null, null, null, null, null, null, null],
-          hours: [null, null, null, null, null, null, 22, null, null, null]
+          data: [null, null, null, null, null, null, null, null, null, null, null],
+          hours: [null, null, null, null, null, null, 22, null, null, null, null]
         },
         {
           name: "Lucas",
-          data: [null, null, null, null, null, null, null, null, null, null],
-          hours: [null, null, null, null, null, null, 21, 16, null, null]
+          data: [null, null, null, null, null, null, null, null, null, null, null],
+          hours: [null, null, null, null, null, null, 21, 16, null, null, null]
         },
         {
           name: "Luigor L.",
-          data: [null, null, null, null, null, null, null, 188, 198, 229],
-          hours: [null, null, null, null, null, null, null, null, 24, 23]
+          data: [null, null, null, null, null, null, null, 188, 198, 229, null],
+          hours: [null, null, null, null, null, null, null, null, 24, 23, null]
         },
         {
           name: "Bernardo",
-          data: [null, null, null, null, null, null, null, 111, 168, null],
-          hours: [null, null, null, null, null, null, null, null, 31, null]
+          data: [null, null, null, null, null, null, null, 111, 168, null, null],
+          hours: [null, null, null, null, null, null, null, null, 31, null, null]
         },
         {
           name: "Rafael M.",
-          data: [null, null, null, null, null, null, null, 53, null, 84],
-          hours: [null, null, null, null, null, null, null, 20, 24, null]
+          data: [null, null, null, null, null, null, null, 53, null, 84, null],
+          hours: [null, null, null, null, null, null, null, 20, 24, null, 12]
         },
         {
           name: "Renan",
-          data: [null, null, null, null, null, null, null, null, null, null],
-          hours: [null, null, null, null, null, null, null, 17, 18, 20]
+          data: [null, null, null, null, null, null, null, null, null, null, null],
+          hours: [null, null, null, null, null, null, null, 17, 18, 20, null]
         },
         {
           name: "Matheus B.",
-          data: [null, null, null, null, null, null, null, null, 122, null],
-          hours: [null, null, null, null, null, null, null, 16, 26, null]
+          data: [null, null, null, null, null, null, null, null, 122, null, null],
+          hours: [null, null, null, null, null, null, null, 16, 26, null, null]
         },
         {
           name: "I love u",
-          data: [null, null, null, null, null, null, null, null, 254, null],
-          hours: [null, null, null, null, null, null, null, null, null, null]
+          data: [null, null, null, null, null, null, null, null, 254, null, null],
+          hours: [null, null, null, null, null, null, null, null, null, null, null]
         },
         {
           name: "Bader",
-          data: [null, null, null, null, null, null, null, null, null, 171],
-          hours: [null, null, null, null, null, null, null, null, null, 20]
+          data: [null, null, null, null, null, null, null, null, null, 171, 50],
+          hours: [null, null, null, null, null, null, null, null, null, 20, null]
+        },
+        {
+          name: "Melvino N.",
+          data: [null, null, null, null, null, null, null, null, null, null, 100],
+          hours: [null, null, null, null, null, null, null, null, null, null, null]
         }
       ];
     }
@@ -743,8 +749,7 @@
         iconTheme.innerHTML = dark ? SVG_SUN : SVG_MOON;
         if (animate) animateLiquidToggle(toggleTheme, dark);
         else syncLiquidToggle(toggleTheme, dark);
-        if (persist)
-          localStorage.setItem("falatina-theme", dark ? "dark" : "light");
+        if (persist) localStorage.setItem("falatina-theme", dark ? "dark" : "light");
         updateChartTheme(dark);
       }
       toggleTheme.addEventListener("click", () => {
@@ -872,6 +877,14 @@
             const activeHours = chart2.data.datasets[0].data[dIdx];
             bodyText = `Ativas: ${activeHours.toFixed(1)}h \xB7 Inativas: ${hours.toFixed(1)}h`;
           }
+        } else if (currentView === "cumulative") {
+          color = dp.dataset.borderColor;
+          titleText = dp.dataset.label;
+          bodyText = `Total: ${dp.parsed.y.toLocaleString("pt-BR")} mensagens`;
+        } else if (currentView === "weekly-total") {
+          color = dp.dataset.borderColor;
+          titleText = dp.dataset.label;
+          bodyText = `Total: ${dp.parsed.y.toLocaleString("pt-BR")} mensagens`;
         } else {
           color = dp.dataset.borderColor;
           titleText = dp.dataset.label;
@@ -1210,12 +1223,8 @@
       function buildWeeklyRanking() {
         const el = document.getElementById("ranking-weekly");
         const labelEl = document.getElementById("carousel-label");
-        const prevBtn = document.getElementById(
-          "carousel-prev"
-        );
-        const nextBtn = document.getElementById(
-          "carousel-next"
-        );
+        const prevBtn = document.getElementById("carousel-prev");
+        const nextBtn = document.getElementById("carousel-next");
         el.innerHTML = "";
         labelEl.textContent = WEEKS[carouselWeekIndex];
         prevBtn.disabled = carouselWeekIndex === 0;
@@ -1295,7 +1304,8 @@
         document.body.classList.toggle("view-proportion", view === "proportion");
         if (view === "messages") currentMetric = "messages";
         else if (view === "hours" || view === "proportion") currentMetric = "hours";
-        if (view === "scatter" || view === "heatmap") currentMetric = "messages";
+        if (view === "scatter" || view === "heatmap" || view === "weekly-total" || view === "cumulative")
+          currentMetric = "messages";
         document.querySelectorAll(".metric-tab").forEach((tab) => {
           const isActive = tab.dataset.metric === view;
           tab.classList.toggle("active", isActive);
@@ -1307,7 +1317,9 @@
           hours: "Horas ativas por semana",
           scatter: "Efici\xEAncia \xB7 mensagens vs horas",
           heatmap: "Intensidade \xB7 msg/h por semana",
-          proportion: "Propor\xE7\xE3o \xB7 horas ativas de 168h"
+          proportion: "Propor\xE7\xE3o \xB7 horas ativas de 168h",
+          "weekly-total": "Total Top 20 por semana",
+          cumulative: "Acumulado por usu\xE1rio"
         };
         if (brandSub) brandSub.textContent = subtitles[view];
         if (chart) {
@@ -1331,6 +1343,10 @@
             chart = buildScatterChart();
           } else if (view === "proportion") {
             chart = buildProportionChart();
+          } else if (view === "weekly-total") {
+            chart = buildWeeklyTotalChart();
+          } else if (view === "cumulative") {
+            chart = buildCumulativeChart();
           } else {
             chart = buildChart();
           }
@@ -1582,9 +1598,7 @@
         const activeDs = {
           label: "Horas ativas",
           data: data.map((d) => d.avg),
-          backgroundColor: data.map(
-            (d) => palette[d.idx % palette.length] + "cc"
-          ),
+          backgroundColor: data.map((d) => palette[d.idx % palette.length] + "cc"),
           borderColor: data.map((d) => palette[d.idx % palette.length]),
           borderWidth: 1.5,
           borderRadius: 4,
@@ -1652,6 +1666,202 @@
                   autoSkip: false
                 },
                 border: { color: "transparent" }
+              }
+            }
+          }
+        });
+      }
+      function buildWeeklyTotalChart() {
+        const canvas = document.getElementById("chart");
+        const dark = document.documentElement.dataset.theme === "dark";
+        const c = getChartColors(dark);
+        const weeklyTotals = WEEKS.map((_, weekIdx) => {
+          return PARTICIPANTS.map((p) => ({
+            count: p.data[weekIdx]
+          })).filter((p) => p.count !== null).sort((a, b) => b.count - a.count).slice(0, 20).reduce((sum, p) => sum + p.count, 0);
+        });
+        return new Chart(canvas, {
+          type: "line",
+          data: {
+            labels: WEEKS,
+            datasets: [
+              {
+                label: "Total Top 20",
+                data: weeklyTotals,
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(),
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 10,
+                pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(),
+                pointBorderColor: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(),
+                pointHoverBorderWidth: 2.5,
+                pointHoverBorderColor: "#ffffff",
+                tension: 0.35,
+                fill: true,
+                backgroundColor: dark ? "rgba(74,222,128,0.08)" : "rgba(37,211,102,0.10)"
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 400 },
+            interaction: {
+              mode: "nearest",
+              intersect: false,
+              axis: "xy"
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                enabled: false,
+                external: externalTooltipHandler
+              }
+            },
+            onHover: (evt, elements) => {
+              if (evt.native?.target) {
+                evt.native.target.style.cursor = elements.length > 0 ? "pointer" : "default";
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: c.grid },
+                ticks: {
+                  color: c.text,
+                  font: {
+                    family: "Inter, sans-serif",
+                    size: 13,
+                    weight: "600"
+                  }
+                },
+                border: { color: "transparent" }
+              },
+              y: {
+                grid: { color: c.grid },
+                ticks: {
+                  color: c.text,
+                  font: { family: "Inter, sans-serif", size: 12 },
+                  maxTicksLimit: 8
+                },
+                border: { color: "transparent" },
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+      function buildCumulativeChart() {
+        const canvas = document.getElementById("chart");
+        const dark = document.documentElement.dataset.theme === "dark";
+        const c = getChartColors(dark);
+        const palette = ACCENT_THEMES[currentAccent].palette;
+        const ranked = PARTICIPANTS.map((p, idx) => ({
+          name: p.name,
+          idx,
+          total: p.data.reduce((s, v) => s + (v ?? 0), 0)
+        })).sort((a, b) => b.total - a.total);
+        const datasets = ranked.map((p, i) => {
+          const color = palette[i % palette.length];
+          let cumulative = 0;
+          const cumulativeData = WEEKS.map((_, w) => {
+            const val = PARTICIPANTS[p.idx].data[w];
+            if (val === null) return null;
+            cumulative += val;
+            return cumulative;
+          });
+          return {
+            label: p.name,
+            data: cumulativeData,
+            borderColor: color,
+            backgroundColor: color + "22",
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointHoverRadius: 9,
+            pointBackgroundColor: color,
+            pointBorderColor: color,
+            pointHoverBorderWidth: 2.5,
+            pointHoverBorderColor: "#ffffff",
+            tension: 0.35,
+            spanGaps: true
+          };
+        });
+        return new Chart(canvas, {
+          type: "line",
+          plugins: [dimPlugin],
+          data: {
+            labels: WEEKS,
+            datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 400 },
+            interaction: {
+              mode: "nearest",
+              intersect: false,
+              axis: "xy"
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                enabled: false,
+                external: externalTooltipHandler
+              }
+            },
+            onHover: (evt, elements) => {
+              if (evt.native?.target) {
+                evt.native.target.style.cursor = elements.length > 0 ? "pointer" : "default";
+              }
+              if (elements.length > 0) {
+                const idx = elements[0].datasetIndex;
+                if (highlightedIndex !== idx) {
+                  highlightedIndex = idx;
+                  syncLegendHover(idx);
+                }
+              } else if (highlightedIndex !== null) {
+                highlightedIndex = null;
+                syncLegendHover(pinFocusIndex);
+              }
+            },
+            onClick: (evt, _elements, ch) => {
+              if (!evt.native) return;
+              const hits = ch.getElementsAtEventForMode(
+                evt.native,
+                "nearest",
+                { intersect: true },
+                false
+              );
+              if (hits.length > 0) {
+                const idx = hits[0].datasetIndex;
+                pinFocusIndex = pinFocusIndex === idx ? null : idx;
+              } else {
+                pinFocusIndex = null;
+              }
+              ch.update("none");
+              syncLegendHover(pinFocusIndex);
+            },
+            scales: {
+              x: {
+                grid: { color: c.grid },
+                ticks: {
+                  color: c.text,
+                  font: {
+                    family: "Inter, sans-serif",
+                    size: 13,
+                    weight: "600"
+                  }
+                },
+                border: { color: "transparent" }
+              },
+              y: {
+                grid: { color: c.grid },
+                ticks: {
+                  color: c.text,
+                  font: { family: "Inter, sans-serif", size: 12 },
+                  maxTicksLimit: 8
+                },
+                border: { color: "transparent" },
+                beginAtZero: true
               }
             }
           }
@@ -1841,11 +2051,7 @@
             const prev = exportPrevCountMap.get(p.name) ?? 0;
             const diff = p.count - prev;
             ctx.fillStyle = diff > 0 ? positiveColor : diff < 0 ? negativeColor : fgMuted;
-            ctx.fillText(
-              diff > 0 ? `+${diff}` : String(diff || "="),
-              R_END,
-              rightY
-            );
+            ctx.fillText(diff > 0 ? `+${diff}` : String(diff || "="), R_END, rightY);
           }
           rightY += ROW_H;
         });
@@ -1891,8 +2097,10 @@
                 <li><strong>Efici\xEAncia</strong> \u2014 scatter plot de total de mensagens (eixo Y) vs total de horas ativas (eixo X), agregado em todas as semanas por participante. Pontos mais altos e \xE0 esquerda indicam maior efici\xEAncia (mais msg/h). O tooltip mostra nome, totais e msg/h m\xE9dio.</li>
                 <li><strong>Intensidade</strong> \u2014 heatmap de msg/h por participante e semana. Cores quentes (vermelho) indicam alta taxa, frias (azul) indicam baixa. A coluna "M\xE9dia" mostra a taxa m\xE9dia geral.</li>
                 <li><strong>Propor\xE7\xE3o</strong> \u2014 barras horizontais empilhadas mostrando horas ativas (colorido) vs inativas (cinza) de um total de 168h semanais. Exibe a m\xE9dia de todas as semanas de cada participante.</li>
+                <li><strong>Sum\xE1rio Top 20</strong> \u2014 linha \xFAnica com o total de mensagens dos top 20 participantes de cada semana, ordenados por quantidade de mensagens. Ideal para comparar semanas mais e menos movimentadas.</li>
+                <li><strong>Acumulado</strong> \u2014 linhas do acumulado de mensagens por usu\xE1rio semana a semana (todos os participantes). Semanas sem dados do usu\xE1rio aparecem como um gap na linha; quando ele volta a enviar mensagens, a linha retoma do valor acumulado correto.</li>
              </ul>
-             <p class="help-p" style="margin-top:4px">Todas as abas incluem <strong>msg/h</strong> no tooltip e nas tabelas de ranking quando ambos os dados existem.</p>`
+             <p class="help-p" style="margin-top:4px">A taxa <strong>msg/h</strong> aparece no tooltip dos gr\xE1ficos de Mensagens e Horas Ativas, no scatter de Efici\xEAncia, e nas tabelas de ranking (Top 10 e Top 20) em todas as abas quando ambos os dados existem.</p>`
           ),
           section(
             iLegend,
@@ -1976,8 +2184,7 @@
         btnToggleSidebar.setAttribute("aria-pressed", String(!hidden));
         btnToggleSidebar.setAttribute("aria-label", label);
         btnToggleSidebar.title = label;
-        if (persist)
-          localStorage.setItem(SIDEBAR_KEY, hidden ? "hidden" : "visible");
+        if (persist) localStorage.setItem(SIDEBAR_KEY, hidden ? "hidden" : "visible");
       }
       applySidebarState(localStorage.getItem(SIDEBAR_KEY) === "hidden", false);
       if (btnToggleSidebar && rankingCol) {
