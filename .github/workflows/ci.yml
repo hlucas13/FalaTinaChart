@@ -20,21 +20,16 @@ jobs:
           cache-dependency-path: "**/package-lock.json"
 
       - name: Install dependencies
-        working-directory: FalaTina
         run: npm ci
 
       - name: Type check
-        working-directory: FalaTina
         run: npm run typecheck
 
       - name: Lint
-        working-directory: FalaTina
         run: npm run lint
 
       - name: Data integrity test
-        working-directory: FalaTina
         run: npm test
 
       - name: Build
-        working-directory: FalaTina
         run: npm run build

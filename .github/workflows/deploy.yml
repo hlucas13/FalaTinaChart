@@ -38,27 +38,21 @@ jobs:
           cache-dependency-path: "**/package-lock.json"
 
       - name: Install dependencies
-        working-directory: FalaTina
         run: npm ci
 
       - name: Type check
-        working-directory: FalaTina
         run: npm run typecheck
 
       - name: Lint
-        working-directory: FalaTina
         run: npm run lint
 
       - name: Data integrity test
-        working-directory: FalaTina
         run: npm test
 
       - name: Build
-        working-directory: FalaTina
         run: npm run build
 
       - name: Inject cache-busting hash
-        working-directory: FalaTina
         run: |
           HASH=$(md5sum app.bundle.js | cut -c1-8)
           sed -i "s|<script src=\"app\\.bundle\\.js\">|<script src=\"app.bundle.js?h=$HASH\">|" index.html
@@ -70,7 +64,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: FalaTina
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
