@@ -73,13 +73,24 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
 
 5. **Horas ativas**: conta-se uma hora se o participante enviou pelo menos uma mensagem dentro do intervalo XX:00 a XX:59. Ex: 2 msgs às 10h20 e 1 msg às 11h30 = 2 horas ativas (slots 10h–10h59 e 11h–11h59).
 
-6. Execute `node build.js` para gerar o bundle:
+6. Faça commit e push para a branch `main`:
 
    ```bash
-   node build.js
+   git add src/data.ts
+   git commit -m "feat(data): add W22"
+   git push
    ```
 
-7. Faça commit de `app.bundle.js` e push — o GitHub Pages atualiza automaticamente.
+7. O **GitHub Actions** executa automaticamente:
+   - **TypeScript check** (`tsc --noEmit`)
+   - **Lint** (`eslint`)
+   - **Teste de integridade** (`node test-data.js`)
+   - **Build** (`node build.js`)
+   - **Deploy** para GitHub Pages
+
+   > Acompanhe o progresso em **Actions** no repositório.
+
+8. O site é publicado em `https://hlucas13.github.io/FalaTinaChart/` — sem necessidade de build local nem commit do bundle.
 
 ---
 
@@ -166,7 +177,16 @@ open index.html
 
 ## Deploy para GitHub Pages
 
-1. Criar o repositório `FalaTinaChart` no GitHub
-2. Fazer push de todos os arquivos (incluindo `app.bundle.js`)
-3. Nas configurações do repositório → Pages → Branch: `main`, pasta: `/ (root)`
-4. O site fica disponível em `https://<username>.github.io/FalaTinaChart/`
+O deploy é automatizado via GitHub Actions. Ao fazer push para `main`:
+
+1. O workflow de **Deploy** é acionado automaticamente
+2. Ele executa typecheck, lint, teste de dados e build
+3. O conteúdo da pasta `FalaTina/` é publicado no GitHub Pages
+
+### Configuração necessária no repositório (uma vez)
+
+1. Vá em **Settings → Pages** do repositório `FalaTinaChart`
+2. Em **Source**, selecione **GitHub Actions**
+3. Pronto — os próximos pushes vão disparar o deploy automático
+
+> O site fica disponível em `https://hlucas13.github.io/FalaTinaChart/`
