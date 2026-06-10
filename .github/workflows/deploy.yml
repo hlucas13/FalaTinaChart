@@ -46,17 +46,11 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Data integrity test
+      - name: Test
         run: npm test
 
       - name: Build
         run: npm run build
-
-      - name: Inject cache-busting hash
-        run: |
-          HASH=$(md5sum app.bundle.js | cut -c1-8)
-          sed -i "s|<script src=\"app\\.bundle\\.js\">|<script src=\"app.bundle.js?h=$HASH\">|" index.html
-          echo "✅ index.html — cache-bust hash set to $HASH"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -64,7 +58,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment

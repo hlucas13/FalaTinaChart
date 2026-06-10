@@ -3,3 +3,4 @@ node_modules/
 *.local
 data-reference.md
 app.bundle.js
+dist/

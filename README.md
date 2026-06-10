@@ -1,79 +1,79 @@
 # Fala Tina
 
-Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** no WhatsApp — construído com uma estética **Liquid Glass** inspirada em refração física da luz.
+Interactive line chart for the **Fala Tina** WhatsApp group's weekly message stats — built with a **Liquid Glass** aesthetic inspired by physical light refraction.
 
-**[→ Abrir Fala Tina](https://hlucas13.github.io/FalaTinaChart/)**
-
----
-
-## Funcionalidades
-
-- **Gráfico de linhas interativo** — cada participante é uma linha colorida; passe o mouse sobre qualquer ponto para ver um tooltip com vidro líquido exibindo o nome do participante e a quantidade de mensagens naquela semana
-- **7 abas de visualização** — alterne entre diferentes perspectivas dos dados:
-  - **Mensagens** — gráfico de linhas com o total de mensagens por semana (visão padrão)
-  - **Horas Ativas** — gráfico de linhas com as horas ativas por semana (conta horas distintas em que o participante enviou pelo menos uma mensagem)
-  - **Eficiência** — scatter plot de total de mensagens (eixo Y) vs total de horas ativas (eixo X), agregado em todas as semanas por participante; pontos mais altos e à esquerda indicam maior msg/h; tooltip mostra nome, totais e msg/h médio
-  - **Intensidade** — heatmap de msg/h por participante e semana; cores quentes indicam alta taxa, frias indicam baixa; coluna "Média" com a taxa geral
-  - **Proporção** — barras horizontais empilhadas mostrando horas ativas (colorido) vs inativas (cinza) de um total de 168h semanais
-  - **Sumário Top 20** — linha única com o total de mensagens dos top 20 participantes de cada semana; ideal para comparar semanas mais e menos agitadas
-  - **Acumulado** — linhas do acumulado de mensagens por usuário semana a semana; semanas sem dados aparecem como gaps na linha
-- **Métrica msg/h** — a taxa de mensagens por hora aparece no tooltip dos gráficos de Mensagens e Horas Ativas, no scatter de Eficiência, e nas tabelas de ranking (Top 10 e Top 20) em todas as abas quando ambos os dados existem
-- **Tooltip por participante** — ao passar o mouse sobre o gráfico, é exibido o tooltip apenas da linha mais próxima do cursor; todas as linhas permanecem visíveis
-- **Foco por clique** — clique num ponto do gráfico para fixar o destaque naquela linha (as demais ficam semi-transparentes); clique novamente no mesmo ponto ou numa área vazia para voltar a exibir todas com opacidade plena
-- **Legenda clicável** — clique em uma pílula da legenda para mostrar ou ocultar um participante; passe o mouse para destacá-lo isoladamente
-- **Tooltip com Liquid Glass** — o container do tooltip usa o mesmo efeito de vidro físico da dock e dos painéis
-- **Exportar PNG** — clique em **Exportar** na dock para abrir o menu de exportação; escolha **Com tabelas** (gráfico + legenda + Top 10 e Top 20) ou **Sem tabelas** (só gráfico e legenda); a imagem PNG é salva com o fundo e as cores do tema atual; uma confirmação aparece brevemente após guardar
-- **Temas de cor** — 4 paletas de destaque (WhatsApp verde, Oceano azul, Uva roxo, Pôr do Sol laranja), cada uma com 32 cores distintas para as linhas do gráfico ordenadas para contrastar com o fundo do tema, em modo claro e escuro
-- **Modo escuro / claro** — alternância completa com transição animada Liquid Glass; segue automaticamente a preferência do sistema
-- **Vidro fosco** — ativa o efeito de desfoque atrás dos painéis e da dock (Liquid Glass frosted)
-- **Mostrar / ocultar legenda** — toggle nas Configurações para esconder a barra de participantes e expandir o gráfico
-- **Preferências salvas** — modo escuro, vidro fosco, paleta de cor, visibilidade da legenda e estado do painel de ranking são guardados no navegador (`localStorage`) e restaurados automaticamente na próxima visita
-- **Ajuda & Wiki** — painel integrado nas Configurações com instruções de uso
-- **Tecla ESC** — fecha qualquer menu aberto ou o painel de ajuda sem precisar clicar
-- **Notificação de exportação** — exibe uma confirmação breve após salvar a imagem PNG
-- **Tabelas de ranking** — painel lateral à direita com **Top 10 Geral** (total de mensagens/horas + média semanal + msg/h) e **Top 20 por Semana** em carrossel navegável com setas; o Top 20 mostra a variação em relação à semana anterior, setas ▲/▼ de posição, badge **NEW** para entradas novas, e msg/h por linha
-- **Ocultar / mostrar ranking** — botão no cabeçalho da página (visível apenas em landscape) para colapsar e expandir o painel lateral de ranking com animação suave
-- **Responsivo** — funciona em telas verticais (portrait); painel de ranking é empilhado abaixo do gráfico em portrait
-- **Site estático** — funciona no GitHub Pages sem servidor; 100% CDN
+**[→ Open Fala Tina](https://hlucas13.github.io/FalaTinaChart/)**
 
 ---
 
-## Dock — botões disponíveis
+## Features
 
-| Botão             | Visibilidade | Ação                                                                   |
-| ----------------- | ------------ | ---------------------------------------------------------------------- |
-| **Exportar**      | Sempre       | Abre menu com **Com tabelas** e **Sem tabelas**; salva PNG diretamente |
-| **Temas**         | Sempre       | Abre seletor de 4 temas de cor                                         |
-| **Configurações** | Sempre       | Modo escuro, vidro fosco, legenda, Ajuda                               |
-
-> **Botão de painel** — no cabeçalho da página (apenas landscape) há um botão de painel duplo que colapsa/expande o painel de ranking lateral com animação suave.
+- **Interactive line chart** — each participant is a coloured line; hover any point to see a liquid-glass tooltip showing the name and message count for that week
+- **7 view tabs** — switch between different data perspectives:
+  - **Messages** — line chart of total messages per week (default view)
+  - **Active Hours** — line chart of active hours per week (counts distinct hours where the participant sent at least one message)
+  - **Efficiency** — scatter plot of total messages (Y axis) vs total active hours (X axis), aggregated across all weeks per participant; higher and leftward points mean higher msg/h; tooltip shows name, totals, and average msg/h
+  - **Intensity** — heatmap of msg/h per participant and week; warm colours indicate high rate, cool colours indicate low; "Average" column with the overall rate
+  - **Proportion** — stacked horizontal bars showing active hours (coloured) vs inactive hours (grey) out of a 168-hour week
+  - **Top 20 Summary** — single line with the total messages of the top 20 participants each week; ideal for comparing busy vs quiet weeks
+  - **Cumulative** — running total lines per user week by week; gaps appear when a user has no data
+- **msg/h metric** — messages-per-hour rate appears in the tooltip of Messages and Active Hours charts, in the Efficiency scatter plot, and in the ranking tables (Top 10 & Top 20) on every tab when both data points exist
+- **Per-participant tooltip** — hovering the chart shows the tooltip only for the nearest line; all other lines remain visible
+- **Click to focus** — click a chart point to lock the highlight on that line (others turn semi-transparent); click the same point or an empty area to restore full opacity
+- **Clickable legend** — click a legend pill to show or hide a participant; hover it to highlight that participant alone
+- **Liquid Glass tooltip** — the tooltip container uses the same physical glass effect as the dock and panels
+- **Export PNG** — click **Export** in the dock to open the export menu; choose **With tables** (chart + legend + Top 10 & Top 20) or **Without tables** (chart + legend only); the PNG is saved with the current theme's background and colours; a brief confirmation appears after saving
+- **Colour themes** — 4 accent palettes (WhatsApp green, Oceano blue, Uva purple, Pôr do Sol orange), each with 32 distinct chart-line colours ordered to contrast against the theme's background, in both light and dark mode
+- **Dark / light mode** — full toggle with Liquid Glass animated transition; follows system preference automatically
+- **Frosted glass** — enables the blur effect behind panels and the dock (Liquid Glass frosted)
+- **Show / hide legend** — toggle in Settings to hide the participant bar and expand the chart
+- **Saved preferences** — dark mode, frosted glass, colour palette, legend visibility, and ranking panel state are stored in the browser (`localStorage`) and restored automatically on next visit
+- **Help & Wiki** — built-in panel in Settings with usage instructions
+- **ESC key** — closes any open menu or the help panel without clicking
+- **Export notification** — shows a brief confirmation after saving the PNG
+- **Ranking tables** — right-side panel with **All-time Top 10** (total messages/hours + weekly average + msg/h) and **Weekly Top 20** in a navigable carousel with arrows; the Top 20 shows the change from the previous week, ▲/▼ position arrows, a **NEW** badge for new entries, and msg/h per row
+- **Hide / show ranking** — button in the page header (visible only in landscape) to collapse and expand the ranking panel with a smooth animation
+- **Responsive** — works on portrait screens; the ranking panel stacks below the chart in portrait
+- **Static site** — runs on GitHub Pages with no server needed; 100% CDN
 
 ---
 
-## Como atualizar os dados
+## Dock buttons
 
-1. Abra `src/data.ts`
-2. Adicione a nova semana ao array `WEEKS`:
+| Button       | Visibility | Action                                                                     |
+| ------------ | ---------- | -------------------------------------------------------------------------- |
+| **Export**   | Always     | Opens menu with **With tables** and **Without tables**; saves PNG directly |
+| **Themes**   | Always     | Opens a 4-theme colour picker                                              |
+| **Settings** | Always     | Dark mode, frosted glass, legend, Help                                     |
+
+> **Panel button** — in the page header (landscape only) there is a double-panel button that collapses/expands the ranking sidebar with a smooth animation.
+
+---
+
+## How to update the data
+
+1. Open `src/data.ts`
+2. Add the new week to the `WEEKS` array:
 
    ```typescript
    export const WEEKS: string[] = ["W10", "W11", "W12", "W13"];
    ```
 
-3. Para cada participante em `PARTICIPANTS`, adicione o novo valor nos arrays `data` (mensagens) e `hours` (horas ativas), na mesma posição que `WEEKS`. Use `null` se o participante não enviou mensagens ou não tem dados nessa semana:
+3. For each participant in `PARTICIPANTS`, add the new value to the `data` (messages) and `hours` (active hours) arrays, at the same position as `WEEKS`. Use `null` if the participant sent no messages or has no data for that week:
 
    ```typescript
    { name: 'Nay', data: [2392, 2883, 2101, 1980], hours: [74, 82, 75, 68] },
    ```
 
-4. Para adicionar um novo participante, acrescente uma nova entrada:
+4. To add a new participant, append a new entry:
 
    ```typescript
-   { name: 'Novo Participante', data: [null, null, null, 300], hours: [null, null, null, 20] },
+   { name: 'New Participant', data: [null, null, null, 300], hours: [null, null, null, 20] },
    ```
 
-5. **Horas ativas**: conta-se uma hora se o participante enviou pelo menos uma mensagem dentro do intervalo XX:00 a XX:59. Ex: 2 msgs às 10h20 e 1 msg às 11h30 = 2 horas ativas (slots 10h–10h59 e 11h–11h59).
+5. **Active hours**: count one hour if the participant sent at least one message within the XX:00–XX:59 window. E.g. 2 msgs at 10:20 and 1 msg at 11:30 = 2 active hours (slots 10h–10h59 and 11h–11h59).
 
-6. Faça commit e push para a branch `main`:
+6. Commit and push to the `main` branch:
 
    ```bash
    git add src/data.ts
@@ -81,112 +81,128 @@ Gráfico de linhas interativo com as mensagens semanais do grupo **Fala Tina** n
    git push
    ```
 
-7. O **GitHub Actions** executa automaticamente:
+7. **GitHub Actions** runs automatically:
    - **TypeScript check** (`tsc --noEmit`)
    - **Lint** (`eslint`)
-   - **Teste de integridade** (`node test-data.js`)
-   - **Build** (`node build.js`)
-   - **Deploy** para GitHub Pages
+   - **Tests** (`vitest run`)
+   - **Build** (`vite build`)
+   - **Deploy** to GitHub Pages
 
-   > Acompanhe o progresso em **Actions** no repositório.
+   > Track progress under **Actions** in the repository.
 
-8. O site é publicado em `https://hlucas13.github.io/FalaTinaChart/` — sem necessidade de build local nem commit do bundle.
+8. The site is published at `https://hlucas13.github.io/FalaTinaChart/` — no local build or bundle commit required.
 
 ---
 
 ## Tech Stack
 
-### Runtime (CDN — sem instalação local)
+### Runtime (CDN — no local installation)
 
-| Biblioteca                           | Versão | Propósito                               |
-| ------------------------------------ | ------ | --------------------------------------- |
-| [Chart.js](https://www.chartjs.org/) | 4      | Gráfico de linhas com tooltip e legenda |
-| [GSAP](https://gsap.com/)            | 3      | Animações dos toggles Liquid Glass      |
+| Library                              | Version | Purpose                            |
+| ------------------------------------ | ------- | ---------------------------------- |
+| [Chart.js](https://www.chartjs.org/) | 4       | Line chart with tooltip and legend |
+| [GSAP](https://gsap.com/)            | 3       | Liquid Glass toggle animations     |
 
-### Build & Dev tooling (local, não incluído no bundle)
+### Build & Dev tooling (local, not included in the bundle)
 
-| Ferramenta                                                                            | Propósito                                                                      |
-| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| [esbuild](https://esbuild.github.io/)                                                 | Empacota `src/main.ts` e todas as importações em um único IIFE `app.bundle.js` |
-| [TypeScript](https://www.typescriptlang.org/)                                         | Verificação de tipos (`tsc --noEmit`); compilação feita pelo esbuild           |
-| [ESLint](https://eslint.org/) + [`@typescript-eslint`](https://typescript-eslint.io/) | Análise estática de todos os arquivos `.ts`                                    |
-| [Prettier](https://prettier.io/)                                                      | Formatação de código                                                           |
-| [Husky](https://typicode.github.io/husky/)                                            | Git hooks: lint-staged no `pre-commit`, commitlint no `commit-msg`             |
-| [lint-staged](https://github.com/lint-staged/lint-staged)                             | No commit, executa ESLint + Prettier apenas nos arquivos staged                |
-| [commitlint](https://commitlint.js.org/)                                              | Exige o formato [Conventional Commits](https://www.conventionalcommits.org/)   |
+| Tool                                                                                  | Purpose                                                                      |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Vite](https://vitejs.dev/)                                                           | Dev server with HMR and production bundler                                   |
+| [Vitest](https://vitest.dev/)                                                         | Unit testing (30 tests covering data integrity, business logic & themes)     |
+| [TypeScript](https://www.typescriptlang.org/)                                         | Type checking (`tsc --noEmit`)                                               |
+| [ESLint](https://eslint.org/) + [`@typescript-eslint`](https://typescript-eslint.io/) | Static analysis for all `.ts` files                                          |
+| [Prettier](https://prettier.io/)                                                      | Code formatting                                                              |
+| [Husky](https://typicode.github.io/husky/)                                            | Git hooks: lint-staged on `pre-commit`, commitlint on `commit-msg`           |
+| [lint-staged](https://github.com/lint-staged/lint-staged)                             | On commit, runs ESLint + Prettier only on staged files                       |
+| [commitlint](https://commitlint.js.org/)                                              | Enforces [Conventional Commits](https://www.conventionalcommits.org/) format |
 
 ---
 
 ## Liquid Glass
 
-A UI (dock, menus, toggles e tooltip) é construída sobre o mesmo sistema **Liquid Glass** baseado em física do [Prisma.md](https://github.com/hlucas13/Prisma.md).
+The UI (dock, menus, toggles and tooltip) is built on the same physics-based **Liquid Glass** system from [Prisma.md](https://github.com/hlucas13/Prisma.md).
 
-A implementação segue os princípios de refração descritos em **[Liquid Glass — CSS & SVG](https://kube.io/blog/liquid-glass-css-svg/)**:
+The implementation follows the refraction principles described in **[Liquid Glass — CSS & SVG](https://kube.io/blog/liquid-glass-css-svg/)**:
 
-- **Refração de Snell** — cada pixel da superfície de vidro desloca o fundo com base no ângulo de refração derivado da normal à superfície (índice de refração 1,45).
-- **Perfil de altura convexo** — a função `h(t) = √t` modela uma lente de vidro curva.
-- **Mapas de deslocamento SVG** — pipeline `<feImage>` + `<feDisplacementMap>` aplica o deslocamento por pixel em tempo real.
-- **Dois filtros** — `#glass-distortion-dock` (pill da dock) e `#glass-distortion-panel` (menus e tooltip).
+- **Snell's refraction** — each glass-surface pixel displaces the background based on the refraction angle derived from the surface normal (refractive index 1.45).
+- **Convex height profile** — the function `h(t) = √t` models a curved glass lens.
+- **SVG displacement maps** — `<feImage>` + `<feDisplacementMap>` pipeline applies per-pixel displacement in real time.
+- **Two filters** — `#glass-distortion-dock` (dock pill) and `#glass-distortion-panel` (menus and tooltip).
 
 ---
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 FalaTina/
 ├── src/
-│   ├── chart-themes.ts    # Definições de temas de cor (4 paletas)
-│   ├── data.ts            # Dataset — semanas e participantes
-│   ├── glass-distortion.ts # Motor Liquid Glass (refração física)
-│   ├── globals.d.ts       # Declarações de tipos para CDN (Chart.js, GSAP)
-│   └── main.ts            # Lógica principal — gráfico, dock, temas, exportação
-├── app.bundle.js          # Bundle gerado (fazer commit após o build)
-├── build.js               # Script de build (esbuild)
-├── commitlint.config.js
-├── eslint.config.js
+│   ├── __tests__/
+│   │   └── main.test.ts    # Vitest tests (data integrity, business logic, themes)
+│   ├── chart-themes.ts      # Colour theme definitions (4 palettes)
+│   ├── data.ts              # Dataset — weeks and participants
+│   ├── glass-distortion.ts  # Liquid Glass engine (physical refraction)
+│   ├── globals.d.ts         # Type declarations for CDN globals (Chart.js, GSAP)
+│   └── main.ts              # Core logic — chart, dock, themes, export
+├── dist/                    # Production build output (gitignored)
 ├── index.html
-├── LICENSE
-├── package.json
-├── README.md
+├── vite.config.ts           # Vite + Vitest configuration
 ├── style.css
-└── tsconfig.json
+├── package.json
+├── tsconfig.json
+├── eslint.config.cjs
+├── commitlint.config.cjs
+├── .github/
+│   └── workflows/
+│       ├── ci.yml           # CI: typecheck → lint → test → build
+│       └── deploy.yml       # CD: typecheck → lint → test → build → deploy Pages
+├── LICENSE
+└── README.md
 ```
 
 ---
 
-## Desenvolvimento local
+## Local Development
 
 ```bash
-# Instalar dependências de build
+# Install dependencies
 npm install
 
-# Verificar tipos
+# Start dev server with HMR
+npm run dev
+
+# Type check
 npm run typecheck
 
 # Lint
 npm run lint
 
-# Build (gera app.bundle.js)
+# Run tests
+npm test
+
+# Full pipeline (typecheck + lint + test)
+npm run test:full
+
+# Production build
 npm run build
 
-# Abrir no navegador
-open index.html
+# Preview production build
+npm run preview
 ```
 
 ---
 
-## Deploy para GitHub Pages
+## Deploy to GitHub Pages
 
-O deploy é automatizado via GitHub Actions. Ao fazer push para `main`:
+Deployment is automated via GitHub Actions. Pushing to `main`:
 
-1. O workflow de **Deploy** é acionado automaticamente
-2. Ele executa typecheck, lint, teste de dados e build
-3. O conteúdo da pasta `FalaTina/` é publicado no GitHub Pages
+1. The **Deploy** workflow triggers automatically
+2. It runs typecheck, lint, tests, and build
+3. The `dist/` folder is published to GitHub Pages
 
-### Configuração necessária no repositório (uma vez)
+### One-time repository setup
 
-1. Vá em **Settings → Pages** do repositório `FalaTinaChart`
-2. Em **Source**, selecione **GitHub Actions**
-3. Pronto — os próximos pushes vão disparar o deploy automático
+1. Go to **Settings → Pages** of the `FalaTinaChart` repository
+2. Under **Source**, select **GitHub Actions**
+3. Done — subsequent pushes will trigger automatic deployment
 
-> O site fica disponível em `https://hlucas13.github.io/FalaTinaChart/`
+> The site is available at `https://hlucas13.github.io/FalaTinaChart/`

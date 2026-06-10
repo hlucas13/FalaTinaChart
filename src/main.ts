@@ -197,6 +197,27 @@ function applyAccentTheme(name: AccentThemeName, persist = true) {
         ds.backgroundColor = color;
         ds.borderColor = color;
       });
+    } else if (currentView === "weekly-total") {
+      const accent = getComputedStyle(document.documentElement)
+        .getPropertyValue("--accent")
+        .trim();
+      const isDark = document.documentElement.dataset.theme === "dark";
+      const ds = chart.data.datasets[0];
+      if (ds) {
+        ds.borderColor = accent;
+        ds.backgroundColor = accent + (isDark ? "14" : "1A");
+        ds.pointBackgroundColor = accent;
+        ds.pointBorderColor = accent;
+      }
+    } else if (currentView === "cumulative") {
+      chart.data.datasets.forEach((ds: any, i: number) => {
+        const color = palette[i % palette.length];
+        ds.borderColor = color;
+        ds.backgroundColor = color + "22";
+        ds.pointBackgroundColor = color;
+        ds.pointBorderColor = color;
+        ds.pointHoverBackgroundColor = color;
+      });
     }
     // proportion chart needs full rebuild for per-bar colours
     if (currentView === "proportion") {
@@ -500,6 +521,17 @@ function updateChartTheme(dark: boolean) {
     opts.scales.y.grid.color = c.grid;
     opts.scales.y.ticks.color = c.text;
     if (opts.scales.y.title) opts.scales.y.title.color = c.text;
+  }
+  // Update weekly-total dataset colours (both border & fill depend on --accent / dark mode)
+  if (currentView === "weekly-total" && chart.data.datasets[0]) {
+    const accent = getComputedStyle(document.documentElement)
+      .getPropertyValue("--accent")
+      .trim();
+    const ds = chart.data.datasets[0];
+    ds.borderColor = accent;
+    ds.backgroundColor = accent + (dark ? "14" : "1A");
+    ds.pointBackgroundColor = accent;
+    ds.pointBorderColor = accent;
   }
   chart.update("none");
   if (currentView === "heatmap") buildHeatmap();
@@ -1251,6 +1283,10 @@ function buildWeeklyTotalChart() {
       .reduce((sum, p) => sum + (p.count as number), 0);
   });
 
+  const accentColor = getComputedStyle(document.documentElement)
+    .getPropertyValue("--accent")
+    .trim();
+
   return new Chart(canvas, {
     type: "line",
     data: {
@@ -1259,25 +1295,17 @@ function buildWeeklyTotalChart() {
         {
           label: "Total Top 20",
           data: weeklyTotals,
-          borderColor: getComputedStyle(document.documentElement)
-            .getPropertyValue("--accent")
-            .trim(),
+          borderColor: accentColor,
           borderWidth: 3,
           pointRadius: 5,
           pointHoverRadius: 10,
-          pointBackgroundColor: getComputedStyle(document.documentElement)
-            .getPropertyValue("--accent")
-            .trim(),
-          pointBorderColor: getComputedStyle(document.documentElement)
-            .getPropertyValue("--accent")
-            .trim(),
+          pointBackgroundColor: accentColor,
+          pointBorderColor: accentColor,
           pointHoverBorderWidth: 2.5,
           pointHoverBorderColor: "#ffffff",
           tension: 0.35,
           fill: true,
-          backgroundColor: (dark
-            ? "rgba(74,222,128,0.08)"
-            : "rgba(37,211,102,0.10)") as any,
+          backgroundColor: accentColor + (dark ? "14" : "1A"),
         },
       ],
     },
