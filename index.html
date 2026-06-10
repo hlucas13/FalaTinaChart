@@ -2,10 +2,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Fala Tina</title>
     <link
       rel="icon"
@@ -31,9 +28,7 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path
-              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-            />
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
         </span>
         <div class="brand-text">
@@ -185,23 +180,11 @@
           </button>
         </div>
         <div class="chart-wrapper">
-          <canvas
-            id="chart"
-            aria-label="Gráfico de mensagens por semana"
-          ></canvas>
-          <div
-            id="heatmap-container"
-            class="heatmap-container"
-            style="display: none"
-          ></div>
+          <canvas id="chart" aria-label="Gráfico de mensagens por semana"></canvas>
+          <div id="heatmap-container" class="heatmap-container" style="display: none"></div>
         </div>
         <div class="legend-area">
-          <div
-            id="legend"
-            class="legend-grid"
-            role="list"
-            aria-label="Participantes"
-          ></div>
+          <div id="legend" class="legend-grid" role="list" aria-label="Participantes"></div>
         </div>
       </div>
 
@@ -276,11 +259,7 @@
                   </svg>
                 </button>
                 <span id="carousel-label" class="carousel-label">W10</span>
-                <button
-                  id="carousel-next"
-                  class="carousel-btn"
-                  aria-label="Próxima semana"
-                >
+                <button id="carousel-next" class="carousel-btn" aria-label="Próxima semana">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -330,9 +309,7 @@
           </span>
           <span class="settings-row-text">
             <span class="settings-row-name">Modo escuro</span>
-            <span class="settings-row-desc"
-              >Alternar entre tema claro e escuro</span
-            >
+            <span class="settings-row-desc">Alternar entre tema claro e escuro</span>
           </span>
           <button
             class="liquid-toggle"
@@ -378,9 +355,7 @@
           </span>
           <span class="settings-row-text">
             <span class="settings-row-name">Vidro fosco</span>
-            <span class="settings-row-desc"
-              >Efeito de vidro desfocado na interface</span
-            >
+            <span class="settings-row-desc">Efeito de vidro desfocado na interface</span>
           </span>
           <button
             class="liquid-toggle"
@@ -425,27 +400,13 @@
               <line x1="8" y1="12" x2="21" y2="12" />
               <line x1="8" y1="18" x2="21" y2="18" />
               <circle cx="3" cy="6" r="1.2" fill="currentColor" stroke="none" />
-              <circle
-                cx="3"
-                cy="12"
-                r="1.2"
-                fill="currentColor"
-                stroke="none"
-              />
-              <circle
-                cx="3"
-                cy="18"
-                r="1.2"
-                fill="currentColor"
-                stroke="none"
-              />
+              <circle cx="3" cy="12" r="1.2" fill="currentColor" stroke="none" />
+              <circle cx="3" cy="18" r="1.2" fill="currentColor" stroke="none" />
             </svg>
           </span>
           <span class="settings-row-text">
             <span class="settings-row-name">Mostrar legenda</span>
-            <span class="settings-row-desc"
-              >Exibir barra de participantes abaixo do gráfico</span
-            >
+            <span class="settings-row-desc">Exibir barra de participantes abaixo do gráfico</span>
           </span>
           <button
             class="liquid-toggle"
@@ -539,18 +500,12 @@
           </span>
           <span class="platform-btn-text">
             <span class="platform-btn-name">Com tabelas</span>
-            <span class="platform-btn-desc"
-              >Gráfico + legenda + Top 10 e Top 20</span
-            >
+            <span class="platform-btn-desc">Gráfico + legenda + Top 10 e Top 20</span>
           </span>
         </button>
 
         <!-- Sem tabelas -->
-        <button
-          id="btn-export-without-tables"
-          class="platform-btn"
-          type="button"
-        >
+        <button id="btn-export-without-tables" class="platform-btn" type="button">
           <span class="platform-btn-icon">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -605,12 +560,7 @@
         </button>
 
         <!-- Temas — opens colour theme picker -->
-        <button
-          id="btn-themes"
-          class="dock-btn has-menu"
-          title="Temas de cor"
-          aria-label="Temas"
-        >
+        <button id="btn-themes" class="dock-btn has-menu" title="Temas de cor" aria-label="Temas">
           <svg
             class="dock-icon"
             xmlns="http://www.w3.org/2000/svg"
@@ -731,10 +681,7 @@
     </svg>
 
     <!-- SVG filters for liquid toggles -->
-    <svg
-      aria-hidden="true"
-      style="position: absolute; width: 0; height: 0; overflow: hidden"
-    >
+    <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden">
       <defs>
         <filter id="lt-goo" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="4" />
@@ -755,24 +702,14 @@
                     -255 -255 -255 0 1"
             result="black-pixels"
           />
-          <feMorphology
-            in="black-pixels"
-            operator="dilate"
-            radius="0.5"
-            result="smoothed"
-          />
+          <feMorphology in="black-pixels" operator="dilate" radius="0.5" result="smoothed" />
           <feComposite in="SourceGraphic" in2="smoothed" operator="out" />
         </filter>
       </defs>
     </svg>
 
     <!-- External liquid-glass tooltip (replaces canvas-drawn tooltip) -->
-    <div
-      id="chart-tooltip"
-      class="chart-tooltip"
-      role="tooltip"
-      aria-live="polite"
-    >
+    <div id="chart-tooltip" class="chart-tooltip" role="tooltip" aria-live="polite">
       <div class="glass-effect"></div>
       <div class="glass-tint"></div>
       <div class="glass-shine"></div>

@@ -56,7 +56,7 @@ Interactive line chart for the **Fala Tina** WhatsApp group's weekly message sta
 2. Add the new week to the `WEEKS` array:
 
    ```typescript
-   export const WEEKS: string[] = ["W10", "W11", "W12", "W13"];
+   export const WEEKS: string[] = ['W10', 'W11', 'W12', 'W13'];
    ```
 
 3. For each participant in `PARTICIPANTS`, add the new value to the `data` (messages) and `hours` (active hours) arrays, at the same position as `WEEKS`. Use `null` if the participant sent no messages or has no data for that week:

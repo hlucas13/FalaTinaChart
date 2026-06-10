@@ -1,27 +1,23 @@
 // ── FalaTina — main application module ──
-import {
-  ACCENT_THEMES,
-  THEME_NAMES,
-  type AccentThemeName,
-} from "./chart-themes";
-import { PARTICIPANTS, WEEKS } from "./data";
-import "./glass-distortion";
+import { ACCENT_THEMES, THEME_NAMES, type AccentThemeName } from './chart-themes';
+import { PARTICIPANTS, WEEKS } from './data';
+import './glass-distortion';
 
 // ── Metric switcher ──
-type MetricType = "messages" | "hours";
+type MetricType = 'messages' | 'hours';
 type ViewType =
-  | "messages"
-  | "hours"
-  | "scatter"
-  | "heatmap"
-  | "proportion"
-  | "weekly-total"
-  | "cumulative";
-let currentMetric: MetricType = "messages";
-let currentView: ViewType = "messages";
+  | 'messages'
+  | 'hours'
+  | 'scatter'
+  | 'heatmap'
+  | 'proportion'
+  | 'weekly-total'
+  | 'cumulative';
+let currentMetric: MetricType = 'messages';
+let currentView: ViewType = 'messages';
 
 function getMetricValues(p: (typeof PARTICIPANTS)[number]): (number | null)[] {
-  return currentMetric === "messages" ? p.data : p.hours;
+  return currentMetric === 'messages' ? p.data : p.hours;
 }
 
 // ── SVG icon paths ──
@@ -30,59 +26,47 @@ const SVG_SUN =
   '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
 
 // ── DOM element references ──
-const settingsMenu = document.getElementById("settings-menu")!;
-const exportMenu = document.getElementById("export-menu")!;
-const themesMenu = document.getElementById("themes-menu")!;
-const helpModal = document.getElementById("help-modal")!;
-const helpModalBackdrop = document.getElementById("help-modal-backdrop")!;
-const btnCloseHelp = document.getElementById("btn-close-help")!;
-const helpBody = document.getElementById("help-body")!;
+const settingsMenu = document.getElementById('settings-menu')!;
+const exportMenu = document.getElementById('export-menu')!;
+const themesMenu = document.getElementById('themes-menu')!;
+const helpModal = document.getElementById('help-modal')!;
+const helpModalBackdrop = document.getElementById('help-modal-backdrop')!;
+const btnCloseHelp = document.getElementById('btn-close-help')!;
+const helpBody = document.getElementById('help-body')!;
 
-const btnSettings = document.getElementById("btn-settings")!;
-const btnExport = document.getElementById("btn-export")!;
-const btnThemes = document.getElementById("btn-themes")!;
-const btnExportWithTables = document.getElementById("btn-export-with-tables")!;
-const btnExportWithoutTables = document.getElementById(
-  "btn-export-without-tables",
-)!;
-const btnHelp = document.getElementById("btn-help")!;
+const btnSettings = document.getElementById('btn-settings')!;
+const btnExport = document.getElementById('btn-export')!;
+const btnThemes = document.getElementById('btn-themes')!;
+const btnExportWithTables = document.getElementById('btn-export-with-tables')!;
+const btnExportWithoutTables = document.getElementById('btn-export-without-tables')!;
+const btnHelp = document.getElementById('btn-help')!;
 
-const toggleTheme = document.getElementById(
-  "toggle-theme",
-) as HTMLButtonElement;
-const toggleGlass = document.getElementById(
-  "toggle-glass",
-) as HTMLButtonElement;
-const toggleLegend = document.getElementById(
-  "toggle-legend",
-) as HTMLButtonElement;
-const iconTheme = document.getElementById("icon-theme")!;
-const toast = document.getElementById("toast")!;
-const chartTooltipEl = document.getElementById("chart-tooltip")!;
-const chartTooltipTitle = chartTooltipEl.querySelector<HTMLElement>(
-  ".chart-tooltip-title",
-)!;
-const chartTooltipBody = chartTooltipEl.querySelector<HTMLElement>(
-  ".chart-tooltip-body",
-)!;
+const toggleTheme = document.getElementById('toggle-theme') as HTMLButtonElement;
+const toggleGlass = document.getElementById('toggle-glass') as HTMLButtonElement;
+const toggleLegend = document.getElementById('toggle-legend') as HTMLButtonElement;
+const iconTheme = document.getElementById('icon-theme')!;
+const toast = document.getElementById('toast')!;
+const chartTooltipEl = document.getElementById('chart-tooltip')!;
+const chartTooltipTitle = chartTooltipEl.querySelector<HTMLElement>('.chart-tooltip-title')!;
+const chartTooltipBody = chartTooltipEl.querySelector<HTMLElement>('.chart-tooltip-body')!;
 
 // ── Liquid Toggle helpers (GSAP-animated) ──
 function syncLiquidToggle(el: HTMLElement, state: boolean) {
-  el.setAttribute("aria-checked", String(state));
-  el.style.setProperty("--complete", state ? "100" : "0");
+  el.setAttribute('aria-checked', String(state));
+  el.style.setProperty('--complete', state ? '100' : '0');
 }
 
 function animateLiquidToggle(el: HTMLElement, toState: boolean) {
-  (el as HTMLElement & { dataset: DOMStringMap }).dataset.active = "true";
+  (el as HTMLElement & { dataset: DOMStringMap }).dataset.active = 'true';
   gsap.to(el, {
-    "--complete": toState ? 100 : 0,
+    '--complete': toState ? 100 : 0,
     duration: 0.14,
     delay: 0.18,
-    ease: "power1.inOut",
+    ease: 'power1.inOut',
     onComplete: () => {
       gsap.delayedCall(0.05, () => {
         delete (el as HTMLElement & { dataset: DOMStringMap }).dataset.active;
-        el.setAttribute("aria-checked", String(toState));
+        el.setAttribute('aria-checked', String(toState));
       });
     },
   });
@@ -93,134 +77,131 @@ const allMenus = [settingsMenu, exportMenu, themesMenu];
 
 function closeAllMenus() {
   for (const m of allMenus) {
-    m.classList.remove("visible");
-    m.setAttribute("inert", "");
+    m.classList.remove('visible');
+    m.setAttribute('inert', '');
   }
 }
 
 function toggleMenu(menu: HTMLElement, open: boolean) {
   for (const m of allMenus) {
     if (m !== menu) {
-      m.classList.remove("visible");
-      m.setAttribute("inert", "");
+      m.classList.remove('visible');
+      m.setAttribute('inert', '');
     }
   }
-  menu.classList.toggle("visible", open);
-  if (open) menu.removeAttribute("inert");
-  else menu.setAttribute("inert", "");
+  menu.classList.toggle('visible', open);
+  if (open) menu.removeAttribute('inert');
+  else menu.setAttribute('inert', '');
 }
 
-btnSettings.addEventListener("click", (e) => {
+btnSettings.addEventListener('click', (e) => {
   e.stopPropagation();
-  toggleMenu(settingsMenu, !settingsMenu.classList.contains("visible"));
+  toggleMenu(settingsMenu, !settingsMenu.classList.contains('visible'));
 });
 
-btnExport.addEventListener("click", (e) => {
+btnExport.addEventListener('click', (e) => {
   e.stopPropagation();
-  toggleMenu(exportMenu, !exportMenu.classList.contains("visible"));
+  toggleMenu(exportMenu, !exportMenu.classList.contains('visible'));
 });
 
-btnThemes.addEventListener("click", (e) => {
+btnThemes.addEventListener('click', (e) => {
   e.stopPropagation();
-  toggleMenu(themesMenu, !themesMenu.classList.contains("visible"));
+  toggleMenu(themesMenu, !themesMenu.classList.contains('visible'));
 });
 
-document.addEventListener("click", (e) => {
+document.addEventListener('click', (e) => {
   const target = e.target as Node;
   const clickedInsideMenu = allMenus.some((m) => m.contains(target));
   const clickedDockBtn = !!(target as HTMLElement).closest(
-    "#btn-settings, #btn-export, #btn-themes",
+    '#btn-settings, #btn-export, #btn-themes',
   );
   if (!clickedInsideMenu && !clickedDockBtn) closeAllMenus();
 });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    if (helpModal.classList.contains("visible")) closeHelpModal();
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if (helpModal.classList.contains('visible')) closeHelpModal();
     else closeAllMenus();
   }
 });
 
 // ── Dark mode ──
 function applyTheme(dark: boolean, animate = false, persist = true) {
-  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   iconTheme.innerHTML = dark ? SVG_SUN : SVG_MOON;
   if (animate) animateLiquidToggle(toggleTheme, dark);
   else syncLiquidToggle(toggleTheme, dark);
-  if (persist) localStorage.setItem("falatina-theme", dark ? "dark" : "light");
+  if (persist) localStorage.setItem('falatina-theme', dark ? 'dark' : 'light');
   updateChartTheme(dark);
 }
 
-toggleTheme.addEventListener("click", () => {
-  const isDark = document.documentElement.dataset.theme === "dark";
+toggleTheme.addEventListener('click', () => {
+  const isDark = document.documentElement.dataset.theme === 'dark';
   applyTheme(!isDark, true);
 });
 
 // ── Frosted glass style ──
 function applyGlassStyle(frosted: boolean, animate = false, persist = true) {
-  document.documentElement.dataset.glass = frosted ? "frosted" : "clear";
+  document.documentElement.dataset.glass = frosted ? 'frosted' : 'clear';
   if (animate) animateLiquidToggle(toggleGlass, frosted);
   else syncLiquidToggle(toggleGlass, frosted);
-  if (persist)
-    localStorage.setItem("falatina-glass", frosted ? "frosted" : "clear");
+  if (persist) localStorage.setItem('falatina-glass', frosted ? 'frosted' : 'clear');
 }
 
-toggleGlass.addEventListener("click", () => {
-  applyGlassStyle(document.documentElement.dataset.glass !== "frosted", true);
+toggleGlass.addEventListener('click', () => {
+  applyGlassStyle(document.documentElement.dataset.glass !== 'frosted', true);
 });
 
 // ── Accent colour / chart theme ──
-let currentAccent: AccentThemeName = "whatsapp";
+let currentAccent: AccentThemeName = 'whatsapp';
 
 function applyAccentTheme(name: AccentThemeName, persist = true) {
   currentAccent = name;
   document.documentElement.dataset.accent = name;
-  if (persist) localStorage.setItem("falatina-accent", name);
-  document.querySelectorAll<HTMLElement>(".chart-theme-row").forEach((row) => {
-    row.classList.toggle("active", row.dataset.accentTheme === name);
+  if (persist) localStorage.setItem('falatina-accent', name);
+  document.querySelectorAll<HTMLElement>('.chart-theme-row').forEach((row) => {
+    row.classList.toggle('active', row.dataset.accentTheme === name);
   });
   // Update live chart colours if chart is already built
   if (chart) {
     const palette = ACCENT_THEMES[name].palette;
-    if (currentView === "messages" || currentView === "hours") {
+    if (currentView === 'messages' || currentView === 'hours') {
       chart.data.datasets.forEach((ds: any, i: number) => {
         const color = palette[i % palette.length];
         ds.borderColor = color;
-        ds.backgroundColor = color + "22";
+        ds.backgroundColor = color + '22';
         ds.pointBackgroundColor = color;
         ds.pointBorderColor = color;
         ds.pointHoverBackgroundColor = color;
       });
-    } else if (currentView === "scatter") {
+    } else if (currentView === 'scatter') {
       chart.data.datasets.forEach((ds: any, i: number) => {
         const color = palette[i % palette.length];
         ds.backgroundColor = color;
         ds.borderColor = color;
       });
-    } else if (currentView === "weekly-total") {
-      const accent = getComputedStyle(document.documentElement)
-        .getPropertyValue("--accent")
-        .trim();
-      const isDark = document.documentElement.dataset.theme === "dark";
+    } else if (currentView === 'weekly-total') {
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      const isDark = document.documentElement.dataset.theme === 'dark';
       const ds = chart.data.datasets[0];
       if (ds) {
         ds.borderColor = accent;
-        ds.backgroundColor = accent + (isDark ? "14" : "1A");
+        ds.backgroundColor = accent + (isDark ? '14' : '1A');
         ds.pointBackgroundColor = accent;
         ds.pointBorderColor = accent;
       }
-    } else if (currentView === "cumulative") {
+    } else if (currentView === 'cumulative') {
       chart.data.datasets.forEach((ds: any, i: number) => {
         const color = palette[i % palette.length];
         ds.borderColor = color;
-        ds.backgroundColor = color + "22";
+        ds.backgroundColor = color + '22';
         ds.pointBackgroundColor = color;
         ds.pointBorderColor = color;
         ds.pointHoverBackgroundColor = color;
       });
     }
     // proportion chart needs full rebuild for per-bar colours
-    if (currentView === "proportion") {
+    if (currentView === 'proportion') {
       chart.destroy();
       chart = buildProportionChart();
     } else {
@@ -229,20 +210,20 @@ function applyAccentTheme(name: AccentThemeName, persist = true) {
     buildLegend();
     updateRankingColors();
   }
-  if (currentView === "heatmap") {
+  if (currentView === 'heatmap') {
     buildHeatmap();
     updateRankingColors();
   }
 }
 
 function buildThemeRows() {
-  const container = document.getElementById("themes-menu-rows")!;
-  container.innerHTML = "";
+  const container = document.getElementById('themes-menu-rows')!;
+  container.innerHTML = '';
   THEME_NAMES.forEach((key) => {
     const t = ACCENT_THEMES[key];
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "chart-theme-row";
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chart-theme-row';
     btn.dataset.accentTheme = key;
     btn.innerHTML = `
             <span class="pdf-theme-dot" style="background:${t.dot}"></span>
@@ -252,7 +233,7 @@ function buildThemeRows() {
             </span>
             <svg class="pdf-theme-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         `;
-    btn.addEventListener("click", () => {
+    btn.addEventListener('click', () => {
       applyAccentTheme(key);
       closeAllMenus();
     });
@@ -263,29 +244,25 @@ function buildThemeRows() {
 // ── Legend visibility (settings liquid toggle) ──
 let legendVisible = true;
 
-function applyLegendVisibility(
-  visible: boolean,
-  animate = false,
-  persist = true,
-) {
+function applyLegendVisibility(visible: boolean, animate = false, persist = true) {
   legendVisible = visible;
-  const legendArea = document.querySelector<HTMLElement>(".legend-area");
-  if (legendArea) legendArea.style.display = visible ? "" : "none";
-  const chartWrapper = document.querySelector<HTMLElement>(".chart-wrapper");
-  if (chartWrapper) chartWrapper.style.flex = visible ? "" : "1";
+  const legendArea = document.querySelector<HTMLElement>('.legend-area');
+  if (legendArea) legendArea.style.display = visible ? '' : 'none';
+  const chartWrapper = document.querySelector<HTMLElement>('.chart-wrapper');
+  if (chartWrapper) chartWrapper.style.flex = visible ? '' : '1';
   if (animate) animateLiquidToggle(toggleLegend, visible);
   else syncLiquidToggle(toggleLegend, visible);
-  if (persist) localStorage.setItem("falatina-legend", visible ? "1" : "0");
+  if (persist) localStorage.setItem('falatina-legend', visible ? '1' : '0');
 }
 
-toggleLegend.addEventListener("click", () => {
+toggleLegend.addEventListener('click', () => {
   applyLegendVisibility(!legendVisible, true);
 });
 
 // ── Chart.js external tooltip (Liquid Glass) ──
 function externalTooltipHandler({ chart, tooltip }: any) {
   if (tooltip.opacity === 0 || !tooltip.dataPoints?.length) {
-    chartTooltipEl.classList.remove("visible");
+    chartTooltipEl.classList.remove('visible');
     return;
   }
 
@@ -294,7 +271,7 @@ function externalTooltipHandler({ chart, tooltip }: any) {
   let titleText: string;
   let bodyText: string;
 
-  if (currentView === "scatter") {
+  if (currentView === 'scatter') {
     const ds = dp.dataset as any;
     color = ds.borderColor as string;
     titleText = ds.label as string;
@@ -302,15 +279,14 @@ function externalTooltipHandler({ chart, tooltip }: any) {
     const y = dp.parsed.y as number;
     const mph = (ds._mph as number) ?? 0;
     const wks = ds._weeks as number;
-    bodyText = `${y.toLocaleString("pt-BR")} msgs · ${x.toLocaleString("pt-BR")}h · ${mph > 0 ? mph.toFixed(1) : "—"} msg/h (${wks} sem)`;
-  } else if (currentView === "proportion") {
+    bodyText = `${y.toLocaleString('pt-BR')} msgs · ${x.toLocaleString('pt-BR')}h · ${mph > 0 ? mph.toFixed(1) : '—'} msg/h (${wks} sem)`;
+  } else if (currentView === 'proportion') {
     const ds = dp.dataset as any;
     const dIdx = dp.dataIndex as number;
     // Always use the active dataset's colour for the dot
     const activeDs = chart.data.datasets[0] as any;
-    const activeColor = Array.isArray(activeDs.borderColor)
-      ? activeDs.borderColor[dIdx]
-      : activeDs.borderColor;
+    const activeColor =
+      Array.isArray(activeDs.borderColor) ? activeDs.borderColor[dIdx] : activeDs.borderColor;
     color = activeColor;
     titleText = dp.label as string;
     const hours = dp.parsed.x as number;
@@ -321,24 +297,24 @@ function externalTooltipHandler({ chart, tooltip }: any) {
       const activeHours = (chart.data.datasets[0].data as number[])[dIdx];
       bodyText = `Ativas: ${(activeHours as number).toFixed(1)}h · Inativas: ${hours.toFixed(1)}h`;
     }
-  } else if (currentView === "cumulative") {
+  } else if (currentView === 'cumulative') {
     // Cumulative chart: show only total, no week label or msg/h
     color = (dp.dataset as any).borderColor as string;
     titleText = dp.dataset.label as string;
-    bodyText = `Total: ${(dp.parsed.y as number).toLocaleString("pt-BR")} mensagens`;
-  } else if (currentView === "weekly-total") {
+    bodyText = `Total: ${(dp.parsed.y as number).toLocaleString('pt-BR')} mensagens`;
+  } else if (currentView === 'weekly-total') {
     // Weekly total chart: single dataset, show only total
     color = (dp.dataset as any).borderColor as string;
     titleText = dp.dataset.label as string;
-    bodyText = `Total: ${(dp.parsed.y as number).toLocaleString("pt-BR")} mensagens`;
+    bodyText = `Total: ${(dp.parsed.y as number).toLocaleString('pt-BR')} mensagens`;
   } else {
     // Line chart (messages / hours)
     color = (dp.dataset as any).borderColor as string;
     titleText = dp.dataset.label as string;
     const pIdx = dp.datasetIndex as number;
     const wIdx = dp.dataIndex as number;
-    const unit = currentMetric === "messages" ? "mensagens" : "horas";
-    bodyText = `${dp.label as string}: ${(dp.parsed.y as number).toLocaleString("pt-BR")} ${unit}`;
+    const unit = currentMetric === 'messages' ? 'mensagens' : 'horas';
+    bodyText = `${dp.label as string}: ${(dp.parsed.y as number).toLocaleString('pt-BR')} ${unit}`;
     const msgs = PARTICIPANTS[pIdx].data[wIdx];
     const hrs = PARTICIPANTS[pIdx].hours[wIdx];
     if (msgs !== null && hrs !== null && hrs > 0) {
@@ -356,14 +332,13 @@ function externalTooltipHandler({ chart, tooltip }: any) {
   // Clamp inside the viewport
   const TW = chartTooltipEl.offsetWidth || 190;
   const TH = chartTooltipEl.offsetHeight || 72;
-  if (x + TW > window.innerWidth - 12)
-    x = rect.left + (tooltip.caretX as number) - TW - 16;
+  if (x + TW > window.innerWidth - 12) x = rect.left + (tooltip.caretX as number) - TW - 16;
   if (y + TH > window.innerHeight - 12) y = window.innerHeight - TH - 12;
   if (y < 12) y = 12;
 
   chartTooltipEl.style.left = `${x}px`;
   chartTooltipEl.style.top = `${y}px`;
-  chartTooltipEl.classList.add("visible");
+  chartTooltipEl.classList.add('visible');
 }
 
 // ── Chart.js ──
@@ -376,7 +351,7 @@ const hiddenDatasets = new Set<number>();
 
 /** Plugin: dims every dataset except the pinned one (click-locked) */
 const dimPlugin = {
-  id: "dimPlugin",
+  id: 'dimPlugin',
   beforeDatasetDraw(ch: any, args: any) {
     if (pinFocusIndex === null) return;
     if (args.index === pinFocusIndex) return;
@@ -392,8 +367,8 @@ const dimPlugin = {
 
 function getChartColors(dark: boolean) {
   return {
-    grid: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)",
-    text: dark ? "#8b949e" : "#6b7280",
+    grid: dark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)',
+    text: dark ? '#8b949e' : '#6b7280',
   };
 }
 
@@ -405,14 +380,14 @@ function buildDatasets() {
       label: p.name,
       data: getMetricValues(p),
       borderColor: color,
-      backgroundColor: color + "22",
+      backgroundColor: color + '22',
       borderWidth: 2.5,
       pointRadius: 4,
       pointHoverRadius: 9,
       pointBackgroundColor: color,
       pointBorderColor: color,
       pointHoverBorderWidth: 2.5,
-      pointHoverBorderColor: "#ffffff",
+      pointHoverBorderColor: '#ffffff',
       tension: 0.35,
       spanGaps: false,
     };
@@ -420,12 +395,12 @@ function buildDatasets() {
 }
 
 function buildChart() {
-  const canvas = document.getElementById("chart") as HTMLCanvasElement;
-  const dark = document.documentElement.dataset.theme === "dark";
+  const canvas = document.getElementById('chart') as HTMLCanvasElement;
+  const dark = document.documentElement.dataset.theme === 'dark';
   const c = getChartColors(dark);
 
   return new Chart(canvas, {
-    type: "line",
+    type: 'line',
     plugins: [dimPlugin],
     data: {
       labels: WEEKS,
@@ -436,9 +411,9 @@ function buildChart() {
       maintainAspectRatio: false,
       animation: { duration: 400 },
       interaction: {
-        mode: "nearest",
+        mode: 'nearest',
         intersect: false,
-        axis: "xy",
+        axis: 'xy',
       },
       plugins: {
         legend: { display: false },
@@ -450,7 +425,7 @@ function buildChart() {
       onHover: (evt: any, elements: any[]) => {
         if (evt.native?.target) {
           (evt.native.target as HTMLElement).style.cursor =
-            elements.length > 0 ? "pointer" : "default";
+            elements.length > 0 ? 'pointer' : 'default';
         }
         if (elements.length > 0) {
           const idx = elements[0].datasetIndex;
@@ -467,7 +442,7 @@ function buildChart() {
         if (!evt.native) return;
         const hits = ch.getElementsAtEventForMode(
           evt.native,
-          "nearest",
+          'nearest',
           { intersect: true },
           false,
         );
@@ -477,7 +452,7 @@ function buildChart() {
         } else {
           pinFocusIndex = null;
         }
-        ch.update("none");
+        ch.update('none');
         syncLegendHover(pinFocusIndex);
       },
       scales: {
@@ -486,21 +461,21 @@ function buildChart() {
           ticks: {
             color: c.text,
             font: {
-              family: "Inter, sans-serif",
+              family: 'Inter, sans-serif',
               size: 13,
-              weight: "600",
+              weight: '600',
             },
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
         },
         y: {
           grid: { color: c.grid },
           ticks: {
             color: c.text,
-            font: { family: "Inter, sans-serif", size: 12 },
+            font: { family: 'Inter, sans-serif', size: 12 },
             maxTicksLimit: 8,
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
           beginAtZero: true,
         },
       },
@@ -523,54 +498,52 @@ function updateChartTheme(dark: boolean) {
     if (opts.scales.y.title) opts.scales.y.title.color = c.text;
   }
   // Update weekly-total dataset colours (both border & fill depend on --accent / dark mode)
-  if (currentView === "weekly-total" && chart.data.datasets[0]) {
-    const accent = getComputedStyle(document.documentElement)
-      .getPropertyValue("--accent")
-      .trim();
+  if (currentView === 'weekly-total' && chart.data.datasets[0]) {
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
     const ds = chart.data.datasets[0];
     ds.borderColor = accent;
-    ds.backgroundColor = accent + (dark ? "14" : "1A");
+    ds.backgroundColor = accent + (dark ? '14' : '1A');
     ds.pointBackgroundColor = accent;
     ds.pointBorderColor = accent;
   }
-  chart.update("none");
-  if (currentView === "heatmap") buildHeatmap();
+  chart.update('none');
+  if (currentView === 'heatmap') buildHeatmap();
 }
 
 // ── Legend ──
 function syncLegendHover(idx: number | null) {
-  document.querySelectorAll<HTMLElement>(".legend-item").forEach((btn, i) => {
-    if (idx === null) btn.classList.remove("legend-item--dimmed");
-    else btn.classList.toggle("legend-item--dimmed", i !== idx);
+  document.querySelectorAll<HTMLElement>('.legend-item').forEach((btn, i) => {
+    if (idx === null) btn.classList.remove('legend-item--dimmed');
+    else btn.classList.toggle('legend-item--dimmed', i !== idx);
   });
 }
 
 function buildLegend() {
-  const legend = document.getElementById("legend");
+  const legend = document.getElementById('legend');
   if (!legend) return;
-  legend.innerHTML = "";
+  legend.innerHTML = '';
   if (!chart) return;
 
   chart.data.datasets.forEach((ds: any, i: number) => {
     // Skip invisible datasets like "Horas inativas" in proportion view
-    if (currentView === "proportion" && i > 0) return;
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "legend-item";
+    if (currentView === 'proportion' && i > 0) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'legend-item';
     btn.title = `Clique para mostrar/ocultar ${ds.label as string}`;
 
-    const dot = document.createElement("span");
-    dot.className = "legend-dot";
+    const dot = document.createElement('span');
+    dot.className = 'legend-dot';
     dot.style.background = ds.borderColor;
 
-    const label = document.createElement("span");
-    label.className = "legend-label";
+    const label = document.createElement('span');
+    label.className = 'legend-label';
     label.textContent = ds.label;
 
     btn.appendChild(dot);
     btn.appendChild(label);
 
-    btn.addEventListener("click", () => {
+    btn.addEventListener('click', () => {
       const isHidden = hiddenDatasets.has(i);
       if (isHidden) {
         hiddenDatasets.delete(i);
@@ -580,19 +553,19 @@ function buildLegend() {
         chart!.setDatasetVisibility(i, false);
       }
       chart!.update();
-      btn.classList.toggle("legend-item--hidden", !isHidden);
+      btn.classList.toggle('legend-item--hidden', !isHidden);
     });
 
-    btn.addEventListener("mouseenter", () => {
+    btn.addEventListener('mouseenter', () => {
       if (hiddenDatasets.has(i)) return;
       highlightedIndex = i;
-      chart!.update("none");
+      chart!.update('none');
       syncLegendHover(i);
     });
 
-    btn.addEventListener("mouseleave", () => {
+    btn.addEventListener('mouseleave', () => {
       highlightedIndex = null;
-      chart!.update("none");
+      chart!.update('none');
       syncLegendHover(pinFocusIndex);
     });
 
@@ -619,74 +592,74 @@ function buildRankingRow(
   isNew?: boolean,
   msgPerH?: number | null,
 ): HTMLLIElement {
-  const li = document.createElement("li");
-  li.className = "ranking-row";
+  const li = document.createElement('li');
+  li.className = 'ranking-row';
 
-  const posEl = document.createElement("span");
-  posEl.className = "ranking-pos";
-  if (pos === 1) posEl.classList.add("gold");
-  else if (pos === 2) posEl.classList.add("silver");
-  else if (pos === 3) posEl.classList.add("bronze");
+  const posEl = document.createElement('span');
+  posEl.className = 'ranking-pos';
+  if (pos === 1) posEl.classList.add('gold');
+  else if (pos === 2) posEl.classList.add('silver');
+  else if (pos === 3) posEl.classList.add('bronze');
   posEl.textContent = String(pos);
 
-  const dot = document.createElement("span");
-  dot.className = "ranking-dot";
+  const dot = document.createElement('span');
+  dot.className = 'ranking-dot';
   dot.style.background = getParticipantColor(participantIndex);
 
-  const nameEl = document.createElement("span");
-  nameEl.className = "ranking-name";
+  const nameEl = document.createElement('span');
+  nameEl.className = 'ranking-name';
 
-  const nameTxt = document.createElement("span");
-  nameTxt.className = "ranking-name-text";
+  const nameTxt = document.createElement('span');
+  nameTxt.className = 'ranking-name-text';
   nameTxt.textContent = name;
   nameEl.appendChild(nameTxt);
 
   if (isNew) {
-    const newEl = document.createElement("span");
-    newEl.className = "ranking-new";
-    newEl.textContent = "NEW";
+    const newEl = document.createElement('span');
+    newEl.className = 'ranking-new';
+    newEl.textContent = 'NEW';
     nameEl.appendChild(newEl);
   } else if (posDiff !== undefined && posDiff !== 0) {
-    const trendEl = document.createElement("span");
-    trendEl.className = `ranking-trend ${posDiff > 0 ? "up" : "down"}`;
-    trendEl.textContent = posDiff > 0 ? "\u25b2" : "\u25bc";
+    const trendEl = document.createElement('span');
+    trendEl.className = `ranking-trend ${posDiff > 0 ? 'up' : 'down'}`;
+    trendEl.textContent = posDiff > 0 ? '\u25b2' : '\u25bc';
     nameEl.appendChild(trendEl);
   }
 
-  const statsEl = document.createElement("span");
-  statsEl.className = "ranking-stats";
+  const statsEl = document.createElement('span');
+  statsEl.className = 'ranking-stats';
 
-  const countEl = document.createElement("span");
-  countEl.className = "ranking-count";
-  countEl.textContent = count.toLocaleString("pt-BR");
+  const countEl = document.createElement('span');
+  countEl.className = 'ranking-count';
+  countEl.textContent = count.toLocaleString('pt-BR');
   statsEl.appendChild(countEl);
 
   if (avg !== undefined) {
-    const avgEl = document.createElement("span");
-    avgEl.className = "ranking-avg";
-    const avgUnit = currentMetric === "messages" ? "/sem" : "h/sem";
-    avgEl.textContent = `~${Math.round(avg).toLocaleString("pt-BR")}${avgUnit}`;
+    const avgEl = document.createElement('span');
+    avgEl.className = 'ranking-avg';
+    const avgUnit = currentMetric === 'messages' ? '/sem' : 'h/sem';
+    avgEl.textContent = `~${Math.round(avg).toLocaleString('pt-BR')}${avgUnit}`;
     statsEl.appendChild(avgEl);
   }
 
   if (countDiff !== undefined) {
-    const diffEl = document.createElement("span");
+    const diffEl = document.createElement('span');
     if (countDiff > 0) {
-      diffEl.className = "ranking-diff positive";
-      diffEl.textContent = `+${countDiff.toLocaleString("pt-BR")}`;
+      diffEl.className = 'ranking-diff positive';
+      diffEl.textContent = `+${countDiff.toLocaleString('pt-BR')}`;
     } else if (countDiff < 0) {
-      diffEl.className = "ranking-diff negative";
-      diffEl.textContent = countDiff.toLocaleString("pt-BR");
+      diffEl.className = 'ranking-diff negative';
+      diffEl.textContent = countDiff.toLocaleString('pt-BR');
     } else {
-      diffEl.className = "ranking-diff neutral";
-      diffEl.textContent = "=";
+      diffEl.className = 'ranking-diff neutral';
+      diffEl.textContent = '=';
     }
     statsEl.appendChild(diffEl);
   }
 
   if (msgPerH !== undefined && msgPerH !== null) {
-    const mphEl = document.createElement("span");
-    mphEl.className = "ranking-msgh";
+    const mphEl = document.createElement('span');
+    mphEl.className = 'ranking-msgh';
     mphEl.textContent = `${msgPerH.toFixed(1)} msg/h`;
     statsEl.appendChild(mphEl);
   }
@@ -699,16 +672,15 @@ function buildRankingRow(
 }
 
 function buildAlltimeRanking() {
-  const el = document.getElementById("ranking-alltime")!;
-  el.innerHTML = "";
+  const el = document.getElementById('ranking-alltime')!;
+  el.innerHTML = '';
   const totals = PARTICIPANTS.map((p, i) => {
     const values = getMetricValues(p);
     const weeks = values.filter((v) => v !== null).length;
     const total = values.reduce<number>((s, v) => s + (v ?? 0), 0);
     const totalMsgs = p.data.reduce<number>((s, v) => s + (v ?? 0), 0);
     const totalHours = p.hours.reduce<number>((s, v) => s + (v ?? 0), 0);
-    const msgPerH =
-      totalHours > 0 && totalMsgs > 0 ? totalMsgs / totalHours : null;
+    const msgPerH = totalHours > 0 && totalMsgs > 0 ? totalMsgs / totalHours : null;
     return {
       name: p.name,
       idx: i,
@@ -736,12 +708,12 @@ function buildAlltimeRanking() {
 }
 
 function buildWeeklyRanking() {
-  const el = document.getElementById("ranking-weekly")!;
-  const labelEl = document.getElementById("carousel-label")!;
-  const prevBtn = document.getElementById("carousel-prev") as HTMLButtonElement;
-  const nextBtn = document.getElementById("carousel-next") as HTMLButtonElement;
+  const el = document.getElementById('ranking-weekly')!;
+  const labelEl = document.getElementById('carousel-label')!;
+  const prevBtn = document.getElementById('carousel-prev') as HTMLButtonElement;
+  const nextBtn = document.getElementById('carousel-next') as HTMLButtonElement;
 
-  el.innerHTML = "";
+  el.innerHTML = '';
   labelEl.textContent = WEEKS[carouselWeekIndex];
   prevBtn.disabled = carouselWeekIndex === 0;
   nextBtn.disabled = carouselWeekIndex === WEEKS.length - 1;
@@ -763,9 +735,7 @@ function buildWeeklyRanking() {
       count: getMetricValues(p)[carouselWeekIndex - 1] ?? 0,
     })).filter((p) => p.count > 0);
     prevData.sort((a, b) => b.count - a.count);
-    prevRankMap = new Map(
-      prevData.slice(0, 20).map((p, rank) => [p.name, rank + 1]),
-    );
+    prevRankMap = new Map(prevData.slice(0, 20).map((p, rank) => [p.name, rank + 1]));
     prevCountMap = new Map(prevData.map((p) => [p.name, p.count]));
   }
 
@@ -787,8 +757,7 @@ function buildWeeklyRanking() {
     }
     const msgs = PARTICIPANTS[p.idx].data[carouselWeekIndex];
     const hrs = PARTICIPANTS[p.idx].hours[carouselWeekIndex];
-    const msgPerH =
-      msgs !== null && hrs !== null && hrs > 0 ? msgs / hrs : null;
+    const msgPerH = msgs !== null && hrs !== null && hrs > 0 ? msgs / hrs : null;
     el.appendChild(
       buildRankingRow(
         currentRank,
@@ -811,13 +780,13 @@ function updateRankingColors() {
   buildWeeklyRanking();
 }
 
-document.getElementById("carousel-prev")!.addEventListener("click", () => {
+document.getElementById('carousel-prev')!.addEventListener('click', () => {
   if (carouselWeekIndex > 0) {
     carouselWeekIndex--;
     buildWeeklyRanking();
   }
 });
-document.getElementById("carousel-next")!.addEventListener("click", () => {
+document.getElementById('carousel-next')!.addEventListener('click', () => {
   if (carouselWeekIndex < WEEKS.length - 1) {
     carouselWeekIndex++;
     buildWeeklyRanking();
@@ -828,37 +797,32 @@ document.getElementById("carousel-next")!.addEventListener("click", () => {
 function switchView(view: ViewType) {
   if (currentView === view) return;
   currentView = view;
-  document.body.classList.toggle("view-proportion", view === "proportion");
+  document.body.classList.toggle('view-proportion', view === 'proportion');
 
   // Determine base metric for rankings
-  if (view === "messages") currentMetric = "messages";
-  else if (view === "hours" || view === "proportion") currentMetric = "hours";
+  if (view === 'messages') currentMetric = 'messages';
+  else if (view === 'hours' || view === 'proportion') currentMetric = 'hours';
   // scatter, heatmap, weekly-total & cumulative show messages by default
-  if (
-    view === "scatter" ||
-    view === "heatmap" ||
-    view === "weekly-total" ||
-    view === "cumulative"
-  )
-    currentMetric = "messages";
+  if (view === 'scatter' || view === 'heatmap' || view === 'weekly-total' || view === 'cumulative')
+    currentMetric = 'messages';
 
   // Update tab UI
-  document.querySelectorAll<HTMLElement>(".metric-tab").forEach((tab) => {
+  document.querySelectorAll<HTMLElement>('.metric-tab').forEach((tab) => {
     const isActive = tab.dataset.metric === view;
-    tab.classList.toggle("active", isActive);
-    tab.setAttribute("aria-selected", String(isActive));
+    tab.classList.toggle('active', isActive);
+    tab.setAttribute('aria-selected', String(isActive));
   });
 
   // Update brand subtitle
-  const brandSub = document.querySelector<HTMLElement>(".brand-sub");
+  const brandSub = document.querySelector<HTMLElement>('.brand-sub');
   const subtitles: Record<ViewType, string> = {
-    messages: "Mensagens por semana",
-    hours: "Horas ativas por semana",
-    scatter: "Eficiência · mensagens vs horas",
-    heatmap: "Intensidade · msg/h por semana",
-    proportion: "Proporção · horas ativas de 168h",
-    "weekly-total": "Total Top 20 por semana",
-    cumulative: "Acumulado por usuário",
+    messages: 'Mensagens por semana',
+    hours: 'Horas ativas por semana',
+    scatter: 'Eficiência · mensagens vs horas',
+    heatmap: 'Intensidade · msg/h por semana',
+    proportion: 'Proporção · horas ativas de 168h',
+    'weekly-total': 'Total Top 20 por semana',
+    cumulative: 'Acumulado por usuário',
   };
   if (brandSub) brandSub.textContent = subtitles[view];
 
@@ -868,28 +832,28 @@ function switchView(view: ViewType) {
     chart = null;
   }
 
-  const canvas = document.getElementById("chart") as HTMLCanvasElement;
-  const heatmapEl = document.getElementById("heatmap-container")!;
-  const legendArea = document.querySelector<HTMLElement>(".legend-area");
+  const canvas = document.getElementById('chart') as HTMLCanvasElement;
+  const heatmapEl = document.getElementById('heatmap-container')!;
+  const legendArea = document.querySelector<HTMLElement>('.legend-area');
 
-  if (view === "heatmap") {
-    canvas.style.display = "none";
-    heatmapEl.style.display = "";
-    if (legendArea) legendArea.style.display = "none";
+  if (view === 'heatmap') {
+    canvas.style.display = 'none';
+    heatmapEl.style.display = '';
+    if (legendArea) legendArea.style.display = 'none';
     buildHeatmap();
   } else {
-    canvas.style.display = "";
-    heatmapEl.style.display = "none";
-    heatmapEl.innerHTML = "";
-    if (legendArea) legendArea.style.display = legendVisible ? "" : "none";
+    canvas.style.display = '';
+    heatmapEl.style.display = 'none';
+    heatmapEl.innerHTML = '';
+    if (legendArea) legendArea.style.display = legendVisible ? '' : 'none';
 
-    if (view === "scatter") {
+    if (view === 'scatter') {
       chart = buildScatterChart();
-    } else if (view === "proportion") {
+    } else if (view === 'proportion') {
       chart = buildProportionChart();
-    } else if (view === "weekly-total") {
+    } else if (view === 'weekly-total') {
       chart = buildWeeklyTotalChart();
-    } else if (view === "cumulative") {
+    } else if (view === 'cumulative') {
       chart = buildCumulativeChart();
     } else {
       chart = buildChart();
@@ -904,16 +868,16 @@ function switchView(view: ViewType) {
   buildWeeklyRanking();
 }
 
-document.querySelectorAll<HTMLElement>(".metric-tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
+document.querySelectorAll<HTMLElement>('.metric-tab').forEach((tab) => {
+  tab.addEventListener('click', () => {
     switchView(tab.dataset.metric as ViewType);
   });
 });
 
 // ── Scatter chart: Efficiency (Y = messages, X = hours) ──
 function buildScatterChart() {
-  const canvas = document.getElementById("chart") as HTMLCanvasElement;
-  const dark = document.documentElement.dataset.theme === "dark";
+  const canvas = document.getElementById('chart') as HTMLCanvasElement;
+  const dark = document.documentElement.dataset.theme === 'dark';
   const c = getChartColors(dark);
   const palette = ACCENT_THEMES[currentAccent].palette;
 
@@ -942,7 +906,7 @@ function buildScatterChart() {
       pointHoverRadius: 11,
       pointBorderWidth: 2,
       pointHoverBorderWidth: 2.5,
-      pointHoverBorderColor: "#ffffff",
+      pointHoverBorderColor: '#ffffff',
       // store extra info for tooltip
       _mph: totalHours > 0 ? totalMsgs / totalHours : 0,
       _weeks: weeks,
@@ -950,14 +914,14 @@ function buildScatterChart() {
   }).filter((d) => d !== null);
 
   return new Chart(canvas, {
-    type: "scatter",
+    type: 'scatter',
     plugins: [dimPlugin],
     data: { datasets: datasets as any[] },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       animation: { duration: 400 },
-      interaction: { mode: "nearest", intersect: false },
+      interaction: { mode: 'nearest', intersect: false },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -968,7 +932,7 @@ function buildScatterChart() {
       onHover: (evt: any, elements: any[]) => {
         if (evt.native?.target) {
           (evt.native.target as HTMLElement).style.cursor =
-            elements.length > 0 ? "pointer" : "default";
+            elements.length > 0 ? 'pointer' : 'default';
         }
         if (elements.length > 0) {
           const idx = elements[0].datasetIndex;
@@ -985,7 +949,7 @@ function buildScatterChart() {
         if (!evt.native) return;
         const hits = ch.getElementsAtEventForMode(
           evt.native,
-          "nearest",
+          'nearest',
           { intersect: true },
           false,
         );
@@ -995,47 +959,47 @@ function buildScatterChart() {
         } else {
           pinFocusIndex = null;
         }
-        ch.update("none");
+        ch.update('none');
         syncLegendHover(pinFocusIndex);
       },
       scales: {
         x: {
           title: {
             display: true,
-            text: "Total de horas ativas",
+            text: 'Total de horas ativas',
             color: c.text,
             font: {
-              family: "Inter, sans-serif",
+              family: 'Inter, sans-serif',
               size: 12,
-              weight: "500",
+              weight: '500',
             },
           },
           grid: { color: c.grid },
           ticks: {
             color: c.text,
-            font: { family: "Inter, sans-serif", size: 12 },
+            font: { family: 'Inter, sans-serif', size: 12 },
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
           beginAtZero: true,
         },
         y: {
           title: {
             display: true,
-            text: "Total de mensagens",
+            text: 'Total de mensagens',
             color: c.text,
             font: {
-              family: "Inter, sans-serif",
+              family: 'Inter, sans-serif',
               size: 12,
-              weight: "500",
+              weight: '500',
             },
           },
           grid: { color: c.grid },
           ticks: {
             color: c.text,
-            font: { family: "Inter, sans-serif", size: 12 },
+            font: { family: 'Inter, sans-serif', size: 12 },
             maxTicksLimit: 8,
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
           beginAtZero: true,
         },
       },
@@ -1045,8 +1009,8 @@ function buildScatterChart() {
 
 // ── Heatmap: msg/h intensity grid ──
 function buildHeatmap() {
-  const container = document.getElementById("heatmap-container")!;
-  container.innerHTML = "";
+  const container = document.getElementById('heatmap-container')!;
+  container.innerHTML = '';
 
   // Compute msg/h for each participant × week
   const rows = PARTICIPANTS.map((p, idx) => {
@@ -1058,9 +1022,7 @@ function buildHeatmap() {
     });
     // Average: sum of all valid msg/h values divided by total weeks
     // (including weeks with no data, normalized by total time period)
-    const sumValidRatios = cells
-      .filter((c): c is number => c !== null)
-      .reduce((a, b) => a + b, 0);
+    const sumValidRatios = cells.filter((c): c is number => c !== null).reduce((a, b) => a + b, 0);
     const avg = sumValidRatios / WEEKS.length;
     return { name: p.name, idx, cells, avg };
   })
@@ -1068,9 +1030,7 @@ function buildHeatmap() {
     .sort((a, b) => b.avg - a.avg);
 
   // Find global min/max for colour scale
-  const allValues = rows.flatMap((r) =>
-    r.cells.filter((c): c is number => c !== null),
-  );
+  const allValues = rows.flatMap((r) => r.cells.filter((c): c is number => c !== null));
   const minVal = Math.min(...allValues);
   const maxVal = Math.max(...allValues);
 
@@ -1079,64 +1039,61 @@ function buildHeatmap() {
     // Cool → warm gradient: blue → cyan → green → yellow → orange → red
     const hue = (1 - t) * 240; // 240=blue → 0=red
     const sat = 70 + t * 20;
-    const light =
-      document.documentElement.dataset.theme === "dark"
-        ? 25 + t * 20
-        : 85 - t * 40;
+    const light = document.documentElement.dataset.theme === 'dark' ? 25 + t * 20 : 85 - t * 40;
     return `hsl(${hue}, ${sat}%, ${light}%)`;
   }
 
   function textColor(val: number): string {
     const t = maxVal > minVal ? (val - minVal) / (maxVal - minVal) : 0.5;
-    const dark = document.documentElement.dataset.theme === "dark";
-    if (dark) return t > 0.6 ? "#000" : "#fff";
-    return t > 0.5 ? "#fff" : "#111";
+    const dark = document.documentElement.dataset.theme === 'dark';
+    if (dark) return t > 0.6 ? '#000' : '#fff';
+    return t > 0.5 ? '#fff' : '#111';
   }
 
   // ── CSS Grid layout (replaces <table> for proper sticky glass header) ──
-  const grid = document.createElement("div");
-  grid.className = "heatmap-grid";
-  grid.style.setProperty("--week-cols", String(WEEKS.length));
+  const grid = document.createElement('div');
+  grid.className = 'heatmap-grid';
+  grid.style.setProperty('--week-cols', String(WEEKS.length));
 
   // Glass sticky header
-  const glassHeader = document.createElement("div");
-  glassHeader.className = "heatmap-glass-header";
-  const thName = document.createElement("div");
-  thName.className = "heatmap-th heatmap-th-name";
-  thName.textContent = "Participante";
+  const glassHeader = document.createElement('div');
+  glassHeader.className = 'heatmap-glass-header';
+  const thName = document.createElement('div');
+  thName.className = 'heatmap-th heatmap-th-name';
+  thName.textContent = 'Participante';
   glassHeader.appendChild(thName);
   WEEKS.forEach((w) => {
-    const th = document.createElement("div");
-    th.className = "heatmap-th";
+    const th = document.createElement('div');
+    th.className = 'heatmap-th';
     th.textContent = w;
     glassHeader.appendChild(th);
   });
-  const thAvg = document.createElement("div");
-  thAvg.className = "heatmap-th";
-  thAvg.textContent = "Média";
+  const thAvg = document.createElement('div');
+  thAvg.className = 'heatmap-th';
+  thAvg.textContent = 'Média';
   glassHeader.appendChild(thAvg);
   grid.appendChild(glassHeader);
 
   // Body rows — each cell is a direct child of the grid
   rows.forEach((r) => {
-    const nameDiv = document.createElement("div");
-    nameDiv.className = "heatmap-name";
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'heatmap-name';
     nameDiv.textContent = r.name;
-    const dot = document.createElement("span");
-    dot.className = "ranking-dot";
+    const dot = document.createElement('span');
+    dot.className = 'ranking-dot';
     dot.style.background = getParticipantColor(r.idx);
-    dot.style.display = "inline-block";
-    dot.style.marginRight = "6px";
-    dot.style.verticalAlign = "middle";
+    dot.style.display = 'inline-block';
+    dot.style.marginRight = '6px';
+    dot.style.verticalAlign = 'middle';
     nameDiv.prepend(dot);
     grid.appendChild(nameDiv);
 
     r.cells.forEach((val) => {
-      const cell = document.createElement("div");
-      cell.className = "heatmap-cell";
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
       if (val === null) {
-        cell.classList.add("no-data");
-        cell.textContent = "—";
+        cell.classList.add('no-data');
+        cell.textContent = '—';
       } else {
         cell.style.background = heatColor(val);
         cell.style.color = textColor(val);
@@ -1147,16 +1104,16 @@ function buildHeatmap() {
     });
 
     // Average cell
-    const avgCell = document.createElement("div");
-    avgCell.className = "heatmap-cell";
+    const avgCell = document.createElement('div');
+    avgCell.className = 'heatmap-cell';
     if (r.avg > 0) {
       avgCell.style.background = heatColor(r.avg);
       avgCell.style.color = textColor(r.avg);
       avgCell.textContent = r.avg.toFixed(1);
-      avgCell.style.fontWeight = "700";
+      avgCell.style.fontWeight = '700';
     } else {
-      avgCell.classList.add("no-data");
-      avgCell.textContent = "—";
+      avgCell.classList.add('no-data');
+      avgCell.textContent = '—';
     }
     grid.appendChild(avgCell);
   });
@@ -1165,8 +1122,8 @@ function buildHeatmap() {
 
 // ── Proportion chart: active hours out of 168h per week ──
 function buildProportionChart() {
-  const canvas = document.getElementById("chart") as HTMLCanvasElement;
-  const dark = document.documentElement.dataset.theme === "dark";
+  const canvas = document.getElementById('chart') as HTMLCanvasElement;
+  const dark = document.documentElement.dataset.theme === 'dark';
   const c = getChartColors(dark);
   const palette = ACCENT_THEMES[currentAccent].palette;
 
@@ -1174,9 +1131,7 @@ function buildProportionChart() {
   const data = PARTICIPANTS.map((p, idx) => {
     const validHours = p.hours.filter((h): h is number => h !== null);
     const avg =
-      validHours.length > 0
-        ? validHours.reduce((a, b) => a + b, 0) / validHours.length
-        : 0;
+      validHours.length > 0 ? validHours.reduce((a, b) => a + b, 0) / validHours.length : 0;
     return { name: p.name, idx, avg };
   })
     .filter((d) => d.avg > 0)
@@ -1188,9 +1143,9 @@ function buildProportionChart() {
   const barThickness = portrait ? 12 : undefined;
 
   const activeDs = {
-    label: "Horas ativas",
+    label: 'Horas ativas',
     data: data.map((d) => d.avg),
-    backgroundColor: data.map((d) => palette[d.idx % palette.length] + "cc"),
+    backgroundColor: data.map((d) => palette[d.idx % palette.length] + 'cc'),
     borderColor: data.map((d) => palette[d.idx % palette.length]),
     borderWidth: 1.5,
     borderRadius: 4,
@@ -1199,10 +1154,10 @@ function buildProportionChart() {
   };
 
   const inactiveDs = {
-    label: "Horas inativas",
+    label: 'Horas inativas',
     data: data.map((d) => MAX_HOURS - d.avg),
-    backgroundColor: dark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-    borderColor: dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+    backgroundColor: dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
+    borderColor: dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
     borderWidth: 1,
     borderRadius: 4,
     borderSkipped: false,
@@ -1210,7 +1165,7 @@ function buildProportionChart() {
   };
 
   return new Chart(canvas, {
-    type: "bar",
+    type: 'bar',
     data: {
       labels: data.map((d) => d.name),
       datasets: [activeDs, inactiveDs],
@@ -1218,7 +1173,7 @@ function buildProportionChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      indexAxis: "y",
+      indexAxis: 'y',
       animation: { duration: 400 },
       plugins: {
         legend: { display: false },
@@ -1233,20 +1188,20 @@ function buildProportionChart() {
           max: MAX_HOURS,
           title: {
             display: true,
-            text: "Horas na semana (média)",
+            text: 'Horas na semana (média)',
             color: c.text,
             font: {
-              family: "Inter, sans-serif",
+              family: 'Inter, sans-serif',
               size: 12,
-              weight: "500",
+              weight: '500',
             },
           },
           grid: { color: c.grid },
           ticks: {
             color: c.text,
-            font: { family: "Inter, sans-serif", size: 11 },
+            font: { family: 'Inter, sans-serif', size: 11 },
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
         },
         y: {
           stacked: true,
@@ -1254,12 +1209,12 @@ function buildProportionChart() {
           ticks: {
             color: c.text,
             font: {
-              family: "Inter, sans-serif",
+              family: 'Inter, sans-serif',
               size: portrait ? 10 : 11,
             },
             autoSkip: false,
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
         },
       },
     },
@@ -1268,8 +1223,8 @@ function buildProportionChart() {
 
 // ── Weekly Total chart: sum of top 20 per week ──
 function buildWeeklyTotalChart() {
-  const canvas = document.getElementById("chart") as HTMLCanvasElement;
-  const dark = document.documentElement.dataset.theme === "dark";
+  const canvas = document.getElementById('chart') as HTMLCanvasElement;
+  const dark = document.documentElement.dataset.theme === 'dark';
   const c = getChartColors(dark);
 
   // For each week, sum messages from the top 20 participants by message count
@@ -1284,16 +1239,16 @@ function buildWeeklyTotalChart() {
   });
 
   const accentColor = getComputedStyle(document.documentElement)
-    .getPropertyValue("--accent")
+    .getPropertyValue('--accent')
     .trim();
 
   return new Chart(canvas, {
-    type: "line",
+    type: 'line',
     data: {
       labels: WEEKS,
       datasets: [
         {
-          label: "Total Top 20",
+          label: 'Total Top 20',
           data: weeklyTotals,
           borderColor: accentColor,
           borderWidth: 3,
@@ -1302,10 +1257,10 @@ function buildWeeklyTotalChart() {
           pointBackgroundColor: accentColor,
           pointBorderColor: accentColor,
           pointHoverBorderWidth: 2.5,
-          pointHoverBorderColor: "#ffffff",
+          pointHoverBorderColor: '#ffffff',
           tension: 0.35,
           fill: true,
-          backgroundColor: accentColor + (dark ? "14" : "1A"),
+          backgroundColor: accentColor + (dark ? '14' : '1A'),
         },
       ],
     },
@@ -1314,9 +1269,9 @@ function buildWeeklyTotalChart() {
       maintainAspectRatio: false,
       animation: { duration: 400 },
       interaction: {
-        mode: "nearest",
+        mode: 'nearest',
         intersect: false,
-        axis: "xy",
+        axis: 'xy',
       },
       plugins: {
         legend: { display: false },
@@ -1328,7 +1283,7 @@ function buildWeeklyTotalChart() {
       onHover: (evt: any, elements: any[]) => {
         if (evt.native?.target) {
           (evt.native.target as HTMLElement).style.cursor =
-            elements.length > 0 ? "pointer" : "default";
+            elements.length > 0 ? 'pointer' : 'default';
         }
       },
       scales: {
@@ -1337,21 +1292,21 @@ function buildWeeklyTotalChart() {
           ticks: {
             color: c.text,
             font: {
-              family: "Inter, sans-serif",
+              family: 'Inter, sans-serif',
               size: 13,
-              weight: "600",
+              weight: '600',
             },
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
         },
         y: {
           grid: { color: c.grid },
           ticks: {
             color: c.text,
-            font: { family: "Inter, sans-serif", size: 12 },
+            font: { family: 'Inter, sans-serif', size: 12 },
             maxTicksLimit: 8,
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
           beginAtZero: true,
         },
       },
@@ -1361,8 +1316,8 @@ function buildWeeklyTotalChart() {
 
 // ── Cumulative chart: running total per top-20 user ──
 function buildCumulativeChart() {
-  const canvas = document.getElementById("chart") as HTMLCanvasElement;
-  const dark = document.documentElement.dataset.theme === "dark";
+  const canvas = document.getElementById('chart') as HTMLCanvasElement;
+  const dark = document.documentElement.dataset.theme === 'dark';
   const c = getChartColors(dark);
   const palette = ACCENT_THEMES[currentAccent].palette;
 
@@ -1387,21 +1342,21 @@ function buildCumulativeChart() {
       label: p.name,
       data: cumulativeData,
       borderColor: color,
-      backgroundColor: color + "22",
+      backgroundColor: color + '22',
       borderWidth: 2.5,
       pointRadius: 4,
       pointHoverRadius: 9,
       pointBackgroundColor: color,
       pointBorderColor: color,
       pointHoverBorderWidth: 2.5,
-      pointHoverBorderColor: "#ffffff",
+      pointHoverBorderColor: '#ffffff',
       tension: 0.35,
       spanGaps: true,
     };
   });
 
   return new Chart(canvas, {
-    type: "line",
+    type: 'line',
     plugins: [dimPlugin],
     data: {
       labels: WEEKS,
@@ -1412,9 +1367,9 @@ function buildCumulativeChart() {
       maintainAspectRatio: false,
       animation: { duration: 400 },
       interaction: {
-        mode: "nearest",
+        mode: 'nearest',
         intersect: false,
-        axis: "xy",
+        axis: 'xy',
       },
       plugins: {
         legend: { display: false },
@@ -1426,7 +1381,7 @@ function buildCumulativeChart() {
       onHover: (evt: any, elements: any[]) => {
         if (evt.native?.target) {
           (evt.native.target as HTMLElement).style.cursor =
-            elements.length > 0 ? "pointer" : "default";
+            elements.length > 0 ? 'pointer' : 'default';
         }
         if (elements.length > 0) {
           const idx = elements[0].datasetIndex;
@@ -1443,7 +1398,7 @@ function buildCumulativeChart() {
         if (!evt.native) return;
         const hits = ch.getElementsAtEventForMode(
           evt.native,
-          "nearest",
+          'nearest',
           { intersect: true },
           false,
         );
@@ -1453,7 +1408,7 @@ function buildCumulativeChart() {
         } else {
           pinFocusIndex = null;
         }
-        ch.update("none");
+        ch.update('none');
         syncLegendHover(pinFocusIndex);
       },
       scales: {
@@ -1462,21 +1417,21 @@ function buildCumulativeChart() {
           ticks: {
             color: c.text,
             font: {
-              family: "Inter, sans-serif",
+              family: 'Inter, sans-serif',
               size: 13,
-              weight: "600",
+              weight: '600',
             },
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
         },
         y: {
           grid: { color: c.grid },
           ticks: {
             color: c.text,
-            font: { family: "Inter, sans-serif", size: 12 },
+            font: { family: 'Inter, sans-serif', size: 12 },
             maxTicksLimit: 8,
           },
-          border: { color: "transparent" },
+          border: { color: 'transparent' },
           beginAtZero: true,
         },
       },
@@ -1485,26 +1440,26 @@ function buildCumulativeChart() {
 }
 
 // ── Export buttons ──
-btnExportWithTables.addEventListener("click", () => {
+btnExportWithTables.addEventListener('click', () => {
   closeAllMenus();
   exportPng(true);
 });
 
-btnExportWithoutTables.addEventListener("click", () => {
+btnExportWithoutTables.addEventListener('click', () => {
   closeAllMenus();
   exportPng(false);
 });
 
 // ── Shared canvas builder (chart + legend + optional 2-column rankings) ──
 function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
-  const canvas = document.getElementById("chart") as HTMLCanvasElement;
-  const dark = document.documentElement.dataset.theme === "dark";
-  const bg = dark ? "#0d1117" : "#f0f2f8";
-  const fg = dark ? "#e6edf3" : "#111827";
-  const fgMuted = dark ? "#8b949e" : "#6b7280";
-  const borderLine = dark ? "#30363d" : "#e5e7eb";
-  const positiveColor = "#22c55e";
-  const negativeColor = "#ef4444";
+  const canvas = document.getElementById('chart') as HTMLCanvasElement;
+  const dark = document.documentElement.dataset.theme === 'dark';
+  const bg = dark ? '#0d1117' : '#f0f2f8';
+  const fg = dark ? '#e6edf3' : '#111827';
+  const fgMuted = dark ? '#8b949e' : '#6b7280';
+  const borderLine = dark ? '#30363d' : '#e5e7eb';
+  const positiveColor = '#22c55e';
+  const negativeColor = '#ef4444';
 
   const datasets = chart?.data?.datasets ?? [];
   const DPR = window.devicePixelRatio || 1;
@@ -1524,21 +1479,20 @@ function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
   const TOP10 = 10;
   const TOP20 = 20;
   const rankingBodyH = TOP20 * ROW_H;
-  const rankingH = withTables
-    ? SEP_H + LABEL_H + CHEADER_H + rankingBodyH + Math.round(16 * DPR)
-    : 0;
+  const rankingH =
+    withTables ? SEP_H + LABEL_H + CHEADER_H + rankingBodyH + Math.round(16 * DPR) : 0;
 
-  const tmp = document.createElement("canvas");
+  const tmp = document.createElement('canvas');
   tmp.width = canvas.width;
   tmp.height = canvas.height + legendH + rankingH;
-  const ctx = tmp.getContext("2d")!;
+  const ctx = tmp.getContext('2d')!;
 
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, tmp.width, tmp.height);
   ctx.drawImage(canvas, 0, 0);
 
   // ── Legend ──
-  ctx.textBaseline = "middle";
+  ctx.textBaseline = 'middle';
   const colW = (canvas.width - PAD * 2) / COLS;
   datasets.forEach((ds: any, i: number) => {
     const col = i % COLS;
@@ -1597,45 +1551,41 @@ function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
 
   ctx.fillStyle = fg;
   ctx.font = `600 ${Math.round(13 * DPR)}px Inter, -apple-system, sans-serif`;
-  ctx.textBaseline = "middle";
-  ctx.textAlign = "left";
-  ctx.fillText("Top 10 Geral", L_START, leftY + LABEL_H / 2);
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'left';
+  ctx.fillText('Top 10 Geral', L_START, leftY + LABEL_H / 2);
   leftY += LABEL_H;
 
   ctx.fillStyle = fgMuted;
   ctx.font = `500 ${Math.round(11 * DPR)}px Inter, -apple-system, sans-serif`;
-  ctx.textAlign = "left";
-  ctx.fillText("Nome", L_START + NAME_OFF, leftY);
-  ctx.textAlign = "right";
-  ctx.fillText("Total", L_END - Math.round(58 * DPR), leftY);
-  ctx.fillText("~sem", L_END, leftY);
+  ctx.textAlign = 'left';
+  ctx.fillText('Nome', L_START + NAME_OFF, leftY);
+  ctx.textAlign = 'right';
+  ctx.fillText('Total', L_END - Math.round(58 * DPR), leftY);
+  ctx.fillText('~sem', L_END, leftY);
   leftY += CHEADER_H;
 
   totals.slice(0, TOP10).forEach((p, rank) => {
     if (rank % 2 === 0) {
-      ctx.fillStyle = dark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
+      ctx.fillStyle = dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
       ctx.fillRect(L_START, leftY - ROW_H * 0.45, HALF_W, ROW_H);
     }
     ctx.beginPath();
     ctx.arc(L_START + DOT_OFF, leftY, Math.round(5 * DPR), 0, Math.PI * 2);
-    ctx.fillStyle = (datasets[p.idx] as any)?.borderColor ?? "#888";
+    ctx.fillStyle = (datasets[p.idx] as any)?.borderColor ?? '#888';
     ctx.fill();
 
     ctx.font = `500 ${Math.round(12 * DPR)}px Inter, -apple-system, sans-serif`;
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "left";
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
     ctx.fillStyle = fgMuted;
     ctx.fillText(String(rank + 1), L_START + RANK_OFF, leftY);
     ctx.fillStyle = fg;
     ctx.fillText(p.name, L_START + NAME_OFF, leftY);
 
-    ctx.textAlign = "right";
+    ctx.textAlign = 'right';
     ctx.fillStyle = fg;
-    ctx.fillText(
-      p.total.toLocaleString("pt-BR"),
-      L_END - Math.round(58 * DPR),
-      leftY,
-    );
+    ctx.fillText(p.total.toLocaleString('pt-BR'), L_END - Math.round(58 * DPR), leftY);
     ctx.fillStyle = fgMuted;
     ctx.fillText(p.avg.toFixed(0), L_END, leftY);
 
@@ -1667,53 +1617,51 @@ function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
 
   ctx.fillStyle = fg;
   ctx.font = `600 ${Math.round(13 * DPR)}px Inter, -apple-system, sans-serif`;
-  ctx.textBaseline = "middle";
-  ctx.textAlign = "left";
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'left';
   ctx.fillText(`Top 20 · ${weekLabel}`, R_START, rightY + LABEL_H / 2);
   rightY += LABEL_H;
 
-  const colLabel = currentMetric === "messages" ? "Msgs" : "Horas";
+  const colLabel = currentMetric === 'messages' ? 'Msgs' : 'Horas';
   ctx.fillStyle = fgMuted;
   ctx.font = `500 ${Math.round(11 * DPR)}px Inter, -apple-system, sans-serif`;
-  ctx.textAlign = "left";
-  ctx.fillText("Nome", R_START + NAME_OFF, rightY);
-  ctx.textAlign = "right";
+  ctx.textAlign = 'left';
+  ctx.fillText('Nome', R_START + NAME_OFF, rightY);
+  ctx.textAlign = 'right';
   ctx.fillText(colLabel, R_END - Math.round(50 * DPR), rightY);
-  if (exportPrevCountMap) ctx.fillText("+/−", R_END, rightY);
+  if (exportPrevCountMap) ctx.fillText('+/−', R_END, rightY);
   rightY += CHEADER_H;
 
   weekData.slice(0, TOP20).forEach((p, rank) => {
     if (rank % 2 === 0) {
-      ctx.fillStyle = dark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)";
+      ctx.fillStyle = dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
       ctx.fillRect(R_START, rightY - ROW_H * 0.45, HALF_W, ROW_H);
     }
     ctx.beginPath();
     ctx.arc(R_START + DOT_OFF, rightY, Math.round(5 * DPR), 0, Math.PI * 2);
-    ctx.fillStyle = (datasets[p.idx] as any)?.borderColor ?? "#888";
+    ctx.fillStyle = (datasets[p.idx] as any)?.borderColor ?? '#888';
     ctx.fill();
 
     ctx.font = `500 ${Math.round(12 * DPR)}px Inter, -apple-system, sans-serif`;
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "left";
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
     ctx.fillStyle = fgMuted;
     ctx.fillText(String(rank + 1), R_START + RANK_OFF, rightY);
     ctx.fillStyle = fg;
     ctx.fillText(p.name, R_START + NAME_OFF, rightY);
 
-    ctx.textAlign = "right";
+    ctx.textAlign = 'right';
     ctx.fillStyle = fg;
-    ctx.fillText(
-      p.count.toLocaleString("pt-BR"),
-      R_END - Math.round(50 * DPR),
-      rightY,
-    );
+    ctx.fillText(p.count.toLocaleString('pt-BR'), R_END - Math.round(50 * DPR), rightY);
 
     if (exportPrevCountMap) {
       const prev = exportPrevCountMap.get(p.name) ?? 0;
       const diff = p.count - prev;
       ctx.fillStyle =
-        diff > 0 ? positiveColor : diff < 0 ? negativeColor : fgMuted;
-      ctx.fillText(diff > 0 ? `+${diff}` : String(diff || "="), R_END, rightY);
+        diff > 0 ? positiveColor
+        : diff < 0 ? negativeColor
+        : fgMuted;
+      ctx.fillText(diff > 0 ? `+${diff}` : String(diff || '='), R_END, rightY);
     }
 
     rightY += ROW_H;
@@ -1725,13 +1673,11 @@ function buildExportCanvas(withTables: boolean): HTMLCanvasElement {
 // ── Export PNG ──
 function exportPng(withTables = false) {
   const tmp = buildExportCanvas(withTables);
-  const link = document.createElement("a");
-  link.download = "fala-tina.png";
-  link.href = tmp.toDataURL("image/png");
+  const link = document.createElement('a');
+  link.download = 'fala-tina.png';
+  link.href = tmp.toDataURL('image/png');
   link.click();
-  showToast(
-    withTables ? "PNG com tabelas exportado!" : "Imagem PNG exportada!",
-  );
+  showToast(withTables ? 'PNG com tabelas exportado!' : 'Imagem PNG exportada!');
 }
 
 // ── Help / Wiki Modal ──
@@ -1755,13 +1701,13 @@ function buildHelpBody() {
   helpBody.innerHTML = [
     section(
       iChart,
-      "Gráfico interativo",
+      'Gráfico interativo',
       `<p class="help-p">Passe o mouse sobre o gráfico para ver o tooltip do participante mais próximo do cursor — nome e quantidade de mensagens naquela semana. Todas as linhas permanecem visíveis durante o hover.</p>
              <p class="help-p" style="margin-top:4px"><strong>Clique num ponto</strong> para fixar o foco naquela linha: as demais ficam semi-transparentes. Clique novamente no mesmo ponto ou numa área vazia do gráfico para remover o foco e restaurar todas as linhas.</p>`,
     ),
     section(
       iChart,
-      "Abas de visualização",
+      'Abas de visualização',
       `<ul class="help-list">
                 <li><strong>Mensagens</strong> — gráfico de linhas com o total de mensagens por semana (visão padrão).</li>
                 <li><strong>Horas Ativas</strong> — gráfico de linhas com as horas ativas por semana. Uma hora é contada se o participante enviou pelo menos uma mensagem entre XX:00 e XX:59.</li>
@@ -1775,7 +1721,7 @@ function buildHelpBody() {
     ),
     section(
       iLegend,
-      "Legenda de participantes",
+      'Legenda de participantes',
       `<ul class="help-list">
                 <li><strong>Clique</strong> em uma pílula para ocultar ou mostrar a linha correspondente.</li>
                 <li><strong>Hover</strong> sobre a pílula para destacar apenas aquela linha.</li>
@@ -1784,7 +1730,7 @@ function buildHelpBody() {
     ),
     section(
       iRanking,
-      "Ranking de participantes",
+      'Ranking de participantes',
       `<ul class="help-list">
                 <li><strong>Top 10 Geral</strong> — os 10 participantes com mais mensagens (ou horas, conforme a aba) no período; exibe o total, a média semanal e a taxa msg/h.</li>
                 <li><strong>Top 20 por Semana</strong> — carrossel navegável pelas setas ‹ ›; exibe os 20 mais ativos em cada semana. Inclui msg/h quando disponível.</li>
@@ -1795,7 +1741,7 @@ function buildHelpBody() {
     ),
     section(
       iExport,
-      "Exportar",
+      'Exportar',
       `<ul class="help-list">
                 <li>Clique em <strong>Exportar</strong> na dock para abrir o menu de exportação.</li>
                 <li><strong>Com tabelas</strong> — salva PNG com o gráfico, legenda e as duas tabelas de ranking lado a lado.</li>
@@ -1805,7 +1751,7 @@ function buildHelpBody() {
     ),
     section(
       iThemes,
-      "Temas de cor",
+      'Temas de cor',
       `<ul class="help-list">
                 <li><strong>WhatsApp</strong> — verde · padrão</li>
                 <li><strong>Oceano</strong> — azul · fundo azulado</li>
@@ -1816,7 +1762,7 @@ function buildHelpBody() {
     ),
     section(
       iSettings,
-      "Configurações",
+      'Configurações',
       `<ul class="help-list">
                 <li><strong>Modo escuro</strong> — alterna entre tema claro e escuro; segue o sistema por padrão.</li>
                 <li><strong>Vidro fosco</strong> — ativa o efeito de desfoque atrás dos painéis e da dock.</li>
@@ -1825,52 +1771,50 @@ function buildHelpBody() {
              </ul>
              <p class="help-p" style="margin-top:4px">Pressione <strong>ESC</strong> para fechar qualquer menu ou este painel de ajuda.</p>`,
     ),
-  ].join("");
+  ].join('');
 }
 
 function openHelpModal() {
   buildHelpBody();
-  helpModal.classList.add("visible");
-  helpModal.removeAttribute("inert");
+  helpModal.classList.add('visible');
+  helpModal.removeAttribute('inert');
   btnCloseHelp.focus();
 }
 
 function closeHelpModal() {
-  helpModal.classList.remove("visible");
-  helpModal.setAttribute("inert", "");
+  helpModal.classList.remove('visible');
+  helpModal.setAttribute('inert', '');
 }
 
-btnHelp.addEventListener("click", () => {
+btnHelp.addEventListener('click', () => {
   closeAllMenus();
   openHelpModal();
 });
 
-helpModalBackdrop.addEventListener("click", closeHelpModal);
-btnCloseHelp.addEventListener("click", closeHelpModal);
+helpModalBackdrop.addEventListener('click', closeHelpModal);
+btnCloseHelp.addEventListener('click', closeHelpModal);
 
 // ── Sidebar toggle (desktop only) ──
-const SIDEBAR_KEY = "falatina-sidebar";
-const btnToggleSidebar = document.getElementById(
-  "btn-toggle-sidebar",
-) as HTMLButtonElement | null;
-const rankingCol = document.querySelector<HTMLElement>(".ranking-col");
+const SIDEBAR_KEY = 'falatina-sidebar';
+const btnToggleSidebar = document.getElementById('btn-toggle-sidebar') as HTMLButtonElement | null;
+const rankingCol = document.querySelector<HTMLElement>('.ranking-col');
 
 function applySidebarState(hidden: boolean, persist: boolean) {
   if (!rankingCol || !btnToggleSidebar) return;
-  rankingCol.classList.toggle("hidden", hidden);
-  const label = hidden ? "Mostrar tabelas" : "Ocultar tabelas";
-  btnToggleSidebar.setAttribute("aria-pressed", String(!hidden));
-  btnToggleSidebar.setAttribute("aria-label", label);
+  rankingCol.classList.toggle('hidden', hidden);
+  const label = hidden ? 'Mostrar tabelas' : 'Ocultar tabelas';
+  btnToggleSidebar.setAttribute('aria-pressed', String(!hidden));
+  btnToggleSidebar.setAttribute('aria-label', label);
   btnToggleSidebar.title = label;
-  if (persist) localStorage.setItem(SIDEBAR_KEY, hidden ? "hidden" : "visible");
+  if (persist) localStorage.setItem(SIDEBAR_KEY, hidden ? 'hidden' : 'visible');
 }
 
 // Restore from localStorage (default: visible)
-applySidebarState(localStorage.getItem(SIDEBAR_KEY) === "hidden", false);
+applySidebarState(localStorage.getItem(SIDEBAR_KEY) === 'hidden', false);
 
 if (btnToggleSidebar && rankingCol) {
-  btnToggleSidebar.addEventListener("click", () => {
-    const isHidden = rankingCol.classList.contains("hidden");
+  btnToggleSidebar.addEventListener('click', () => {
+    const isHidden = rankingCol.classList.contains('hidden');
     applySidebarState(!isHidden, true);
   });
 }
@@ -1879,13 +1823,13 @@ if (btnToggleSidebar && rankingCol) {
 let toastTimer: ReturnType<typeof setTimeout>;
 function showToast(msg: string) {
   toast.textContent = msg;
-  toast.classList.remove("hidden");
+  toast.classList.remove('hidden');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.add("hidden"), 2400);
+  toastTimer = setTimeout(() => toast.classList.add('hidden'), 2400);
 }
 
 // ── Print styles (PDF export shows legend below chart) ──
-const printStyle = document.createElement("style");
+const printStyle = document.createElement('style');
 printStyle.textContent = `
 @media print {
   body { background: #fff !important; }
@@ -1905,32 +1849,28 @@ document.head.appendChild(printStyle);
 //   legend  → visible
 // persist = false on first-visit so localStorage stays empty;
 // the OS-change listener can then keep following the system.
-const savedTheme = localStorage.getItem("falatina-theme");
-const savedGlass = localStorage.getItem("falatina-glass");
-const savedAccent = localStorage.getItem("falatina-accent");
-const savedLegend = localStorage.getItem("falatina-legend");
+const savedTheme = localStorage.getItem('falatina-theme');
+const savedGlass = localStorage.getItem('falatina-glass');
+const savedAccent = localStorage.getItem('falatina-accent');
+const savedLegend = localStorage.getItem('falatina-legend');
 
-const prefersDark = globalThis.matchMedia("(prefers-color-scheme: dark)");
+const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)');
 // Only persist if a value was explicitly stored before (user previously changed it)
 applyTheme(
-  savedTheme === null ? prefersDark.matches : savedTheme === "dark",
+  savedTheme === null ? prefersDark.matches : savedTheme === 'dark',
   false,
   savedTheme !== null,
 );
 
 // Follow OS changes only while the user hasn't explicitly set a theme yet
-prefersDark.addEventListener("change", (e: MediaQueryListEvent) => {
-  if (localStorage.getItem("falatina-theme") === null)
-    applyTheme(e.matches, false, false);
+prefersDark.addEventListener('change', (e: MediaQueryListEvent) => {
+  if (localStorage.getItem('falatina-theme') === null) applyTheme(e.matches, false, false);
 });
 
-applyGlassStyle(savedGlass === "frosted", false, savedGlass !== null);
+applyGlassStyle(savedGlass === 'frosted', false, savedGlass !== null);
 
 buildThemeRows();
-applyAccentTheme(
-  (savedAccent ?? "whatsapp") as AccentThemeName,
-  savedAccent !== null,
-);
+applyAccentTheme((savedAccent ?? 'whatsapp') as AccentThemeName, savedAccent !== null);
 
 chart = buildChart();
 buildLegend();
@@ -1938,7 +1878,7 @@ buildAlltimeRanking();
 buildWeeklyRanking();
 
 applyLegendVisibility(
-  savedLegend === null ? true : savedLegend !== "0",
+  savedLegend === null ? true : savedLegend !== '0',
   false,
   savedLegend !== null,
 );

@@ -32,9 +32,7 @@ const GlassDistortion = {
     const qx = Math.abs(px - cx) - (hw - r);
     const qy = Math.abs(py - cy) - (hh - r);
     const outer =
-      Math.sqrt(Math.max(qx, 0) ** 2 + Math.max(qy, 0) ** 2) +
-      Math.min(Math.max(qx, qy), 0) -
-      r;
+      Math.sqrt(Math.max(qx, 0) ** 2 + Math.max(qy, 0) ** 2) + Math.min(Math.max(qx, qy), 0) - r;
     return -outer; // positive inside
   },
 
@@ -43,17 +41,17 @@ const GlassDistortion = {
   // so that SVG filters emit zero displacement instead of rendering
   // artefacts from an empty href.
   _neutralDataUrl() {
-    const c = document.createElement("canvas");
+    const c = document.createElement('canvas');
     c.width = 2;
     c.height = 2;
-    const ctx = c.getContext("2d");
+    const ctx = c.getContext('2d');
     const id = ctx.createImageData(2, 2);
     for (let i = 0; i < 16; i += 4) {
       id.data[i] = id.data[i + 1] = id.data[i + 2] = 128;
       id.data[i + 3] = 255;
     }
     ctx.putImageData(id, 0, 0);
-    return c.toDataURL("image/png");
+    return c.toDataURL('image/png');
   },
 
   // ── Build displacement map ──
@@ -66,15 +64,12 @@ const GlassDistortion = {
     const cy = H / 2;
     // Bezel width in pixels.
     // Upper bound R*0.85 ensures bezel never overshoots the corner curve.
-    const bezelW = Math.min(
-      Math.min(W, H) * this.BEZEL_FRACTION * 0.5,
-      R * 0.85,
-    );
+    const bezelW = Math.min(Math.min(W, H) * this.BEZEL_FRACTION * 0.5, R * 0.85);
 
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = W;
     canvas.height = H;
-    const ctx = canvas.getContext("2d", { willReadFrequently: false });
+    const ctx = canvas.getContext('2d', { willReadFrequently: false });
     const imgData = ctx.createImageData(W, H);
     const d = imgData.data;
 
@@ -139,14 +134,8 @@ const GlassDistortion = {
       const mag = mags[i];
       if (mag > 0) {
         const n = mag / maxMag;
-        d[idx] = Math.min(
-          255,
-          Math.max(0, (128 + dxArr[i] * n * 127 + 0.5) | 0),
-        );
-        d[idx + 1] = Math.min(
-          255,
-          Math.max(0, (128 + dyArr[i] * n * 127 + 0.5) | 0),
-        );
+        d[idx] = Math.min(255, Math.max(0, (128 + dxArr[i] * n * 127 + 0.5) | 0));
+        d[idx + 1] = Math.min(255, Math.max(0, (128 + dyArr[i] * n * 127 + 0.5) | 0));
       } else {
         d[idx] = 128;
         d[idx + 1] = 128;
@@ -157,7 +146,7 @@ const GlassDistortion = {
 
     ctx.putImageData(imgData, 0, 0);
     return {
-      dataUrl: canvas.toDataURL("image/png"),
+      dataUrl: canvas.toDataURL('image/png'),
       scale: maxMag,
       width: W,
       height: H,
@@ -167,18 +156,18 @@ const GlassDistortion = {
   // ── Dock filter (pill) ──
   // Uses userSpaceOnUse pixel coordinates — updated to exact element size.
   _applyToDock(w, h) {
-    const filter = document.getElementById("glass-distortion-dock");
+    const filter = document.getElementById('glass-distortion-dock');
     if (!filter) return;
-    const feImg = filter.querySelector("feImage");
-    const feDisp = filter.querySelector("feDisplacementMap");
+    const feImg = filter.querySelector('feImage');
+    const feDisp = filter.querySelector('feDisplacementMap');
     if (!feImg || !feDisp) return;
 
     const r = h / 2; // pill: border-radius = half height
     const { dataUrl, scale } = this.build(w, h, r);
-    feImg.setAttribute("href", dataUrl);
-    feImg.setAttribute("width", String(Math.ceil(w)));
-    feImg.setAttribute("height", String(Math.ceil(h)));
-    feDisp.setAttribute("scale", scale.toFixed(2));
+    feImg.setAttribute('href', dataUrl);
+    feImg.setAttribute('width', String(Math.ceil(w)));
+    feImg.setAttribute('height', String(Math.ceil(h)));
+    feDisp.setAttribute('scale', scale.toFixed(2));
   },
 
   // ── Panel filter (modals + menus) ──
@@ -186,31 +175,31 @@ const GlassDistortion = {
   // giving proportional edge-distortion regardless of panel dimensions.
   // The scale is expressed as a fraction of the reference image width.
   _applyToPanel() {
-    const filter = document.getElementById("glass-distortion-panel");
+    const filter = document.getElementById('glass-distortion-panel');
     if (!filter) return;
-    const feImg = filter.querySelector("feImage");
-    const feDisp = filter.querySelector("feDisplacementMap");
+    const feImg = filter.querySelector('feImage');
+    const feDisp = filter.querySelector('feDisplacementMap');
     if (!feImg || !feDisp) return;
 
     const { dataUrl, scale, width } = this.build(580, 500, 20);
-    feImg.setAttribute("href", dataUrl);
+    feImg.setAttribute('href', dataUrl);
     // Scale as a bounding-box fraction: actual px = scale_bb × elementWidth
-    feDisp.setAttribute("scale", (scale / width).toFixed(4));
+    feDisp.setAttribute('scale', (scale / width).toFixed(4));
   },
 
   // ── Init: dock ──
   initDock() {
-    const dock = document.querySelector(".glass-dock");
+    const dock = document.querySelector('.glass-dock');
     if (!dock) return;
 
     // Set neutral placeholder so the filter emits zero displacement immediately.
     const neutral = this._neutralDataUrl();
-    const dockFilter = document.getElementById("glass-distortion-dock");
+    const dockFilter = document.getElementById('glass-distortion-dock');
     if (dockFilter) {
-      const fi = dockFilter.querySelector("feImage");
-      const fd = dockFilter.querySelector("feDisplacementMap");
-      if (fi) fi.setAttribute("href", neutral);
-      if (fd) fd.setAttribute("scale", "0");
+      const fi = dockFilter.querySelector('feImage');
+      const fd = dockFilter.querySelector('feDisplacementMap');
+      if (fi) fi.setAttribute('href', neutral);
+      if (fd) fd.setAttribute('scale', '0');
     }
 
     const refresh = (w, h) => {
@@ -231,12 +220,12 @@ const GlassDistortion = {
   initPanel() {
     // Set neutral placeholder first.
     const neutral = this._neutralDataUrl();
-    const panelFilter = document.getElementById("glass-distortion-panel");
+    const panelFilter = document.getElementById('glass-distortion-panel');
     if (panelFilter) {
-      const fi = panelFilter.querySelector("feImage");
-      const fd = panelFilter.querySelector("feDisplacementMap");
-      if (fi) fi.setAttribute("href", neutral);
-      if (fd) fd.setAttribute("scale", "0");
+      const fi = panelFilter.querySelector('feImage');
+      const fd = panelFilter.querySelector('feDisplacementMap');
+      if (fi) fi.setAttribute('href', neutral);
+      if (fd) fd.setAttribute('scale', '0');
     }
     this._applyToPanel();
   },
