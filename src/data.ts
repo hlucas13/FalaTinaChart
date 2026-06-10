@@ -6,7 +6,7 @@
 //      in the same position — use `null` when the participant had no messages
 //      recorded that week.
 //   3. Append the new active-hours count to each participant's `hours` array.
-//   4. Run `node build.js` and commit the updated app.bundle.js.
+//   4. Run `npm run build` (Vite) and commit the updated bundle.
 
 export interface Participant {
   name: string;

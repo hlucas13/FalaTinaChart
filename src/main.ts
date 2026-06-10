@@ -910,7 +910,7 @@ document.querySelectorAll<HTMLElement>(".metric-tab").forEach((tab) => {
   });
 });
 
-// ── Scatter chart: Eficiência (Y = messages, X = hours) ──
+// ── Scatter chart: Efficiency (Y = messages, X = hours) ──
 function buildScatterChart() {
   const canvas = document.getElementById("chart") as HTMLCanvasElement;
   const dark = document.documentElement.dataset.theme === "dark";
