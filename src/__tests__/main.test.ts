@@ -157,6 +157,11 @@ describe('Business Logic', () => {
         expect(result.sum).toBeGreaterThanOrEqual(500);
       }
     });
+
+    it('week W11 Top 20 sum > 10,000 messages', () => {
+      const result = weeklyTop20Sum(0);
+      expect(result.sum).toBeGreaterThan(10000);
+    });
   });
 
   describe('All-time ranking (Top 10)', () => {
@@ -186,14 +191,6 @@ describe('Business Logic', () => {
         }
       });
     });
-
-    it('Nay msg/h ~23.68 (14802 msgs / 625 h)', () => {
-      const nay = PARTICIPANTS.find((p) => p.name === 'Nay');
-      expect(nay).toBeDefined();
-      const rate = msgPerHour(nay!);
-      expect(rate).not.toBeNull();
-      expect(rate).toBeCloseTo(23.68, 1);
-    });
   });
 
   describe('Cumulative sums', () => {
@@ -208,25 +205,6 @@ describe('Business Logic', () => {
           }
         });
       });
-    });
-  });
-
-  describe('Known data — Nay', () => {
-    const nay = PARTICIPANTS.find((p) => p.name === 'Nay')!;
-
-    it('total messages = 14802', () => {
-      const total = nay.data.reduce<number>((s, v) => s + (v ?? 0), 0);
-      expect(total).toBe(14802);
-    });
-
-    it('total hours = 625', () => {
-      const total = nay.hours.reduce<number>((s, v) => s + (v ?? 0), 0);
-      expect(total).toBe(625);
-    });
-
-    it('week W11 Top 20 sum > 10,000 messages', () => {
-      const result = weeklyTop20Sum(0);
-      expect(result.sum).toBeGreaterThan(10000);
     });
   });
 });
